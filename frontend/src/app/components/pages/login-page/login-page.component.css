@@ -1,0 +1,125 @@
+/* #region vvld form */
+.vvld-box-inner.s {
+  margin: 0 auto 20px;
+}
+.vvld-title {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  padding-bottom: 4px;
+}
+.vvld-box {
+  margin-bottom: 26px;
+}
+.vvld-box-inner {
+  max-width: 350px;
+  margin: 0 auto 60px;
+  padding: 14px 18px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.vvld-text {
+  margin: 25px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vvld-text.lst {
+  margin-bottom: 0;
+}
+
+hr {
+  background-color: transparent;
+  display: block;
+  height: 1px;
+  border-width: 0;
+  border-top: 1px solid #e7e7e7;
+  line-height: 19px;
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.vvld-form-group {
+  margin-bottom: 19px;
+}
+.vvld-form-group.lst {
+  margin-bottom: 15px;
+}
+
+.vvld-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.global-btn {
+  width: 100%;
+  padding: 6px 1px;
+  font-size: 13px;
+  background-color: var(--bg-button);
+  border: 1px solid var(--bg-button);
+  cursor: pointer;
+  line-height: 19px;
+  border-radius: 8px;
+}
+.global-btn:hover {
+  background-color: var(--bg-button-hover);
+}
+
+.title-wrap h2 {
+  position: relative;
+  color: #767676;
+}
+
+h2::before,
+h2::after {
+  position: absolute;
+  content: "";
+  width: 150px;
+  height: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+h2::before {
+  left: -161px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+h2::after {
+  right: -161px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+.acc-wrapper a {
+  display: flex;
+  justify-content: center;
+  border-radius: 7px;
+  height: 29px;
+  box-shadow: 0 2px 5px 0 rgba(213, 217, 217, 0.5);
+  border: 1px solid #d5d9d9;
+  align-items: center;
+  color: rgb(17, 17, 17);
+  max-width: 350px;
+  width: 100%;
+  font-size: 13px;
+}
+
+.acc-wrapper a:hover {
+  background-color: #edfdff;
+  box-shadow: 0 0 0 3px #c8f3fa, inset 0 0 0 2px #fff;
+  border-color: #008296;
+}
+
+.acc-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.acc-wrapper a {
+  flex: 1;
+}
+
+/* #endregion vvld form */

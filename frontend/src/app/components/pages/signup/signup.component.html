@@ -1,0 +1,126 @@
+<a class="sign-header" routerLink="/"> <h2 class="logo vvld">MIHIS</h2></a>
+<div class="vvld-box">
+  <div class="vvld-box-inner">
+    <h1 class="vvld-title">Create account</h1>
+    <form [formGroup]="signUpForm" (submit)="submit()">
+      <div class="vvld-form-group">
+        <label for="f-name">First name</label>
+        <input
+          formControlName="firstName"
+          type="text"
+          placeholder="First name"
+          id="f-name"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="firstName?.touched && firstName?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="firstName?.errors?.['required']">
+            &#42; Firstname is required
+          </div>
+          <div *ngIf="firstName?.errors?.['minlength']">
+            &#42; Firstname should be minimum
+            {{firstName?.errors?.['minlength'].requiredLength}} characters
+          </div>
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="l-name">Last name</label>
+        <input
+          formControlName="lastName"
+          type="text"
+          placeholder="Last name"
+          id="l-name"
+          class="form-ctrl"
+        />
+        <div *ngIf="lastName?.touched && lastName?.invalid" class="form-error">
+          <div *ngIf="lastName?.errors?.['required']">
+            &#42; lastName is required
+          </div>
+          <div *ngIf="lastName?.errors?.['minlength']">
+            &#42; lastName should be minimum
+            {{lastName?.errors?.['minlength'].requiredLength}} characters
+          </div>
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="emailOrPhone">Mobile number or email</label>
+        <input
+          formControlName="username"
+          type="text"
+          id="emailOrPhone"
+          placeholder="Enter mobile number or email"
+          class="form-ctrl"
+        />
+        <div *ngIf="username?.touched && username?.invalid" class="form-error">
+          <div *ngIf="username?.errors?.['required']">
+            &#42; This field is required
+          </div>
+          <div *ngIf="username?.errors?.['isEmailOrPhone']">
+            &#42; Please enter a valid email or phone number
+          </div>
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="password">Password</label>
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="At least 6 characters"
+          id="password"
+          class="form-ctrl"
+        />
+        <div *ngIf="password?.touched && password?.invalid" class="form-error">
+          <div *ngIf="password?.errors?.['required']">
+            &#42; Password is required
+          </div>
+          <div *ngIf="password?.errors?.['minlength']">
+            &#42; Password should be minimum
+            {{password?.errors?.['minlength'].requiredLength}} characters
+          </div>
+        </div>
+      </div>
+      <!-- Confirm Password -->
+      <div class="vvld-form-group">
+        <label for="con-password">Confirm Password</label>
+        <input
+          formControlName="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          id="con-password"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="confirmPassword?.touched && confirmPassword?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="confirmPassword?.errors?.['required']">
+            &#42; Password is required
+          </div>
+        </div>
+        <div
+          class="form-error"
+          *ngIf="
+            confirmPasswordValid && signUpForm?.invalid && passwordMismatchError
+          "
+        >
+          &#42; Passwords do not match.
+        </div>
+      </div>
+      <!-- Confirm Password -->
+      <button type="submit" class="global-btn">{{ buttonLabel }}</button>
+    </form>
+    <p class="vvld-text">
+      By creating an account, you agree to our Conditions of Use and Privacy
+      Notice.
+    </p>
+    <hr />
+    <p class="vvld-text lst">
+      Already have an account?
+      <a routerLink="/login" [queryParams]="{ returnUrl: returnUrl }"
+        >Sign in</a
+      >
+    </p>
+  </div>
+</div>

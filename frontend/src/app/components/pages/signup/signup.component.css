@@ -1,0 +1,70 @@
+/* #region vvld form */
+
+.vvld-title {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  padding-bottom: 4px;
+}
+.vvld-box {
+  margin-bottom: 26px;
+}
+.vvld-box-inner {
+  max-width: 350px;
+  margin: 0 auto 60px;
+  padding: 14px 18px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.vvld-text {
+  margin: 25px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vvld-text.lst {
+  margin-bottom: 0;
+}
+
+hr {
+  background-color: transparent;
+  display: block;
+  height: 1px;
+  border-width: 0;
+  border-top: 1px solid #e7e7e7;
+  line-height: 19px;
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.vvld-form-group {
+  margin-bottom: 19px;
+}
+.vvld-form-group.lst {
+  margin-bottom: 15px;
+}
+
+.vvld-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.global-btn {
+  width: 100%;
+  padding: 6px 1px;
+  font-size: 13px;
+  background-color: var(--bg-button);
+  border: 1px solid var(--bg-button);
+  cursor: pointer;
+  line-height: 19px;
+  border-radius: 8px;
+}
+.global-btn:hover {
+  background-color: var(--bg-button-hover);
+}
+
+/* #endregion vvld form */

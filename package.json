@@ -1,0 +1,21 @@
+{
+    "name": "mihis",
+    "version": "1.0.0",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "start": "npm run build && npm run serve",
+        "build": "npm run frontend:build && npm run backend:build",
+        "frontend:build": "cd frontend && npm install && npm run build",
+        "backend:build": "cd backend && npm install && npm run build",
+        "serve": "cd backend && npm run start",
+        "prebuild": "npm run backend:clean",
+        "backend:clean": "npm install rimraf && npx rimraf backend/src/public",
+        "copy-frontend": "npm run backend:clean && node backend/copy-frontend.js"
+    },
+    "dependencies": {
+        "ncp": "^2.0.0",
+        "rimraf": "^6.0.1"
+    }
+}

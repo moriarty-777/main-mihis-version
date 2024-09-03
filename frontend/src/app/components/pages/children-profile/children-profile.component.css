@@ -1,0 +1,235 @@
+/* #region User Profile */
+.user-profile {
+  margin-top: 69px;
+}
+.user-card-wrap {
+  background: #37424c url(/assets/img/dots_bg.png) repeat scroll 0 0;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+.user-profile-container {
+  margin: 0 auto;
+  padding: 30px;
+  border-bottom: 1px solid #37424c;
+  position: relative;
+}
+
+.table-group {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.user-body {
+  display: grid;
+  grid-template-columns: 33% 67%;
+  gap: 30px;
+  padding-bottom: 30px;
+  position: relative;
+}
+.user-body::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50px;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(1, 0, 2, 0), #fff);
+  border-bottom: 1px solid #ccc;
+}
+.usr-hdr-left {
+  font-size: 25px;
+}
+
+.usr-hdr-right.global-btn {
+  max-width: 100%;
+  width: auto;
+  padding: 10px;
+  border-radius: 3px;
+}
+@media (min-width: 992px) {
+  .user-profile-container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .user-profile-container {
+    width: 1170px;
+  }
+}
+
+@media (max-width: 1599px) {
+  .user-profile-container {
+    max-width: 1030px;
+  }
+}
+
+.user-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
+  height: 90px;
+  background: #424d56;
+  top: -45px;
+  right: 15px;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.user-logo img {
+  margin-top: 14px;
+  width: 80px;
+}
+.username-nickname {
+  font-size: 21px;
+  margin-bottom: 16px;
+}
+.user-info {
+  padding: 20px 15px 15px;
+  position: relative;
+  color: #fff;
+}
+
+.user-card {
+  background: url(/assets/img/user_ava_bg.png) repeat-x scroll 0 100%;
+  border: 1px solid rgb(68, 82, 95);
+  overflow: hidden;
+}
+.user-avatar {
+  max-height: 485px;
+  min-height: 210px;
+  overflow: hidden;
+}
+
+/*  */
+.user-info table {
+  width: 100%;
+}
+.user-info table tr {
+  border-bottom: 1px solid #424d56;
+}
+.user-info table tr:last-child {
+  border-bottom: 0;
+}
+.user-info table tr td {
+  font-size: 12px;
+  width: 50%;
+  padding: 4px 0;
+}
+
+.user-info td img {
+  width: 16px;
+  height: auto;
+}
+
+.user-info .question {
+  opacity: 0.6;
+  cursor: pointer;
+}
+.user-info .question:hover {
+  opacity: 1;
+}
+
+.user-info .tooltip-text {
+  pointer-events: none;
+}
+
+.user-info table tr td .gray {
+  color: #a1a9b3;
+  font-size: 0.9em;
+}
+.user-info table tr td .tip {
+  margin-top: 2px;
+}
+
+.user-info .question .mat-icon {
+  width: 12px;
+  font-size: 12px;
+  height: 12px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+}
+.user-info .u_icon {
+  position: relative;
+}
+
+::ng-deep .tooltipS {
+  --mdc-plain-tooltip-container-color: #000 !important;
+  --mdc-plain-tooltip-supporting-text-color: #fff !important;
+  --mdc-plain-tooltip-supporting-text-font: "Amazon Ember", sans-serif;
+  --mdc-plain-tooltip-supporting-text-size: 10.8px;
+}
+
+::ng-deep .tooltipS::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000 transparent transparent transparent;
+}
+
+/* User Stats */
+
+.stat-title {
+  text-transform: uppercase;
+  font-size: 18px;
+  position: relative;
+}
+.stat-sub-title {
+  position: relative;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.stat-title::before,
+.stat-title::after,
+.stat-sub-title::before,
+.stat-sub-title::after {
+  position: absolute;
+  content: "";
+  width: 150px;
+  height: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.stat-title::before,
+.stat-sub-title::before {
+  left: -161px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+.stat-title::after,
+.stat-sub-title::after {
+  right: -161px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+.child-schedule-log .table-group tbody td {
+  font-size: 14px;
+}
+
+/* Schedule Log */
+.child-schedule-log {
+  padding: 30px;
+}
+
+.notes {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px; /* Adjust this value based on your layout */
+}
+
+/* #endregion User Profile */

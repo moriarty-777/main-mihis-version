@@ -1,0 +1,13 @@
+<div>
+  <input
+    #s
+    type="text"
+    placeholder="Search Children"
+    (keyup.enter)="search(s.value)"
+    [value]="searchTerm"
+  />
+
+  <button (click)="search(s.value)">
+    <mat-icon><span class="hidden">Search</span><span> search </span></mat-icon>
+  </button>
+</div>

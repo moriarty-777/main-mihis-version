@@ -1,0 +1,22 @@
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <a routerLink="/" class="header-logo">
+        <h2 class="logo-name">MIHIS</h2>
+      </a>
+    </div>
+    <div class="header-right">
+      <div *ngIf="!isAuth">
+        <a routerLink="/login">Login</a>
+      </div>
+      <div *ngIf="isAuth" class="menu-container">
+        <a routerLink="/dashboard">{{ user.firstName }}</a>
+        <div class="menu">
+          <a routerLink="/profile">Profile</a>
+          <a (click)="logout()">Logout</a>
+        </div>
+      </div>
+      <!-- <a class="global-btn button-sign-up" routerLink="sign-up">Sign In</a> -->
+    </div>
+  </div>
+</div>

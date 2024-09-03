@@ -1,0 +1,9 @@
+node_modules
+
+# Ignore built folder
+built/
+
+# Ignore environment variable files
+.env
+# Ignore public folder with compiled files
+src/public/

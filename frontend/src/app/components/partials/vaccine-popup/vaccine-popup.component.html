@@ -1,0 +1,203 @@
+<div class="vpopup-container">
+  <h2>Child Immunization Record</h2>
+  <div class="vaccination-header">
+    <div class="vh-group">
+      <p>
+        <em>Child's name:</em>
+        <span>{{ child.firstName + " " + child.lastName }}</span>
+      </p>
+      <p>
+        <em>Date of birth:</em>
+        <span>{{ child.dateOfBirth | date : "MM/dd/yy" }}</span>
+      </p>
+      <p><em>Place of birth:</em> <span></span></p>
+      <p>
+        <em>Address:</em> <span>{{ child.barangay }}</span>
+      </p>
+      <p><em class="p-holder">Address plus</em> <span></span></p>
+    </div>
+    <div class="vh-group">
+      <p><em>Mother's name:</em> <span></span></p>
+      <p><em>Father's name:</em> <span></span></p>
+      <p>
+        <em>Birth height:</em> <span>{{ child.height }}</span>
+      </p>
+      <p>
+        <em>Birth weight:</em> <span>{{ child.weight }}</span>
+      </p>
+      <p>
+        <em>Sex:</em> <span>{{ child.gender }}</span>
+      </p>
+    </div>
+    <div class="vh-group">
+      <p><em>Health Center:</em> <span>Bangad Health Center</span></p>
+      <p>
+        <em>Barangay:</em> <span>{{ child.barangay }}</span>
+      </p>
+      <p><em>Family no:</em> <span></span></p>
+    </div>
+  </div>
+  <div class="vaccination-body"></div>
+  <div class="table-group">
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>Bakuna</th>
+          <th>Doses</th>
+          <th>
+            Petsa ng Bakuna <br />
+            MM/DD/YY
+          </th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="w11">
+            <p>BCG Vaccine</p>
+            <p>Hepatitis B Vaccine</p>
+            <p>
+              Pentavalent Vaccine <br />
+              (DPT-Hep B-HIB)
+            </p>
+            <p>Oral Polio Vaccine (OPV)</p>
+            <p>Inactivated Polio Vaccine (IPV)</p>
+            <p>
+              Pneumococcal Conjugate <br />
+              Vaccine (PCV)
+            </p>
+            <p>
+              Measles, Mumps, Rubella <br />
+              Vaccine (MMR)
+            </p>
+          </td>
+          <td class="doses w12">
+            <p><span class="num-dose">1</span> At birth</p>
+            <p><span class="num-dose">1</span> At birth</p>
+            <p>
+              <span class="num-dose ttt">3</span>
+              <span class="dose-group"
+                >1 ½, 2 ½, <br />
+                3 ½ months</span
+              >
+            </p>
+            <p>
+              <span class="num-dose ttt">3</span>
+              <span class="dose-group"
+                >1 ½, 2 ½, <br />
+                3 ½ months</span
+              >
+            </p>
+            <p>
+              <span class="num-dose ttt">2</span>
+              <span class="dose-group"
+                >3 ½ & <br />
+                9 months</span
+              >
+            </p>
+            <p>
+              <span class="num-dose ttt">3</span>
+              <span class="dose-group"
+                >1 ½, 2 ½, <br />
+                3 ½ months</span
+              >
+            </p>
+            <p>
+              <span class="num-dose ttt">2</span>
+              <span class="dose-group"
+                >9 months <br />
+                & 1 year</span
+              >
+            </p>
+          </td>
+          <td class="dates w13">
+            <p *ngIf="getVaccineDates(child, 'BCG')">
+              {{ getVaccineDates(child, "BCG") | date : "MM/dd/yy" }}
+            </p>
+            <p *ngIf="getVaccineDates(child, 'Hepatitis B Vaccine')">
+              {{
+                getVaccineDates(child, "Hepatitis B Vaccine")
+                  | date : "MM/dd/yy"
+              }}
+            </p>
+            <p>
+              <span
+                *ngFor="
+                  let date of getVaccineDates(
+                    child,
+                    'Pentavalent Vaccine'
+                  )?.split(', ')
+                "
+                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+              >
+            </p>
+            <p>
+              <span
+                *ngFor="
+                  let date of getVaccineDates(
+                    child,
+                    'Oral Polio Vaccine (OPV)'
+                  )?.split(', ')
+                "
+                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+              >
+            </p>
+            <p>
+              <span
+                *ngFor="
+                  let date of getVaccineDates(
+                    child,
+                    'Inactivated Polio Vaccine (IPV)'
+                  )?.split(', ')
+                "
+                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+              >
+            </p>
+            <p>
+              <span
+                *ngFor="
+                  let date of getVaccineDates(
+                    child,
+                    'Pneumococcal Conjugate Vaccine (PCV)'
+                  )?.split(', ')
+                "
+                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+              >
+            </p>
+            <p>
+              <span
+                *ngFor="
+                  let date of getVaccineDates(
+                    child,
+                    'Measles, Mumps, Rubella Vaccine (MMR)'
+                  )?.split(', ')
+                "
+                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;
+              </span>
+            </p>
+          </td>
+          <td class="remarks w14">
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- <h2>
+    {{ child.barangay }}{{ child.barangay }}{{ child.barangay
+    }}{{ child.barangay }}{{ child.barangay }}{{ child.barangay }}
+  </h2>
+  {{ child.firstName }}
+  {{ child.firstName }}
+  {{ child.nutritionalStatus }}
+  {{ child.weight }}
+    @for(vaccination of child.vaccinations; track $index){ }
+</div> -->
+</div>

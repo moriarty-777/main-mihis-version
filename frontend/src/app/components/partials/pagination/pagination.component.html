@@ -1,0 +1,19 @@
+<nav>
+  <ul class="pagination">
+    <li class="page-item" [ngClass]="{ disabled: currentPage == 1 }">
+      <a class="previous page-link" (click)="pageClicked(currentPage - 1)">«</a>
+    </li>
+    @for(page of pages; track $index){
+    <li
+      (click)="pageClicked(page)"
+      class="page-item"
+      [ngClass]="{ active: page == currentPage }"
+    >
+      <a class="page-link">{{ page }}</a>
+    </li>
+    }
+    <li class="page-item" [ngClass]="{ disabled: currentPage == totalPages }">
+      <a class="next page-link" (click)="pageClicked(currentPage + 1)">»</a>
+    </li>
+  </ul>
+</nav>

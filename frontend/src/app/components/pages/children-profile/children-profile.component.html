@@ -1,0 +1,224 @@
+<div *ngIf="child">
+  <div class="user-profile">
+    <div class="user-profile-container">
+      <div class="user-header">
+        <div class="usr-hdr-left">
+          <!-- <pre>{{ child | json }}</pre> -->
+          {{ child.firstName + " " + child.lastName }}
+        </div>
+        <a routerLink="/child" class="usr-hdr-right global-btn"
+          >All Barangay Children</a
+        >
+      </div>
+      <div class="user-body">
+        <div class="user-card-wrap">
+          <div class="user-card">
+            <div class="user-avatar">
+              <img [src]="child.photoPath" [alt]="child.firstName" />
+            </div>
+            <div class="user-info">
+              <div class="user-logo">
+                <img
+                  src="/assets/img/barangay_bangad_logo.png"
+                  alt="barangay bangad"
+                />
+              </div>
+              <h2 class="username-nickname">{{ child.firstName }}</h2>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Name</td>
+                    <td>{{ child.firstName + " " + child.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Age</td>
+                    <td>{{ getAgeInMonths(child.dateOfBirth) }} months</td>
+                  </tr>
+                  <tr>
+                    <td>Gender</td>
+                    <td>{{ child.gender }}</td>
+                  </tr>
+                  <tr>
+                    <td>Height</td>
+                    <td>{{ child.height }} cm</td>
+                  </tr>
+                  <tr>
+                    <td>Weight</td>
+                    <td>{{ child.weight }} kg</td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td class="t-icon">
+                      Philippines
+                      <img src="/assets/img/ph_flag.png" alt="logo" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Barangay</td>
+                    <td>{{ child.barangay }}</td>
+                  </tr>
+                  <tr>
+                    <td>Purok</td>
+                    <td>{{ child.purok }}</td>
+                  </tr>
+                  <tr>
+                    <td>Vaccine</td>
+                    <td class="u_icon">
+                      {{ countVaccinations(child) }} /
+                      <span class="gray">15</span>
+                      <span class="question"
+                        ><mat-icon
+                          [matTooltipPosition]="position.value!"
+                          [matTooltip]="vaccineCount"
+                          matTooltipClass="tooltipS"
+                          >help</mat-icon
+                        ></span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="user-statistics">
+          <button class="vcard-popup global-btn" (click)="openDialog()">
+            Vaccination Card
+          </button>
+          <div class="usr-stat-graph">
+            <div class="title-wrap">
+              <h2 class="stat-title">Child Statistics</h2>
+            </div>
+            <div class="the-graph"></div>
+          </div>
+          <div class="table-group">
+            <table class="stat-table">
+              <thead>
+                <tr>
+                  <th>Vaccine Status</th>
+                  <th>Vaccine Coverage</th>
+                  <th>Number of Missed Vaccines</th>
+                  <th>Number of Adverse Reaction</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ getVaccinationStatus(child) }}</td>
+                  <td>
+                    {{ getVaccinationPercentage(child) | number : "1.2-2" }}%
+                  </td>
+                  <!-- Displays the percentage -->
+                  <!-- TODO: -->
+                  <td>{{ "hello" }}</td>
+                  <td>{{ countAEFIOccurrences(child) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="stat-table">
+              <thead>
+                <tr>
+                  <th>Nutritional Status</th>
+                  <!-- Normal At Risk Malnourished -->
+                  <th>Weight For Age</th>
+                  <th>Height For Age</th>
+                  <th>Weight For Length/Height</th>
+                </tr>
+              </thead>
+              <!-- <tbody *ngIf="getLatestWeighing(child) as latestWeighing"> -->
+              @for(weighingHis of child.weighingHistory; track $index){
+              <tbody>
+                <tr>
+                  <!-- <p>Date: {{ latestWeighing.date }}</p>
+                  <p>Weight: {{ latestWeighing.weight }}</p>
+                  <p>Height: {{ latestWeighing.height }}</p> -->
+                  <!-- <td>{{ getNutritionalStatus(latestWeighing) }}</td> -->
+                  <td>{{ child.nutritionalStatus }}</td>
+                  <td>{{ weighingHis.weightForAgeStatus }}</td>
+                  <td>{{ weighingHis.heightForAgeStatus }}</td>
+                  <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
+                </tr>
+              </tbody>
+              }
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+
+      <div class="child-schedule-log">
+        <div class="title-wrap">
+          <h2 class="stat-title">
+            Recent {{ child.firstName + " " + child.lastName }} Vaccinations and
+            Weight Logs
+          </h2>
+        </div>
+        <div class="title-wrap">
+          <h3 class="stat-sub-title">Recent Child Vaccinations</h3>
+        </div>
+        <div class="table-group top">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Vaccine Type</th>
+                <th>Dose Number</th>
+                <th>Administered By</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            @for(vaccination of paginatedChildren; track $index){
+            <tbody>
+              <tr>
+                <td>{{ vaccination.dateOfVaccination }}</td>
+                <td>{{ vaccination.vaccineType }}</td>
+                <td>{{ vaccination.doseNumber }}</td>
+                <td>{{ vaccination.midwifeId }}</td>
+                <td>{{ vaccination.placeOfVaccination }}</td>
+              </tr>
+            </tbody>
+            }
+            <pagination
+              [totalItems]="child.vaccinations.length"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="currentPage"
+              (onClick)="changePage($event)"
+            ></pagination>
+          </table>
+        </div>
+        <div class="title-wrap">
+          <h3 class="stat-sub-title">Child Growth</h3>
+        </div>
+        <div class="table-group">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Weight (kg)</th>
+                <th>Height (cm)</th>
+                <th>Growth Category</th>
+                <th>Age in (months)</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            @for(weighingStat of child.weighingHistory; track child.id){
+            <tbody>
+              <tr>
+                <td>{{ weighingStat.date | date : "yyyy-MM-dd" }}</td>
+                <td>{{ weighingStat.weight }}</td>
+                <td>{{ weighingStat.height }}</td>
+                <td>{{ child.nutritionalStatus }}</td>
+                <td>{{ weighingStat.notes }}</td>
+                <td>
+                  <div class="notes">Nutritional supplements recommended</div>
+                </td>
+              </tr>
+            </tbody>
+            }
+          </table>
+        </div>
+      </div>
+
+      <!--  -->
+    </div>
+  </div>
+</div>

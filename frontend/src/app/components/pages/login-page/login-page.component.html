@@ -1,0 +1,80 @@
+<h2 class="logo vvld"><a routerLink="/">MIHIS</a></h2>
+<!--  -->
+<!-- <a class="sign-header" routerLink="/"> <h2 class="logo vvld">MIHIS</h2></a> -->
+<div class="vvld-box">
+  <div class="vvld-box-inner s">
+    <h1 class="vvld-title">Login</h1>
+    <form [formGroup]="loginForm" (submit)="submit()">
+      <div class="vvld-form-group">
+        <label for="username">Username</label>
+        <input
+          formControlName="username"
+          type="text"
+          placeholder="Email or Phone"
+          id="username"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="
+            (username?.touched && username?.invalid) ||
+            (username?.errors && isSubmitted)
+          "
+          class="form-error"
+        >
+          <div *ngIf="username?.errors?.['required']">
+            &#42; Username is required
+          </div>
+          <div *ngIf="username?.errors?.['isEmailOrPhone']">
+            &#42; Please enter valid email or phone
+          </div>
+          <div *ngIf="username?.errors?.['cannotContainSpace']">
+            &#42; Username cannot contain space
+          </div>
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="password">Password</label>
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="Enter Password"
+          id="password"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="
+            (password?.touched && password?.invalid) ||
+            (isSubmitted && password?.errors)
+          "
+          class="form-error"
+        >
+          <div *ngIf="password?.errors?.['required']">
+            &#42; Password is required
+          </div>
+        </div>
+
+        <!-- <div *ngIf="password?.touched && password?.invalid" class="form-error">
+          <div *ngIf="password?.errors?.['required']">
+            &#42; Password is required
+          </div>
+        </div>
+        <div class="form-error" *ngIf="password?.errors && isSubmitted">
+          <div *ngIf="password?.errors?.['required']">
+            &#42; Password is required
+          </div>
+        </div> -->
+      </div>
+      <button type="submit" class="global-btn">{{ buttonLabel }}</button>
+    </form>
+    <p class="vvld-text">
+      By continuing, you agree to our Conditions of Use and Privacy Notice.
+    </p>
+  </div>
+  <div class="title-wrap"><h2>New to MIHIS?</h2></div>
+  <div class="acc-wrapper">
+    <a routerLink="/signup" [queryParams]="{ returnUrl: returnUrl }"
+      >Create your MIHIS account</a
+    >
+  </div>
+</div>
+<!--  -->
