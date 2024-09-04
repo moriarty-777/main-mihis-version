@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "built/server.js",
   "scripts": {
-    "start": "cd src && nodemon server.ts",
-    "build": "npm run copy-frontend && npm install && tsc",
-    "copy-frontend": "node copy-frontend.js"
+    "build": "npm install && tsc",
+    "start": "npm run build && cd src && nodemon server.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
