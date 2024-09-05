@@ -11,7 +11,20 @@ import { CommonModule } from '@angular/common';
   styleUrl: './vaccine-popup.component.css',
 })
 export class VaccinePopupComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public child: Child) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { child: Child; motherName: string }
+  ) {}
+
+  // Access child data
+  get child(): Child {
+    return this.data.child;
+  }
+
+  // Access motherName
+  get motherName(): string {
+    return this.data.motherName;
+  }
+
   getVaccineDates(child: Child, vaccineType: string): string {
     return child.vaccinations
       .filter((vaccine) => vaccine.vaccineType === vaccineType)

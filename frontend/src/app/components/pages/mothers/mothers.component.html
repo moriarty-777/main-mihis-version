@@ -74,14 +74,30 @@
               <td class="t-icon">
                 <img src="/assets/img/ph_flag.png" alt="PH Flag" />
 
-                <a routerLink="/children-page/{{ mothers.id }}">
+                <a routerLink="/mother/{{ mothers.id }}">
                   {{ mothers.firstName + " " + mothers.lastName }}</a
                 >
               </td>
               <td>{{ mothers.isTransient }}</td>
               <td>{{ mothers.purok }}</td>
               <td>
-                {{ mothers.children }}
+                <!-- @for(child of mothers.children;  track $index){
+                <a [routerLink]="'/children-page/' + child.id"
+                  >{{ child.firstName }}
+                  <span *ngIf="mothers.children.length - 1">|</span>
+                </a>
+                } -->
+                <span *ngFor="let child of mothers.children; let i = index">
+                  <a [routerLink]="'/children-page/' + child.id"
+                    >{{ child.firstName }} {{ child.lastName }}</a
+                  >
+                  <span
+                    style="font-weight: 600"
+                    *ngIf="i < mothers.children.length - 1"
+                  >
+                    |
+                  </span>
+                </span>
               </td>
             </tr>
           </tbody>

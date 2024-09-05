@@ -24,7 +24,7 @@ const MotherSchema = new Schema(
     phone: { type: String, required: false },
     purok: { type: String, required: false },
     photoPath: { type: String, required: false }, // Optional secret key for future use
-    children: [{ type: Schema.Types.ObjectId, ref: "Child", required: false }], // Array of ObjectIds
+    children: [{ type: Schema.Types.ObjectId, ref: "child", required: false }], // Array of ObjectIds
   },
   {
     toJSON: {

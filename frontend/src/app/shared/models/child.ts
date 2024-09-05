@@ -20,4 +20,6 @@ export interface Child {
   dateFullyVaccinated: string;
   weighingHistory: WeighingHistory[];
   nutritionalStatus?: string;
+  mother?: any;
+  child?: any;
 }

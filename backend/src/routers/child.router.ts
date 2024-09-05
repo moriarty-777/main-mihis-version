@@ -2,6 +2,7 @@ import { Router } from "express";
 import { child } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import { ChildModel } from "../models/child.model";
+import { MotherModel } from "../models/mother.model";
 const router = Router();
 
 // seed to db
@@ -35,8 +36,13 @@ router.get(
       "vaccinations.midwifeId",
       "firstName lastName"
     );
+    // Now fetch the mother associated with this child
+    const mother = await MotherModel.findOne({
+      children: req.params.id,
+    }).select("firstName lastName");
 
-    res.send(specificChild);
+    // Combine the child and mother data into the response
+    res.send({ child: specificChild, mother });
   })
 );
 

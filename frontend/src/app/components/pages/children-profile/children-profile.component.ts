@@ -38,6 +38,7 @@ export class ChildrenProfileComponent {
   missedVaccineCount: number = 0;
 
   child!: Child;
+  motherName!: any;
   midwives!: { _id: string; firstName: string; lastName: string }[];
 
   constructor(
@@ -62,10 +63,14 @@ export class ChildrenProfileComponent {
 
   // Missed Vaccine
   loadChildProfile(id: string) {
-    this.childrenService.getChildrenById(id).subscribe((child) => {
-      this.child = child;
+    this.childrenService.getChildrenById(id).subscribe((data) => {
+      this.child = data.child;
+      this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
+
       this.vaccinationSchedule =
-        this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
+        this.childrenService.getExpectedVaccinationSchedule(
+          data.child.dateOfBirth
+        );
 
       // Sort the vaccinations after loading the child data
       this.child.vaccinations.sort((a, b) => {
@@ -167,7 +172,10 @@ export class ChildrenProfileComponent {
   // Pop up Vaccination
   openDialog() {
     this.dialogRef.open(VaccinePopupComponent, {
-      data: this.child,
+      data: {
+        child: this.child, // Pass the child object
+        motherName: this.motherName, // Pass the mother's name
+      },
     });
   }
 

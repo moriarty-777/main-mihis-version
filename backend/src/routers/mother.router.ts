@@ -23,7 +23,10 @@ router.get(
 router.get(
   "/",
   expressAsyncHandler(async (req, res) => {
-    const mothers = await MotherModel.find(); // get all the value from the database without parameter
+    const mothers = await MotherModel.find().populate(
+      "children",
+      "firstName lastName"
+    ); // get all the value from the database without parameter
     res.send(mothers);
   })
 );
@@ -31,7 +34,10 @@ router.get(
 router.get(
   "/:id",
   expressAsyncHandler(async (req, res) => {
-    const specificMother = await MotherModel.findById(req.params.id);
+    const specificMother = await MotherModel.findById(req.params.id).populate(
+      "children",
+      "firstName lastName"
+    );
 
     res.send(specificMother);
   })
