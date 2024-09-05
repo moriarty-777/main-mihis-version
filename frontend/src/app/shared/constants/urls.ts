@@ -7,3 +7,5 @@ export const USER_LOGIN_URL = BASE_URL + '/api/users/login';
 
 export const USER_SIGNUP_URL = BASE_URL + '/api/users/signup';
 // export const MIDWIVES_URL = BASE_URL + '/api/users/midwives';
+export const MOTHER_URL = BASE_URL + '/api/mother';
+export const MOTHER_PROFILE_URL = BASE_URL + '/api/mother/';

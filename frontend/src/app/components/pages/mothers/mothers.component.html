@@ -62,46 +62,26 @@
         <table class="stat-table">
           <thead>
             <tr>
-              <th>Children</th>
-              <th>Gender</th>
+              <th>Mothers</th>
+              <th>Transient</th>
               <th>Purok</th>
-              <th>Nutritional Status</th>
-              <!-- <th>Weight for Age Status</th>
-              <th>Height for Age Status</th>
-              <th>Weight for Length/Height Status</th> -->
-              <th>Vaccine Status</th>
+              <th>Children</th>
             </tr>
           </thead>
-          @for(children of child; track children.id){
+          @for(mothers of mother; track $index){
           <tbody>
             <tr>
               <td class="t-icon">
                 <img src="/assets/img/ph_flag.png" alt="PH Flag" />
 
-                <a routerLink="/children-page/{{ children.id }}">
-                  {{ children.firstName + " " + children.lastName }}</a
+                <a routerLink="/children-page/{{ mothers.id }}">
+                  {{ mothers.firstName + " " + mothers.lastName }}</a
                 >
               </td>
-              <td>{{ children.gender }}</td>
-              <td>{{ children.purok }}</td>
+              <td>{{ mothers.isTransient }}</td>
+              <td>{{ mothers.purok }}</td>
               <td>
-                <!-- {{ children.weighingHistory[0].weightForAgeStatus }} -->
-                {{ children.nutritionalStatus }}
-              </td>
-              <!-- <td>
-                {{ children.weighingHistory[0].heightForAgeStatus }}
-              </td>
-              <td>
-                {{ children.weighingHistory[0].weightForLengthHeightStatus }}
-              </td> -->
-              <td>
-                {{
-                  children.isFullyVaccinated
-                    ? "Fully Vaccinated"
-                    : children.vaccinations.length > 0
-                    ? "Partially Vaccinated"
-                    : "Not Vaccinated"
-                }}
+                {{ mothers.children }}
               </td>
             </tr>
           </tbody>

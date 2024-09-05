@@ -232,4 +232,12 @@
   max-width: 300px; /* Adjust this value based on your layout */
 }
 
+.bosst {
+  margin-top: 50px;
+}
+
+button.global-btn.hey {
+  max-width: 290px;
+  margin: 0 auto 30px;
+}
 /* #endregion User Profile */

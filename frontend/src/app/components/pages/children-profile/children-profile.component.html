@@ -224,18 +224,39 @@
             }
           </table>
         </div>
+        <!-- Schedule Logs for every child -->
+        <div class="title-wrap bosst">
+          <h3 class="stat-sub-title">Child Schedule</h3>
+        </div>
+        <button class="global-btn hey" (click)="toggleSchedule()">
+          {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
+        </button>
+        <div class="table-group" *ngIf="showSchedule">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Scheduled</th>
+                <th>Rescheduled</th>
+                <th>Vaccine Type</th>
+                <th>Dose Number</th>
+              </tr>
+            </thead>
+            @for(vaccine of vaccinationSchedule; track $index){
+            <tbody>
+              <tr>
+                <td>
+                  {{ vaccine.dateOfVaccination | date : "EEE, MM/dd/yyyy" }}
+                </td>
+                <td>{{ vaccine.rescheduleDate | date : "EEE, MM/dd/yyyy" }}</td>
+                <td>{{ vaccine.vaccineType }}</td>
+                <td>{{ vaccine.doseNumber }}</td>
+              </tr>
+            </tbody>
+            }
+          </table>
+        </div>
       </div>
-
       <!--  -->
     </div>
   </div>
 </div>
-
-<div *ngFor="let vaccine of vaccinationSchedule">
-  <p>
-    <strong>{{ vaccine.vaccineType }} - {{ vaccine.doseNumber }}:</strong>
-    Scheduled: {{ vaccine.dateOfVaccination | date : "MM/dd/yyyy" }},
-    Rescheduled: {{ vaccine.rescheduleDate | date : "MM/dd/yyyy" }}
-  </p>
-</div>
-<p>Missed Vaccines:</p>

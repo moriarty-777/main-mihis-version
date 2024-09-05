@@ -20,4 +20,21 @@ router.get(
   })
 );
 
+router.get(
+  "/",
+  expressAsyncHandler(async (req, res) => {
+    const mothers = await MotherModel.find(); // get all the value from the database without parameter
+    res.send(mothers);
+  })
+);
+
+router.get(
+  "/:id",
+  expressAsyncHandler(async (req, res) => {
+    const specificMother = await MotherModel.findById(req.params.id);
+
+    res.send(specificMother);
+  })
+);
+
 export default router;

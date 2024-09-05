@@ -50,11 +50,14 @@ export class ChildrenProfileComponent {
         this.loadChildProfile(params['id']); // Handle everything inside loadChildProfile
       }
     });
-    // this.activatedRoute.params.subscribe((params) => {
-    //   if (params['id']) {
-    //     this.loadChildProfile(params['id']);
-    //   }
-    // });
+  }
+
+  // show schedule of child
+  showSchedule = false; // Initially set to false
+
+  // Method to toggle the visibility of the schedule
+  toggleSchedule() {
+    this.showSchedule = !this.showSchedule;
   }
 
   // Missed Vaccine

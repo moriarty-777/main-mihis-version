@@ -5,10 +5,10 @@ export interface Mother {
   firstName: string;
   lastName: string;
   barangay: string;
-  isTransient: boolean;
+  isTransient?: boolean;
   email?: string;
   phone?: string;
-  purok: string;
+  purok?: string;
   photoPath?: string;
   children?: Schema.Types.ObjectId[];
 }
