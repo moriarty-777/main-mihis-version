@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import { PaginationComponent } from '../../partials/pagination/pagination.compon
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { VaccinePopupComponent } from '../../partials/vaccine-popup/vaccine-popup.component';
 import { Vaccination } from '../../../shared/models/vaccination';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-children-profile',
@@ -33,32 +34,118 @@ export class ChildrenProfileComponent {
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
 
+  vaccinationSchedule: any;
+  missedVaccineCount: number = 0;
+
   child!: Child;
   midwives!: { _id: string; firstName: string; lastName: string }[];
 
-  constructor(activatedRoute: ActivatedRoute, childrenService: ChildService) {
-    activatedRoute.params.subscribe((params) => {
-      if (params['id'])
-        childrenService
-          .getChildrenById(params['id'])
-          .subscribe((serverChild) => {
-            this.child = serverChild;
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private childrenService: ChildService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.activatedRoute.params.subscribe((params) => {
+      if (params['id']) {
+        this.loadChildProfile(params['id']); // Handle everything inside loadChildProfile
+      }
+    });
+    // this.activatedRoute.params.subscribe((params) => {
+    //   if (params['id']) {
+    //     this.loadChildProfile(params['id']);
+    //   }
+    // });
+  }
 
-            // sort the data on client side
-            this.child.vaccinations.sort((a, b) => {
-              return (
-                new Date(b.dateOfVaccination).getTime() -
-                new Date(a.dateOfVaccination).getTime()
-              );
-            });
+  // Missed Vaccine
+  loadChildProfile(id: string) {
+    this.childrenService.getChildrenById(id).subscribe((child) => {
+      this.child = child;
+      this.vaccinationSchedule =
+        this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
 
-            // Sort weighingHistory by date (from recent to old)
-            this.child.weighingHistory.sort((a, b) => {
-              return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });
-          });
+      // Sort the vaccinations after loading the child data
+      this.child.vaccinations.sort((a, b) => {
+        return (
+          new Date(b.dateOfVaccination).getTime() -
+          new Date(a.dateOfVaccination).getTime()
+        );
+      });
+
+      // Sort weighingHistory by date
+      this.child.weighingHistory.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+
+      this.cdr.detectChanges(); // Detect changes if necessary
     });
   }
+
+  calculateMissedVaccines(child: Child): number {
+    const expectedVaccines =
+      this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
+    const administeredVaccines = child.vaccinations || []; // Handle if vaccinations are empty
+
+    // Calculate the current date
+    const today = new Date();
+
+    // Filter out the expected vaccines that were not administered or were missed
+    const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
+      // Find if this expected vaccine was administered
+      const administered = administeredVaccines.some(
+        (administeredVaccine) =>
+          administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
+          administeredVaccine.doseNumber === expectedVaccine.doseNumber
+      );
+
+      // If the vaccine was not administered and the scheduled date has passed, count it as missed
+      return (
+        !administered && new Date(expectedVaccine.dateOfVaccination) < today
+      );
+    });
+
+    // Return the number of missed vaccines
+    return missedVaccines.length;
+  }
+
+  // calculateMissedVaccines(child: Child): number {
+  //   const expectedVaccines =
+  //     this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
+  //   const administeredVaccines = child.vaccinations || []; // Handle if no vaccines were given
+  //   const today = new Date();
+
+  //   const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
+  //     // Check if this vaccine was administered
+  //     const administered = administeredVaccines.find(
+  //       (administeredVaccine) =>
+  //         administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
+  //         administeredVaccine.doseNumber === expectedVaccine.doseNumber
+  //     );
+
+  //     const scheduledDate = new Date(expectedVaccine.dateOfVaccination);
+  //     const rescheduledDate = new Date(expectedVaccine.rescheduleDate); // Assume rescheduleDate exists
+  //     const administeredDate = administered
+  //       ? new Date(administered.dateOfVaccination)
+  //       : null;
+
+  //     // Scenario 1: Vaccine not administered and reschedule date passed
+  //     if (!administered) {
+  //       return today > rescheduledDate; // Missed if both dates passed and no vaccine given
+  //     }
+
+  //     // Scenario 2: Administered, but outside the scheduled and rescheduled window
+  //     if (
+  //       administeredDate &&
+  //       (administeredDate < scheduledDate || administeredDate > rescheduledDate)
+  //     ) {
+  //       return true; // Missed if outside the window
+  //     }
+
+  //     return false; // Not missed if administered within the scheduled/rescheduled range
+  //   });
+
+  //   return missedVaccines.length;
+  // }
 
   // Pagination
   itemsPerPage = 5;
@@ -80,12 +167,6 @@ export class ChildrenProfileComponent {
       data: this.child,
     });
   }
-
-  // Date sorting
-
-  //   child.vaccinations.sort((a, b) => {
-  //   return new Date(b.dateOfVaccination).getTime() - new Date(a.dateOfVaccination).getTime();
-  // });
 
   // Vaccination
 

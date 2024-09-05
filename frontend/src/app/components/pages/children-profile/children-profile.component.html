@@ -107,9 +107,8 @@
                   <td>
                     {{ getVaccinationPercentage(child) | number : "1.2-2" }}%
                   </td>
-                  <!-- Displays the percentage -->
-                  <!-- TODO: -->
-                  <td>{{ "hello" }}</td>
+
+                  <td>{{ calculateMissedVaccines(child) }}</td>
                   <td>{{ countAEFIOccurrences(child) }}</td>
                 </tr>
               </tbody>
@@ -170,7 +169,9 @@
 
             <tbody>
               <tr>
-                <td>{{ vaccination.dateOfVaccination }}</td>
+                <td>
+                  {{ vaccination.dateOfVaccination | date : "MM/dd/yyyy" }}
+                </td>
                 <td>{{ vaccination.vaccineType }}</td>
                 <td>{{ vaccination.doseNumber }}</td>
                 <td>
@@ -229,3 +230,12 @@
     </div>
   </div>
 </div>
+
+<div *ngFor="let vaccine of vaccinationSchedule">
+  <p>
+    <strong>{{ vaccine.vaccineType }} - {{ vaccine.doseNumber }}:</strong>
+    Scheduled: {{ vaccine.dateOfVaccination | date : "MM/dd/yyyy" }},
+    Rescheduled: {{ vaccine.rescheduleDate | date : "MM/dd/yyyy" }}
+  </p>
+</div>
+<p>Missed Vaccines:</p>
