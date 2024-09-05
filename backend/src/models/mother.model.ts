@@ -16,13 +16,13 @@ export interface Mother {
 // Define the Mother schema
 const MotherSchema = new Schema(
   {
-    role: { type: String, required: false }, // BHW, Midwife, Admin
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    username: { type: String, required: true, unique: true }, // Either Gmail or phone number, must be unique
-    password: { type: String, required: true }, // Ensure this is hashed before storing
-    dateOfService: { type: Date, required: false }, // Consider changing to Date if performing date operations
-    gender: { type: String, required: false },
+    barangay: { type: String, required: true }, // Either Gmail or phone number, must be unique
+    isTransient: { type: Boolean, required: false }, // Ensure this is hashed before storing
+    email: { type: String, required: false }, // Consider changing to Date if performing date operations
+    phone: { type: String, required: false },
+    purok: { type: String, required: false },
     photoPath: { type: String, required: false }, // Optional secret key for future use
     children: [{ type: Schema.Types.ObjectId, ref: "Child", required: false }], // Array of ObjectIds
   },

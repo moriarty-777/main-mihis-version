@@ -23,6 +23,17 @@ router.get(
   })
 );
 
+// router.get(
+//   "/midwives",
+//   expressAsyncHandler(async (req, res) => {
+//     const midwives = await UserModel.find(
+//       { role: "midwife" },
+//       "firstName lastName _id"
+//     );
+//     res.send(midwives);
+//   })
+// );
+
 router.post(
   "/login",
   expressAsyncHandler(async (req, res) => {

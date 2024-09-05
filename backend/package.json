@@ -1,10 +1,10 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "built/server.js",
+  "main": "index.js",
   "scripts": {
-    "build": "npm install && tsc",
-    "start": "npm run build && cd src && nodemon server.ts"
+    "start": "cd src && nodemon server.ts",
+    "build": "npm install && tsc"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

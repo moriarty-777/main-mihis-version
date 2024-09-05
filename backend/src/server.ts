@@ -7,6 +7,7 @@ import path from "path";
 import cors from "cors";
 import childRouter from "./routers/child.router";
 import userRouter from "./routers/user.router";
+import motherRouter from "./routers/mother.router";
 import { dbConnect } from "./configs/database.config";
 
 dbConnect();
@@ -24,6 +25,7 @@ app.use(
 // API routes
 app.use("/api", childRouter);
 app.use("/api/users", userRouter);
+app.use("/api/mother", motherRouter);
 
 // Serve static files
 const publicPath = path.join(__dirname, "public");

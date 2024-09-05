@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PaginationComponent } from '../../partials/pagination/pagination.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { VaccinePopupComponent } from '../../partials/vaccine-popup/vaccine-popup.component';
+import { Vaccination } from '../../../shared/models/vaccination';
 
 @Component({
   selector: 'app-children-profile',
@@ -33,6 +34,7 @@ export class ChildrenProfileComponent {
   position = new FormControl(this.positionOptions[1]);
 
   child!: Child;
+  midwives!: { _id: string; firstName: string; lastName: string }[];
 
   constructor(activatedRoute: ActivatedRoute, childrenService: ChildService) {
     activatedRoute.params.subscribe((params) => {

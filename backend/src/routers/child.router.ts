@@ -31,7 +31,10 @@ router.get(
 router.get(
   "/children-page/:id",
   expressAsyncHandler(async (req, res) => {
-    const specificChild = await ChildModel.findById(req.params.id);
+    const specificChild = await ChildModel.findById(req.params.id).populate(
+      "vaccinations.midwifeId",
+      "firstName lastName"
+    );
 
     res.send(specificChild);
   })

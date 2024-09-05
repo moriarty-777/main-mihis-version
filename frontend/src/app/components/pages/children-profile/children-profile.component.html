@@ -167,12 +167,19 @@
               </tr>
             </thead>
             @for(vaccination of paginatedChildren; track $index){
+
             <tbody>
               <tr>
                 <td>{{ vaccination.dateOfVaccination }}</td>
                 <td>{{ vaccination.vaccineType }}</td>
                 <td>{{ vaccination.doseNumber }}</td>
-                <td>{{ vaccination.midwifeId }}</td>
+                <td>
+                  {{
+                    vaccination.midwifeId.firstName +
+                      " " +
+                      vaccination.midwifeId.lastName
+                  }}
+                </td>
                 <td>{{ vaccination.placeOfVaccination }}</td>
               </tr>
             </tbody>
