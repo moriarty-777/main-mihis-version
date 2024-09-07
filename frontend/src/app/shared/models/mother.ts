@@ -6,8 +6,10 @@ export interface Mother {
   lastName: string;
   barangay: string;
   isTransient: boolean;
-  gmail: string;
+  email: string;
   phone: string;
   purok: string;
+  photoPath?: string;
+  childrenCount?: any;
   children: Child[]; // Array of Child objects
 }

@@ -36,10 +36,21 @@ router.get(
   expressAsyncHandler(async (req, res) => {
     const specificMother = await MotherModel.findById(req.params.id).populate(
       "children",
-      "firstName lastName"
+      "firstName lastName photoPath nutritionalStatus isFullyVaccinated dateOfBirth vaccinations"
     );
+    if (!specificMother) {
+      res.status(404).send({ message: "Mother not found" });
+      return; // Add a return here to prevent further code execution
+    }
 
-    res.send(specificMother);
+    // Check if children array exists and get the count
+    const childrenCount = specificMother.children
+      ? specificMother.children.length
+      : 0;
+
+    // Send the response including children count
+    res.send({ ...specificMother.toObject(), childrenCount });
+    // res.send(specificMother);
   })
 );
 

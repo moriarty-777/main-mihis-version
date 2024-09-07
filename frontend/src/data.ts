@@ -164,7 +164,7 @@ export const mother: Mother[] = [
     lastName: 'Dela Cruz',
     barangay: 'Bangad',
     isTransient: false,
-    gmail: 'evangeline.cruz@gmail.com',
+    email: 'evangeline.cruz@gmail.com',
     phone: '+639587485326',
     purok: '2',
     children: child.filter((child) => child.motherId === 'mother1'),

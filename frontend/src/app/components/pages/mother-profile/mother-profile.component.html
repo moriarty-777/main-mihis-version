@@ -1,1 +1,166 @@
-<p>mother-profile works!</p>
+<div *ngIf="mother">
+  <div class="user-profile">
+    <div class="user-profile-container">
+      <div class="user-header">
+        <div class="usr-hdr-left">
+          {{ mother.firstName + " " + mother.lastName }}
+        </div>
+        <a routerLink="/mother" class="usr-hdr-right global-btn"
+          >All Barangay Mothers</a
+        >
+      </div>
+      <div class="user-body">
+        <div class="user-card-wrap">
+          <div class="user-card">
+            <div class="user-avatar">
+              <img [src]="mother.photoPath" [alt]="mother.firstName" />
+            </div>
+            <div class="user-info">
+              <div class="user-logo">
+                <img
+                  src="/assets/img/barangay_bangad_logo.png"
+                  alt="barangay bangad"
+                />
+              </div>
+              <h2 class="username-nickname">Aling {{ mother.firstName }}</h2>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Name</td>
+                    <td>{{ mother.firstName + " " + mother.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td class="mother-contact">
+                      <a href="mailto:{{ mother.email }}"
+                        >{{ mother.email }}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Phone</td>
+                    <td class="mother-contact">
+                      <a href="tel:{{ mother.phone }}">{{ mother.phone }}</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td class="t-icon">
+                      Philippines
+                      <img src="/assets/img/ph_flag.png" alt="logo" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Barangay</td>
+                    <td>{{ mother.barangay }}</td>
+                  </tr>
+                  <tr>
+                    <td>Purok</td>
+                    <td>{{ mother.purok }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="user-statistics">
+          <div class="usr-stat-graph">
+            <div class="title-wrap">
+              <h2 class="stat-title">Mother Statistics</h2>
+            </div>
+            <div class="the-graph"></div>
+          </div>
+          <div class="table-group">
+            <table class="stat-table">
+              <thead>
+                <tr>
+                  <th>Number of Children</th>
+                  <th>Barangay Residency Status</th>
+                  <!-- <th>Number of Missed Vaccines</th>
+                  <th>Number of Adverse Reaction</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ mother.childrenCount }}</td>
+                  <td>
+                    {{ mother.isTransient ? "Transient" : "Native Resident" }}
+                  </td>
+                  <!--<td>
+                    {{ getVaccinationPercentage(child) | number : "1.2-2" }}%
+                  </td>
+
+                  <td>{{ calculateMissedVaccines(child) }}</td>
+                  <td>{{ countAEFIOccurrences(child) }}</td> -->
+                </tr>
+              </tbody>
+            </table>
+            <!-- <table class="stat-table">
+              <thead>
+                <tr>
+                  <th>Nutritional Status</th>
+
+                  <th>Weight For Age</th>
+                  <th>Height For Age</th>
+                  <th>Weight For Length/Height</th>
+                </tr>
+              </thead>
+
+              @for(weighingHis of child.weighingHistory; track $index){
+              <tbody>
+                <tr>
+
+                  <td>{{ child.nutritionalStatus }}</td>
+                  <td>{{ weighingHis.weightForAgeStatus }}</td>
+                  <td>{{ weighingHis.heightForAgeStatus }}</td>
+                  <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
+                </tr>
+              </tbody>
+              }
+            </table> -->
+          </div>
+        </div>
+      </div>
+      <div class="mother-children">
+        <div class="user-card-wrap c">
+          <div class="user-card" *ngFor="let child of mother.children">
+            <div class="user-avatar">
+              <img [src]="child.photoPath" [alt]="child.firstName" />
+            </div>
+            <div class="user-info">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="cxz">Child</td>
+                    <td>{{ child.firstName }}</td>
+                  </tr>
+                  <tr>
+                    <td class="cxz">Nutritional Status</td>
+                    <td>
+                      {{ child.nutritionalStatus }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="cxz">Vaccine Status</td>
+                    <td>{{ getVaccinationStatus(child) }}</td>
+                  </tr>
+                  <tr>
+                    <td class="cxz">Country</td>
+                    <td class="t-icon">
+                      Philippines
+                      <img src="/assets/img/ph_flag.png" alt="logo" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="cxz">Age</td>
+                    <td>{{ getAgeInMonths(child.dateOfBirth) }} months</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
