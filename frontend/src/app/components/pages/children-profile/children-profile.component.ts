@@ -39,6 +39,7 @@ export class ChildrenProfileComponent {
 
   child!: Child;
   motherName!: any;
+  motherId!: any;
   midwives!: { _id: string; firstName: string; lastName: string }[];
 
   constructor(
@@ -66,6 +67,7 @@ export class ChildrenProfileComponent {
     this.childrenService.getChildrenById(id).subscribe((data) => {
       this.child = data.child;
       this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
+      this.motherId = `${data.mother.id}`;
 
       this.vaccinationSchedule =
         this.childrenService.getExpectedVaccinationSchedule(

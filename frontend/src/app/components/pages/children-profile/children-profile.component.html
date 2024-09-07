@@ -76,6 +76,14 @@
                       >
                     </td>
                   </tr>
+                  <tr>
+                    <td>Mother</td>
+                    <td class="mother-link">
+                      <a [routerLink]="'/mother/' + motherId">{{
+                        motherName
+                      }}</a>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -143,7 +151,7 @@
         </div>
       </div>
       <!--  -->
-      <!-- {{ motherName }} -->
+
       <div class="child-schedule-log">
         <div class="title-wrap">
           <h2 class="stat-title">
@@ -204,7 +212,6 @@
                 <th>Weight (kg)</th>
                 <th>Height (cm)</th>
                 <th>Growth Category</th>
-                <th>Age in (months)</th>
                 <th>Notes</th>
               </tr>
             </thead>
@@ -216,9 +223,6 @@
                 <td>{{ weighingStat.height }}</td>
                 <td>{{ child.nutritionalStatus }}</td>
                 <td>{{ weighingStat.notes }}</td>
-                <td>
-                  <div class="notes">Nutritional supplements recommended</div>
-                </td>
               </tr>
             </tbody>
             }

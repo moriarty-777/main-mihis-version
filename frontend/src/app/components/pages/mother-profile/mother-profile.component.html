@@ -123,9 +123,15 @@
       </div>
       <div class="mother-children">
         <div class="user-card-wrap c">
-          <div class="user-card" *ngFor="let child of mother.children">
+          <div
+            class="user-card"
+            *ngFor="let child of mother.children; let i = index"
+          >
             <div class="user-avatar">
-              <img [src]="child.photoPath" [alt]="child.firstName" />
+              <a [routerLink]="'/children-page/' + child.id">
+                <b>{{ i + 1 }}</b>
+                <img [src]="child.photoPath" [alt]="child.firstName" />
+              </a>
             </div>
             <div class="user-info">
               <table>

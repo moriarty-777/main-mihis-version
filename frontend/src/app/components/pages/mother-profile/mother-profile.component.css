@@ -274,4 +274,31 @@ button.global-btn.hey {
   background: #37424c url(/assets/img/dots_bg.png) repeat scroll 0 0;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
+
+.user-card-wrap.c b {
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: block;
+  padding: 5px 10px;
+  background: #424f5a;
+  color: #fff;
+  font-size: 14px;
+}
+
+.user-card-wrap.c b:after {
+  content: "";
+  display: block;
+  background: #424f5a;
+  height: 100%;
+  width: 8px;
+  top: 0;
+  right: -4px;
+  bottom: 0;
+  position: absolute;
+  transform: skew(-10deg);
+}
+.user-card-wrap.c .user-avatar {
+  position: relative;
+}
 /* #endregion User Profile */

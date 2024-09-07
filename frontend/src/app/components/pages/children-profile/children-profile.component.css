@@ -240,4 +240,11 @@ button.global-btn.hey {
   max-width: 290px;
   margin: 0 auto 30px;
 }
+
+.mother-link a {
+  color: #fff;
+}
+.mother-link a:hover {
+  color: var(--bg-hover);
+}
 /* #endregion User Profile */
