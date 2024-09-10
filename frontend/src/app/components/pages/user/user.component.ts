@@ -75,6 +75,8 @@ export class UserComponent {
     return years * 12 + months;
   }
 
+  update() {}
+  delete() {}
   // search(searchTerm: string) {
   //   this.motherService
   //     .getAllMotherBySearchTerm(searchTerm)

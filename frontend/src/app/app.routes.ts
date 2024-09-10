@@ -11,43 +11,15 @@ import { User } from './shared/models/user';
 import { UserProfileComponent } from './components/pages/user-profile/user-profile.component';
 import { UserComponent } from './components/pages/user/user.component';
 import { authGuard } from './auth/guards/auth.guard';
+import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { roleGuard } from './auth/guards/role.guard';
 
 export const routes: Routes = [
+  // Routes for Anonymous User
   {
     path: '',
     component: HomeComponent,
     title: 'Home Page',
-  },
-  {
-    path: 'child',
-    component: ChildComponent,
-    title: 'All Children',
-  },
-  {
-    path: 'mother',
-    component: MothersComponent,
-    title: 'All Mother',
-  },
-  {
-    path: 'children-page/:id',
-    component: ChildrenProfileComponent,
-    title: 'Children Profile',
-  },
-  {
-    path: 'mother/:id',
-    component: MotherProfileComponent,
-    title: 'Mother Profile',
-  },
-  {
-    path: 'user',
-    component: UserComponent,
-    title: 'All Users',
-    canActivate: [authGuard],
-  },
-  {
-    path: 'user/:id',
-    component: UserProfileComponent,
-    title: 'User Profile',
   },
   {
     path: 'login',
@@ -63,5 +35,51 @@ export const routes: Routes = [
     path: 'donate',
     component: DonateComponent,
     title: 'Donate Page',
+  },
+
+  // Routes for Normal User
+  {
+    path: 'child',
+    component: ChildComponent,
+    title: 'All Children',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'mother',
+    component: MothersComponent,
+    title: 'All Mother',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'children-page/:id',
+    component: ChildrenProfileComponent,
+    title: 'Children Profile',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'mother/:id',
+    component: MotherProfileComponent,
+    title: 'Mother Profile',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'user/:id',
+    component: UserProfileComponent,
+    title: 'User Profile',
+    canActivate: [authGuard],
+  },
+
+  // Routes for Admin
+  {
+    path: 'user',
+    component: UserComponent,
+    title: 'All Users',
+    canActivate: [authGuard, roleGuard],
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    title: 'Dashboard Page',
+    canActivate: [authGuard, roleGuard],
   },
 ];

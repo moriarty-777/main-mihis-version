@@ -100,3 +100,18 @@ a:hover {
   cursor: pointer;
   color: #a6c6bc;
 }
+
+.action {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.action .delete {
+  background: #dc143c;
+  border-color: #dc143c;
+}
+
+.action .delete:hover {
+  background: #b51233;
+}

@@ -66,6 +66,7 @@
               <th>Role</th>
               <!-- <th>Username</th> -->
               <th>Years of Experience</th>
+              <th>Action</th>
             </tr>
           </thead>
           @for(users of user; track $index){
@@ -80,6 +81,22 @@
               </td>
               <td>{{ users.role }}</td>
               <td>{{ users.yearsOfService }}</td>
+              <td class="action">
+                <button
+                  type="button"
+                  class="global-btn update"
+                  (click)="update()"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  class="global-btn delete"
+                  (click)="delete()"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           </tbody>
           }
