@@ -8,6 +8,9 @@ export class User {
   password!: string;
   dateOfService!: string;
   secretKey!: string;
+  photoPath?: any;
+  yearsOfService?: any;
+  _id?: any;
   // dateOfService: Date;
 }
 

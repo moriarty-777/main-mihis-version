@@ -1,1 +1,80 @@
-<p>user-profile works!</p>
+<div *ngIf="user">
+  <div class="user-profile">
+    <div class="user-profile-container">
+      <div class="user-header">
+        <div class="usr-hdr-left">
+          {{ user.firstName + " " + user.lastName }}
+        </div>
+        <!-- TODO: IF the user has a role of admin Show this -->
+        <a routerLink="/user" class="usr-hdr-right global-btn">All Users</a>
+      </div>
+      <div class="user-body">
+        <div class="user-card-wrap">
+          <div class="user-card">
+            <div class="user-avatar">
+              <img [src]="user.photoPath" [alt]="user.firstName" />
+            </div>
+            <div class="user-info">
+              <div class="user-logo">
+                <img
+                  src="/assets/img/barangay_bangad_logo.png"
+                  alt="barangay bangad"
+                />
+              </div>
+              <h2 class="username-nickname">{{ user.firstName }}</h2>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Name</td>
+                    <td>{{ user.firstName + " " + user.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td class="t-icon">
+                      Philippines
+                      <img src="/assets/img/ph_flag.png" alt="logo" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="user-statistics">
+          <div class="usr-stat-graph">
+            <div class="title-wrap">
+              <h2 class="stat-title">Mother Statistics</h2>
+            </div>
+            <div class="the-graph"></div>
+          </div>
+          <div class="table-group">
+            <table class="stat-table">
+              <thead>
+                <tr>
+                  <th>Number of Children</th>
+                  <th>Barangay Residency Status</th>
+                  <!-- <th>Number of Missed Vaccines</th>
+                  <th>Number of Adverse Reaction</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <!-- <td>{{ mother.childrenCount }}</td>
+                  <td>
+                    {{ mother.isTransient ? "Transient" : "Native Resident" }}
+                  </td> -->
+                  <!--<td>
+                    {{ getVaccinationPercentage(child) | number : "1.2-2" }}%
+                  </td>
+
+                  <td>{{ calculateMissedVaccines(child) }}</td>
+                  <td>{{ countAEFIOccurrences(child) }}</td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

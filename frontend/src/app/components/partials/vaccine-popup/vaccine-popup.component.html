@@ -113,69 +113,133 @@
             </p>
           </td>
           <td class="dates w13">
-            <p *ngIf="getVaccineDates(child, 'BCG')">
-              {{ getVaccineDates(child, "BCG") | date : "MM/dd/yy" }}
+            <p>
+              {{
+                getVaccineDates(child, "BCG")
+                  ? (getVaccineDates(child, "BCG") | date : "MM/dd/yy")
+                  : "N/A"
+              }}
             </p>
-            <p *ngIf="getVaccineDates(child, 'Hepatitis B Vaccine')">
+            <!-- <p *ngIf="getVaccineDates(child, 'BCG')">
+              {{ getVaccineDates(child, "BCG") | date : "MM/dd/yy" : "N/A" }}
+            </p> -->
+            <!-- <p>
+              <span *ngIf="getVaccineDates(child, 'Hepatitis B Vaccine')">
+                {{
+                  getVaccineDates(child, "Hepatitis B Vaccine")
+                    | date : "MM/dd/yy"
+                }}
+              </span>
+            </p> -->
+            <p>
               {{
                 getVaccineDates(child, "Hepatitis B Vaccine")
-                  | date : "MM/dd/yy"
+                  ? (getVaccineDates(child, "Hepatitis B Vaccine")
+                    | date : "MM/dd/yy")
+                  : "N/A"
               }}
             </p>
             <p>
-              <span
-                *ngFor="
-                  let date of getVaccineDates(
-                    child,
-                    'Pentavalent Vaccine'
-                  )?.split(', ')
+              <ng-container
+                *ngIf="
+                  getVaccineDates(child, 'Pentavalent Vaccine');
+                  else placeholder
                 "
-                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
               >
+                <span
+                  *ngFor="
+                    let date of getVaccineDates(
+                      child,
+                      'Pentavalent Vaccine'
+                    )?.split(', ')
+                  "
+                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+                ></ng-container
+              >
+
+              <ng-template #placeholder>N/A</ng-template>
             </p>
             <p>
-              <span
-                *ngFor="
-                  let date of getVaccineDates(
-                    child,
-                    'Oral Polio Vaccine (OPV)'
-                  )?.split(', ')
+              <ng-container
+                *ngIf="
+                  getVaccineDates(child, 'Oral Polio Vaccine (OPV)');
+                  else placeholder
                 "
-                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
               >
+                <span
+                  *ngFor="
+                    let date of getVaccineDates(
+                      child,
+                      'Oral Polio Vaccine (OPV)'
+                    )?.split(', ')
+                  "
+                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+                >
+              </ng-container>
+              <ng-template #placeholder>N/A</ng-template>
             </p>
             <p>
-              <span
-                *ngFor="
-                  let date of getVaccineDates(
-                    child,
-                    'Inactivated Polio Vaccine (IPV)'
-                  )?.split(', ')
+              <ng-container
+                *ngIf="
+                  getVaccineDates(child, 'Inactivated Polio Vaccine (IPV)');
+                  else placeholder
                 "
-                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
               >
+                <span
+                  *ngFor="
+                    let date of getVaccineDates(
+                      child,
+                      'Inactivated Polio Vaccine (IPV)'
+                    )?.split(', ')
+                  "
+                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+                >
+              </ng-container>
+              <ng-template #placeholder>N/A</ng-template>
             </p>
             <p>
-              <span
-                *ngFor="
-                  let date of getVaccineDates(
+              <ng-container
+                *ngIf="
+                  getVaccineDates(
                     child,
                     'Pneumococcal Conjugate Vaccine (PCV)'
-                  )?.split(', ')
+                  );
+                  else placeholder
                 "
-                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
               >
+                <span
+                  *ngFor="
+                    let date of getVaccineDates(
+                      child,
+                      'Pneumococcal Conjugate Vaccine (PCV)'
+                    )?.split(', ')
+                  "
+                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+                >
+              </ng-container>
+              <ng-template #placeholder>N/A</ng-template>
             </p>
             <p>
-              <span
-                *ngFor="
-                  let date of getVaccineDates(
+              <ng-container
+                *ngIf="
+                  getVaccineDates(
                     child,
                     'Measles, Mumps, Rubella Vaccine (MMR)'
-                  )?.split(', ')
+                  );
+                  else placeholder
                 "
-                >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;
-              </span>
+              >
+                <span
+                  *ngFor="
+                    let date of getVaccineDates(
+                      child,
+                      'Measles, Mumps, Rubella Vaccine (MMR)'
+                    )?.split(', ')
+                  "
+                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;
+                </span>
+              </ng-container>
+              <ng-template #placeholder>N/A</ng-template>
             </p>
           </td>
           <td class="remarks w14">

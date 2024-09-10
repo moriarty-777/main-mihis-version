@@ -3,7 +3,12 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../shared/models/user';
 import { IUserLogin } from '../shared/models/iuserLogin';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { USER_LOGIN_URL, USER_SIGNUP_URL } from '../shared/constants/urls';
+import {
+  USER_LOGIN_URL,
+  USER_PROFILE_URL,
+  USER_SIGNUP_URL,
+  USER_URL,
+} from '../shared/constants/urls';
 import { ToastrService } from 'ngx-toastr';
 import { IUserSignUp } from '../shared/models/iuserSignup';
 
@@ -22,6 +27,28 @@ export class UserService {
     this.userObservable = this.userSubject.asObservable(); //Read only version to eposed outside the user service
   }
 
+  public get currentUser(): User {
+    return this.userSubject.value;
+  }
+
+  getAll(): Observable<User[]> {
+    return this.http.get<User[]>(USER_URL);
+  }
+
+  // getAllMotherBySearchTerm(searchTerm: string) {
+  //   return this.getAll().pipe(
+  //     map((mothers) =>
+  //       mothers.filter((mother) =>
+  //         mother.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+  //       )
+  //     )
+  //   );
+  // }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(USER_PROFILE_URL + id);
+  }
+
   login(userLogin: IUserLogin): Observable<User> {
     return this.http.post<User>(USER_LOGIN_URL, userLogin).pipe(
       tap({
@@ -29,7 +56,7 @@ export class UserService {
           this.setUserToLocalStorage(user);
           this.userSubject.next(user);
           this.toastrService.success(
-            `Welcome to Foodmine ${user.firstName + ' ' + user.lastName}!`,
+            `Welcome to MIHIS ${user.firstName + ' ' + user.lastName}!`,
             'Login Successful'
           );
           // if (user.token) {

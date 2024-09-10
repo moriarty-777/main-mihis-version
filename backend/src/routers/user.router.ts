@@ -23,6 +23,26 @@ router.get(
   })
 );
 
+router.get(
+  "/",
+  expressAsyncHandler(async (req, res) => {
+    const users = await UserModel.find();
+
+    res.send(users);
+  })
+);
+
+router.get(
+  "/:id",
+  expressAsyncHandler(async (req, res) => {
+    const specificUser = await UserModel.findById(req.params.id);
+    if (!specificUser) {
+      res.status(404).send({ message: "User not found" });
+      return; // Add a return here to prevent further code execution
+    }
+    res.send(specificUser);
+  })
+);
 // router.get(
 //   "/midwives",
 //   expressAsyncHandler(async (req, res) => {
@@ -84,6 +104,7 @@ router.post(
 const generateTokenResponse = (user: any) => {
   const token = jwt.sign(
     {
+      id: user.id,
       username: user.username,
       role: user.role,
     },
@@ -96,7 +117,8 @@ const generateTokenResponse = (user: any) => {
   // console.log("Generated Token:", token); // Log the token
 
   return {
-    _id: user._id,
+    // _id: user._id,
+    id: user.id,
     role: user.role,
     firstName: user.firstName,
     lastName: user.lastName,

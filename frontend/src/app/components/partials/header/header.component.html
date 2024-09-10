@@ -10,9 +10,13 @@
         <a routerLink="/login">Login</a>
       </div>
       <div *ngIf="isAuth" class="menu-container">
-        <a routerLink="/dashboard">{{ user.firstName }}</a>
+        <a routerLink="/">{{ user.firstName }}</a>
         <div class="menu">
-          <a routerLink="/profile">Profile</a>
+          <a routerLink="/user/{{ user.id }}">Profile</a>
+          <a routerLink="/dashboard">Dashboard</a>
+          <a routerLink="/user">All Users</a>
+          <a routerLink="/mother">All Mother</a>
+          <a routerLink="/children">All Children</a>
           <a (click)="logout()">Logout</a>
         </div>
       </div>

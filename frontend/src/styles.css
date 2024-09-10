@@ -58,12 +58,14 @@
 .menu {
   position: absolute;
   top: 25px;
-  left: 0;
+  left: 50%;
   flex-direction: column;
   flex-direction: column;
   display: none;
+  transform: translateX(-50%);
+  width: 140px;
+  text-align: center;
 }
-
 .menu-container:hover .menu {
   display: flex;
 }

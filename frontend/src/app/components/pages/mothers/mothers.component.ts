@@ -16,15 +16,15 @@ import { Mother } from '../../../shared/models/mother';
 export class MothersComponent {
   mother: Mother[] = [];
   private http = inject(HttpClient);
-  private momtherService = inject(MotherService);
+  private motherService = inject(MotherService);
   constructor() {
-    this.momtherService.getAll().subscribe((mothers) => {
+    this.motherService.getAll().subscribe((mothers) => {
       this.mother = mothers;
     });
   }
 
   search(searchTerm: string) {
-    this.momtherService
+    this.motherService
       .getAllMotherBySearchTerm(searchTerm)
       .subscribe((mothers) => {
         this.mother = mothers;

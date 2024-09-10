@@ -7,6 +7,10 @@ import { LoginPageComponent } from './components/pages/login-page/login-page.com
 import { SignupComponent } from './components/pages/signup/signup.component';
 import { MothersComponent } from './components/pages/mothers/mothers.component';
 import { MotherProfileComponent } from './components/pages/mother-profile/mother-profile.component';
+import { User } from './shared/models/user';
+import { UserProfileComponent } from './components/pages/user-profile/user-profile.component';
+import { UserComponent } from './components/pages/user/user.component';
+import { authGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -35,9 +39,15 @@ export const routes: Routes = [
     title: 'Mother Profile',
   },
   {
-    path: 'donate',
-    component: DonateComponent,
-    title: 'Donate Page',
+    path: 'user',
+    component: UserComponent,
+    title: 'All Users',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'user/:id',
+    component: UserProfileComponent,
+    title: 'User Profile',
   },
   {
     path: 'login',
@@ -48,5 +58,10 @@ export const routes: Routes = [
     path: 'signup',
     component: SignupComponent,
     title: 'Signup to MIHIS',
+  },
+  {
+    path: 'donate',
+    component: DonateComponent,
+    title: 'Donate Page',
   },
 ];
