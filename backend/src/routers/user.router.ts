@@ -3,7 +3,7 @@ import { users } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import { User, UserModel } from "../models/user.model";
-import { HTTP_BAD_REQUEST } from "../constants/http_status";
+import { HTTP_BAD_REQUEST, HTTP_NOT_FOUND } from "../constants/http_status";
 import bcrypt from "bcryptjs";
 
 const router = Router();
@@ -128,5 +128,40 @@ const generateTokenResponse = (user: any) => {
   // user.token = token;
   // return user;
 };
+
+// Update
+router.patch(
+  "/:id",
+  expressAsyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const updatedData = req.body;
+
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updatedData, {
+      new: true, // Return the updated document
+    });
+
+    if (!updatedUser) {
+      res.status(HTTP_NOT_FOUND).send({ message: "User not found" });
+      return;
+    }
+
+    res.send(updatedUser);
+  })
+);
+
+// Delete User
+router.delete(
+  "/:id",
+  expressAsyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const deletedUser = await UserModel.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      res.status(HTTP_NOT_FOUND).send({ message: "User not found" }); // No need to return, just send the response
+    } else {
+      res.send({ message: "User deleted successfully" }); // Also just send the response
+    }
+  })
+);
 
 export default router;

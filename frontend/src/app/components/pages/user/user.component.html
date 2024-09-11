@@ -64,7 +64,7 @@
             <tr>
               <th>Users</th>
               <th>Role</th>
-              <!-- <th>Username</th> -->
+              <th>Gender</th>
               <th>Years of Experience</th>
               <th>Action</th>
             </tr>
@@ -80,19 +80,20 @@
                 >
               </td>
               <td>{{ users.role }}</td>
+              <td>{{ users.gender }}</td>
               <td>{{ users.yearsOfService }}</td>
               <td class="action">
                 <button
                   type="button"
                   class="global-btn update"
-                  (click)="update()"
+                  (click)="openDialog(users.id)"
                 >
-                  Update
+                  Edit
                 </button>
                 <button
                   type="button"
                   class="global-btn delete"
-                  (click)="delete()"
+                  (click)="deleteUser(users.id)"
                 >
                   Delete
                 </button>

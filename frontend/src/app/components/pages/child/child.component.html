@@ -2,42 +2,59 @@
   <div class="children-container">
     <div class="c-table-header">
       <div class="c-table-item">
-        <select id="gender">
-          <option disabled selected>Gender</option>
-          <option>Male</option>
-          <option>Female</option>
+        <!-- <button type="button">All Children</button> -->
+        <button type="button" class="all-btn" (click)="resetFilters()">
+          All Children
+        </button>
+      </div>
+      <div class="c-table-item">
+        <!-- <select id="gender"> -->
+        <select id="gender" (change)="onGenderChange($event)">
+          <option value="">Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
         </select>
       </div>
       <div class="c-table-item">
-        <select id="purok">
-          <option disabled selected>Purok</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
+        <!-- <select id="purok"> -->
+        <select id="purok" (change)="onPurokChange($event)">
+          <option value="">Purok</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
         </select>
       </div>
       <div class="c-table-item">
-        <select id="nutritionalStatus">
-          <option disabled selected>Nutritional Status</option>
-          <option>Normal</option>
-          <option>Obese</option>
-          <option>Wasted</option>
-          <option>Severely Wasted</option>
-          <option>Stunted</option>
-          <option>Severely Stunted</option>
-          <option>Underweight</option>
-          <option>Severely Underweight</option>
-          <option>Overweight</option>
-          <option>Severely Overweight</option>
+        <!-- <select id="nutritionalStatus"> -->
+        <select
+          id="nutritionalStatus"
+          (change)="onNutritionalStatusChange($event)"
+        >
+          <option value="">Nutritional Status</option>
+          <option value="Normal">Normal</option>
+          <option value="At Risk">At Risk</option>
+          <option value="Malnourished">Malnourished</option>
+          <!-- <option disabled selected>Nutritional Status</option>
+          <option value="Normal">Normal</option>
+          <option value="Obese">Obese</option>
+          <option value="Wasted">Wasted</option>
+          <option value="Severely Wasted">Severely Wasted</option>
+          <option value="Stunted">Stunted</option>
+          <option value="Severely Stunted">Severely Stunted</option>
+          <option value="Underweight">Underweight</option>
+          <option value="Severely Underweight">Severely Underweight</option>
+          <option value="Overweight">Overweight</option>
+          <option value="Severely Overweight">Severely Overweight</option> -->
         </select>
       </div>
       <div class="c-table-item">
-        <select id="vaxStatus">
-          <option disabled selected>Vaccine Status</option>
-          <option>Fully Vaccinated</option>
-          <option>Partially Vaccinated</option>
-          <option>Not Vaccinated</option>
+        <select id="vaxStatus" (change)="onVaxStatusChange($event)">
+          <!-- <select id="vaxStatus"> -->
+          <option value="">Vaccine Status</option>
+          <option value="Fully Vaccinated">Fully Vaccinated</option>
+          <option value="Partially Vaccinated">Partially Vaccinated</option>
+          <option value="Not Vaccinated">Not Vaccinated</option>
         </select>
       </div>
       <div class="c-table-item">
@@ -70,6 +87,7 @@
               <th>Height for Age Status</th>
               <th>Weight for Length/Height Status</th> -->
               <th>Vaccine Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           @for(children of child; track children.id){
@@ -95,6 +113,7 @@
                 {{ children.weighingHistory[0].weightForLengthHeightStatus }}
               </td> -->
               <td>
+                <!-- {{ children.vaccinationStatus }} -->
                 {{
                   children.isFullyVaccinated
                     ? "Fully Vaccinated"
@@ -102,6 +121,22 @@
                     ? "Partially Vaccinated"
                     : "Not Vaccinated"
                 }}
+              </td>
+              <td class="action">
+                <button
+                  type="button"
+                  class="global-btn update"
+                  (click)="openDialog(children.id)"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  class="global-btn delete"
+                  (click)="deleteChild(children.id)"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>

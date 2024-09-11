@@ -115,4 +115,26 @@ export class UserService {
     if (userJson) return JSON.parse(userJson) as User;
     return new User();
   }
-}
+
+  updateUser(id: string, userData: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`${USER_URL}/${id}`, userData).pipe(
+      tap({
+        next: (updatedUser) => {
+          this.toastrService.success('User updated successfully!', '', {
+            timeOut: 2000, // 2000 milliseconds = 2 seconds
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-bottom-right',
+          });
+        },
+        error: (error) => {
+          this.toastrService.error('Failed to update user');
+        },
+      })
+    );
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete(`${USER_URL}/${userId}`);
+  }
+} //

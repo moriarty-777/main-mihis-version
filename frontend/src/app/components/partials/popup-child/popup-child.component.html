@@ -1,1 +1,104 @@
-<p>popup-child works!</p>
+<div class="vpopup-container s">
+  <div class="vvld-box-inner">
+    <h2>Update Child {{ h }}</h2>
+    <!-- <h2>Update Child</h2> -->
+    <!--  -->
+    <form [formGroup]="updatesForm" (submit)="update()">
+      <div class="vvld-form-group">
+        <label for="f-name">Firstname</label>
+        <input
+          formControlName="firstName"
+          type="text"
+          placeholder="First name"
+          id="f-name"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="firstName?.touched && firstName?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="firstName?.errors?.['required']">
+            &#42; Firstname is required
+          </div>
+          <div *ngIf="firstName?.errors?.['minlength']">
+            &#42; Firstname should be minimum
+            {{firstName?.errors?.['minlength'].requiredLength}} characters
+          </div>
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="l-name">Last name</label>
+        <input
+          formControlName="lastName"
+          type="text"
+          placeholder="Last name"
+          id="l-name"
+          class="form-ctrl"
+        />
+        <div *ngIf="lastName?.touched && lastName?.invalid" class="form-error">
+          <div *ngIf="lastName?.errors?.['required']">
+            &#42; lastName is required
+          </div>
+          <div *ngIf="lastName?.errors?.['minlength']">
+            &#42; lastName should be minimum
+            {{lastName?.errors?.['minlength'].requiredLength}} characters
+          </div>
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="dateOfBirth">Start of Service</label>
+        <input
+          formControlName="dateOfBirth"
+          type="date"
+          id="dateOfBirth"
+          placeholder="Date of Service"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="dateOfBirth?.touched && dateOfBirth?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="dateOfBirth?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
+      <!-- gender -->
+      <div class="vvld-form-group">
+        <label for="gender">Gender</label>
+        <select formControlName="gender" id="gender" class="form-ctrl">
+          <option value="" disabled selected>Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <div *ngIf="gender?.touched && gender?.invalid" class="form-error">
+          <div *ngIf="gender?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
+      <!-- photopath -->
+      <div class="vvld-form-group">
+        <label for="photoPath">Photo Path</label>
+        <input
+          formControlName="photoPath"
+          type="text"
+          id="photoPath"
+          placeholder="Photo Path"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="photoPath?.touched && photoPath?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="photoPath?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="global-btn">Update</button>
+    </form>
+    <pre>{{ updatesForm.value | json }}</pre>
+  </div>
+</div>

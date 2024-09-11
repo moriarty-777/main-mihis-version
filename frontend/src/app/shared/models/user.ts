@@ -10,6 +10,8 @@ export class User {
   secretKey!: string;
   photoPath?: any;
   yearsOfService?: any;
+  gender?: any;
+  formattedDate?: any;
   _id?: any;
   // dateOfService: Date;
 }

@@ -118,45 +118,6 @@ export class ChildrenProfileComponent {
     return missedVaccines.length;
   }
 
-  // calculateMissedVaccines(child: Child): number {
-  //   const expectedVaccines =
-  //     this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
-  //   const administeredVaccines = child.vaccinations || []; // Handle if no vaccines were given
-  //   const today = new Date();
-
-  //   const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
-  //     // Check if this vaccine was administered
-  //     const administered = administeredVaccines.find(
-  //       (administeredVaccine) =>
-  //         administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
-  //         administeredVaccine.doseNumber === expectedVaccine.doseNumber
-  //     );
-
-  //     const scheduledDate = new Date(expectedVaccine.dateOfVaccination);
-  //     const rescheduledDate = new Date(expectedVaccine.rescheduleDate); // Assume rescheduleDate exists
-  //     const administeredDate = administered
-  //       ? new Date(administered.dateOfVaccination)
-  //       : null;
-
-  //     // Scenario 1: Vaccine not administered and reschedule date passed
-  //     if (!administered) {
-  //       return today > rescheduledDate; // Missed if both dates passed and no vaccine given
-  //     }
-
-  //     // Scenario 2: Administered, but outside the scheduled and rescheduled window
-  //     if (
-  //       administeredDate &&
-  //       (administeredDate < scheduledDate || administeredDate > rescheduledDate)
-  //     ) {
-  //       return true; // Missed if outside the window
-  //     }
-
-  //     return false; // Not missed if administered within the scheduled/rescheduled range
-  //   });
-
-  //   return missedVaccines.length;
-  // }
-
   // Pagination
   itemsPerPage = 5;
   currentPage = 1;
@@ -231,34 +192,75 @@ export class ChildrenProfileComponent {
       (vaccination) => vaccination.aefi && vaccination.aefi.occurred
     ).length;
   }
-
-  // Weighing
-  // getLatestWeighing(child: Child) {
-  //   return child.weighingHistory.reduce((latest, entry) => {
-  //     return new Date(entry.date) > new Date(latest.date) ? entry : latest;
-  //   }, child.weighingHistory[0]);
-  // }
-
-  // getNutritionalStatus(latestWeighing: any): string {
-  //   const {
-  //     weightForAgeStatus,
-  //     heightForAgeStatus,
-  //     weightForLengthHeightStatus,
-  //   } = latestWeighing;
-
-  //   const statuses = [
-  //     weightForAgeStatus,
-  //     heightForAgeStatus,
-  //     weightForLengthHeightStatus,
-  //   ];
-  //   const normalCount = statuses.filter((status) => status === 'Normal').length;
-
-  //   if (normalCount === 3) {
-  //     return 'Normal';
-  //   } else if (normalCount === 1) {
-  //     return 'Malnourished';
-  //   } else {
-  //     return 'At risk';
-  //   }
-  // }
 }
+
+// calculateMissedVaccines(child: Child): number {
+//   const expectedVaccines =
+//     this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
+//   const administeredVaccines = child.vaccinations || []; // Handle if no vaccines were given
+//   const today = new Date();
+
+//   const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
+//     // Check if this vaccine was administered
+//     const administered = administeredVaccines.find(
+//       (administeredVaccine) =>
+//         administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
+//         administeredVaccine.doseNumber === expectedVaccine.doseNumber
+//     );
+
+//     const scheduledDate = new Date(expectedVaccine.dateOfVaccination);
+//     const rescheduledDate = new Date(expectedVaccine.rescheduleDate); // Assume rescheduleDate exists
+//     const administeredDate = administered
+//       ? new Date(administered.dateOfVaccination)
+//       : null;
+
+//     // Scenario 1: Vaccine not administered and reschedule date passed
+//     if (!administered) {
+//       return today > rescheduledDate; // Missed if both dates passed and no vaccine given
+//     }
+
+//     // Scenario 2: Administered, but outside the scheduled and rescheduled window
+//     if (
+//       administeredDate &&
+//       (administeredDate < scheduledDate || administeredDate > rescheduledDate)
+//     ) {
+//       return true; // Missed if outside the window
+//     }
+
+//     return false; // Not missed if administered within the scheduled/rescheduled range
+//   });
+
+//   return missedVaccines.length;
+// }
+
+/////*****///// */
+
+// Weighing
+// getLatestWeighing(child: Child) {
+//   return child.weighingHistory.reduce((latest, entry) => {
+//     return new Date(entry.date) > new Date(latest.date) ? entry : latest;
+//   }, child.weighingHistory[0]);
+// }
+
+// getNutritionalStatus(latestWeighing: any): string {
+//   const {
+//     weightForAgeStatus,
+//     heightForAgeStatus,
+//     weightForLengthHeightStatus,
+//   } = latestWeighing;
+
+//   const statuses = [
+//     weightForAgeStatus,
+//     heightForAgeStatus,
+//     weightForLengthHeightStatus,
+//   ];
+//   const normalCount = statuses.filter((status) => status === 'Normal').length;
+
+//   if (normalCount === 3) {
+//     return 'Normal';
+//   } else if (normalCount === 1) {
+//     return 'Malnourished';
+//   } else {
+//     return 'At risk';
+//   }
+// }
