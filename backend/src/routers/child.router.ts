@@ -83,7 +83,7 @@ router.get(
 router.get(
   "/children-page/:id",
   expressAsyncHandler(async (req, res) => {
-    console.log("Fetching child by ID:", req.params.id); // Add log here
+    // console.log("Fetching child by ID:", req.params.id); // Add log here
     const specificChild = await ChildModel.findById(req.params.id).populate(
       "vaccinations.midwifeId",
       "firstName lastName"
@@ -100,7 +100,7 @@ router.get(
 
 // Delete
 router.delete(
-  "/:id",
+  "/child/:id",
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
     const deletedChild = await ChildModel.findByIdAndDelete(childId);
@@ -115,7 +115,7 @@ router.delete(
 // Update
 
 router.patch(
-  "/:id",
+  "/child/:id",
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
     const updatedChild = await ChildModel.findByIdAndUpdate(childId, req.body, {

@@ -66,6 +66,7 @@
               <th>Transient</th>
               <th>Purok</th>
               <th>Children</th>
+              <th>Action</th>
             </tr>
           </thead>
           @for(mothers of mother; track $index){
@@ -81,12 +82,6 @@
               <td>{{ mothers.isTransient }}</td>
               <td>{{ mothers.purok }}</td>
               <td>
-                <!-- @for(child of mothers.children;  track $index){
-                <a [routerLink]="'/children-page/' + child.id"
-                  >{{ child.firstName }}
-                  <span *ngIf="mothers.children.length - 1">|</span>
-                </a>
-                } -->
                 <span *ngFor="let child of mothers.children; let i = index">
                   <a [routerLink]="'/children-page/' + child.id"
                     >{{ child.firstName }} {{ child.lastName }}</a
@@ -98,6 +93,22 @@
                     |
                   </span>
                 </span>
+              </td>
+              <td class="action">
+                <button
+                  type="button"
+                  class="global-btn update"
+                  (click)="openDialog(mothers.id)"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  class="global-btn delete"
+                  (click)="deleteMother(mothers.id)"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>

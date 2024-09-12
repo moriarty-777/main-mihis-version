@@ -9,6 +9,7 @@ export interface Mother {
   email?: string;
   phone?: string;
   purok?: string;
+  gender?: string;
   photoPath?: string;
   children?: Schema.Types.ObjectId[];
 }
@@ -23,6 +24,7 @@ const MotherSchema = new Schema(
     email: { type: String, required: false }, // Consider changing to Date if performing date operations
     phone: { type: String, required: false },
     purok: { type: String, required: false },
+    gender: { type: String, required: false },
     photoPath: { type: String, required: false }, // Optional secret key for future use
     children: [{ type: Schema.Types.ObjectId, ref: "child", required: false }], // Array of ObjectIds
   },

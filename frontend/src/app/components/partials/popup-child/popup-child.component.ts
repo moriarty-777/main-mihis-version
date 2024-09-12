@@ -16,7 +16,6 @@ import { Child } from '../../../shared/models/child';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './popup-child.component.html',
-  // template: `<br /><br /><br /><br /><br /><br /><br />`,
   styleUrl: './popup-child.component.css',
 })
 export class PopupChildComponent {
@@ -42,8 +41,6 @@ export class PopupChildComponent {
   }
 
   ngOnInit(): void {
-    console.log('Received childId in ngOnInit:', this.data.childId);
-
     // Check if the childId exists before fetching data
     if (this.data && this.data.childId) {
       this.childService.getChildrenById(this.data.childId).subscribe(
@@ -83,11 +80,11 @@ export class PopupChildComponent {
     });
   }
 
-  ngAfterViewInit(): void {
-    // Call detectChanges in ngAfterViewInit
-    this.cd.detectChanges();
-    console.log('Change detection forced in ngAfterViewInit');
-  }
+  // ngAfterViewInit(): void {
+  //   // Call detectChanges in ngAfterViewInit
+  //   this.cd.detectChanges();
+  //   console.log('Change detection forced in ngAfterViewInit');
+  // }
 
   get firstName() {
     return this.updatesForm.get('firstName');

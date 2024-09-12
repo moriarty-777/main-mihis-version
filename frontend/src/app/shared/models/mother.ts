@@ -11,5 +11,6 @@ export interface Mother {
   purok: string;
   photoPath?: string;
   childrenCount?: any;
+  gender?: any;
   children: Child[]; // Array of Child objects
 }

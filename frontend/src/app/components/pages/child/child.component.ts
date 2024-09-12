@@ -59,7 +59,7 @@ export class ChildComponent {
     // Fetch filtered children from the backend
     this.childService.getAll(filters).subscribe((children) => {
       this.child = children;
-      console.log('Filtered children:', this.child);
+      // console.log('Filtered children:', this.child);
     });
   }
 

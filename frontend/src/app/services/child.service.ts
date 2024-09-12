@@ -19,23 +19,15 @@ export class ChildService {
   //   return this.http.get<Child[]>(CHILD_URL);
   // }
   // TODO:
-  // FIXME:
-  // getAll(filters?: any): Observable<Child[]> {
-  //   const params = new HttpParams({ fromObject: filters || {} });
-  //   return this.http.get<Child[]>(CHILD_URL, { params });
-  // }
+
   getAll(filters?: any): Observable<Child[]> {
     // Build query parameters from filters
     const params = new HttpParams({ fromObject: filters || {} });
 
     // Make GET request with query parameters to the backend
-    return this.http.get<Child[]>(CHILD_URL, { params }).pipe(
-      tap((children) =>
-        console.log('Fetched filtered children from backend:', children)
-      ) // Debugging
-    );
+    return this.http.get<Child[]>(CHILD_URL, { params });
   }
-  // FIXME:
+
   getAllChildrenBySearchTerm(searchTerm: string) {
     return this.getAll().pipe(
       map((children) =>
@@ -47,9 +39,32 @@ export class ChildService {
   }
 
   getChildrenById(id: string): Observable<Child> {
-    const url = `${CHILDREN_PROFILE_URL}${id}`;
-    console.log('Requesting child data from URL:', url); // Log the URL
+    // const url = `${CHILDREN_PROFILE_URL}${id}`;
     return this.http.get<Child>(CHILDREN_PROFILE_URL + id);
+  }
+
+  // Update
+  updateChild(id: string, childData: Partial<Child>): Observable<Child> {
+    return this.http.patch<Child>(`${CHILD_URL}/${id}`, childData).pipe(
+      tap({
+        next: (updatedChild) => {
+          this.toastrService.success('Child updated successfully!', '', {
+            timeOut: 2000, // 2000 milliseconds = 2 seconds
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-bottom-right',
+          });
+        },
+        error: (error) => {
+          this.toastrService.error('Failed to update Child');
+        },
+      })
+    );
+  }
+
+  // Delete
+  deleteChild(id: string): Observable<any> {
+    return this.http.delete(`${CHILD_URL}/${id}`);
   }
 
   // Original
@@ -223,29 +238,5 @@ export class ChildService {
     const nextWednesday = this.getNextWednesday(date);
     nextWednesday.setDate(nextWednesday.getDate() + 7); // Add 7 days (1 week)
     return nextWednesday;
-  }
-
-  // Update
-  updateChild(id: string, childData: Partial<Child>): Observable<Child> {
-    return this.http.patch<Child>(`${CHILD_URL}/${id}`, childData).pipe(
-      tap({
-        next: (updatedChild) => {
-          this.toastrService.success('Child updated successfully!', '', {
-            timeOut: 2000, // 2000 milliseconds = 2 seconds
-            closeButton: true,
-            progressBar: true,
-            positionClass: 'toast-bottom-right',
-          });
-        },
-        error: (error) => {
-          this.toastrService.error('Failed to update Child');
-        },
-      })
-    );
-  }
-
-  // Delete
-  deleteChild(id: string): Observable<any> {
-    return this.http.delete(`${CHILD_URL}/${id}`);
   }
 }
