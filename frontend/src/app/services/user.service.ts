@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { User } from '../shared/models/user';
 import { IUserLogin } from '../shared/models/iuserLogin';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -35,15 +35,27 @@ export class UserService {
     return this.http.get<User[]>(USER_URL);
   }
 
-  // getAllMotherBySearchTerm(searchTerm: string) {
+  // getAllUserBySearchTerm(searchTerm: string) {
   //   return this.getAll().pipe(
-  //     map((mothers) =>
-  //       mothers.filter((mother) =>
-  //         mother.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+  //     map((users) =>
+  //       users.filter((user) =>
+  //         user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
   //       )
   //     )
   //   );
   // }
+
+  getAllUserBySearchTerm(searchTerm: string) {
+    return this.getAll().pipe(
+      map((users) =>
+        users
+          .filter((user) => user.role && user.role.toLowerCase() !== 'admin') // Filter out admin users
+          .filter((user) =>
+            user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+      )
+    );
+  }
 
   getUserById(id: string): Observable<User> {
     return this.http.get<User>(USER_PROFILE_URL + id);

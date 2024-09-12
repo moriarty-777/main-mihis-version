@@ -23,23 +23,34 @@ export class UserComponent {
   private toastrService = inject(ToastrService);
   // private http = inject(HttpClient);
   private userService = inject(UserService);
+  roleFilter: string = '';
+  experienceFilter: string = '';
+
   constructor() {
-    /* this.userService.getAll().subscribe((users) => {
-      this.user = users;
-    }); */
+    this.loadUsers();
     // this.userService.getAll().subscribe((users) => {
-    //   // Filter out Admin users and calculate years and months of service
     //   this.user = users
     //     .filter((user) => user.role && user.role.toLowerCase() !== 'admin')
     //     .map((user) => ({
     //       ...user,
     //       yearsOfService: this.calculateYearsAndMonths(user.dateOfService),
-    //     }));
+    //       totalMonthsOfService: this.calculateTotalMonths(user.dateOfService),
+    //     }))
+    //     .sort((a, b) => {
+    //       if (a.role.toLowerCase() === 'midwife') return -1;
+    //       if (b.role.toLowerCase() === 'midwife') return 1;
+    //       return b.totalMonthsOfService - a.totalMonthsOfService;
+    //     });
     // });
+  }
 
+  // Load users with filters applied
+  loadUsers() {
     this.userService.getAll().subscribe((users) => {
       this.user = users
-        .filter((user) => user.role && user.role.toLowerCase() !== 'admin')
+        .filter((user) => user.role && user.role.toLowerCase() !== 'admin') // Hide admins
+        .filter((user) => this.applyRoleFilter(user)) // Apply role filter
+        .filter((user) => this.applyExperienceFilter(user)) // Apply experience filter
         .map((user) => ({
           ...user,
           yearsOfService: this.calculateYearsAndMonths(user.dateOfService),
@@ -51,6 +62,41 @@ export class UserComponent {
           return b.totalMonthsOfService - a.totalMonthsOfService;
         });
     });
+  }
+
+  // Filter by role
+  applyRoleFilter(user: User) {
+    if (!this.roleFilter) return true; // No role filter applied
+    return user.role.toLowerCase() === this.roleFilter.toLowerCase();
+  }
+
+  // Filter by years of experience
+  applyExperienceFilter(user: User) {
+    const totalMonths = this.calculateTotalMonths(user.dateOfService);
+    if (this.experienceFilter === 'lessThan1') {
+      return totalMonths < 12; // Less than 1 year
+    }
+    if (this.experienceFilter === 'lessThan5') {
+      return totalMonths > 12 && totalMonths < 120;
+    }
+    if (this.experienceFilter === 'moreThan10') {
+      return totalMonths > 120; // More than 10 years
+    }
+    return true; // No experience filter applied
+  }
+
+  // Handle role change event
+  onRoleChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.roleFilter = selectElement.value;
+    this.loadUsers(); // Reload users after applying the role filter
+  }
+
+  // Handle experience change event
+  onExperienceChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.experienceFilter = selectElement.value;
+    this.loadUsers(); // Reload users after applying the experience filter
   }
 
   calculateYearsAndMonths(dateOfService: string): string {
@@ -113,46 +159,6 @@ export class UserComponent {
         );
       }
     }, 500); // Allow the Toastr to appear before showing confirm dialog
-    // Show a confirmation Toastr
-    // const toastrRef = this.toastrService.warning(
-    //   'Are you sure you want to delete this user?',
-    //   'Delete Confirmation',
-    //   {
-    //     timeOut: 5000, // Automatically close after 5 seconds
-    //     tapToDismiss: true,
-    //     closeButton: true,
-    //     progressBar: true,
-    //     positionClass: 'toast-bottom-right',
-    //   }
-    // );
-
-    // // Perform the delete operation if the toastr is dismissed by timeout or close button
-    // toastrRef.onHidden.subscribe(() => {
-    //   if (confirm('Do you want to delete this user?')) {
-    //     // Proceed with deletion
-    //     this.userService.deleteUser(userId).subscribe(
-    //       (response) => {
-    //         this.toastrService.success('User deleted successfully!');
-    //         window.location.reload(); // Reload the page after successful deletion
-    //       },
-    //       (error) => {
-    //         this.toastrService.error('Error deleting user');
-    //       }
-    //     );
-    //   }
-    // }); adas asd asd ad asdsa TODO:
-
-    // if (confirm('Are you sure you want to delete this user?')) {
-    //   this.userService.deleteUser(userId).subscribe(
-    //     (response) => {
-    //       console.log('User deleted successfully!', response);
-    //       window.location.reload(); // Reload the page or refresh the list
-    //     },
-    //     (error) => {
-    //       console.error('Error deleting user', error);
-    //     }
-    //   );
-    // }
   } //
 
   openDialog(userId: string) {
@@ -161,10 +167,25 @@ export class UserComponent {
     });
   }
   // search(searchTerm: string) {
-  //   this.motherService
-  //     .getAllMotherBySearchTerm(searchTerm)
-  //     .subscribe((mothers) => {
-  //       this.mother = mothers;
-  //     });
+  //   this.userService.getAllUserBySearchTerm(searchTerm).subscribe((users) => {
+  //     this.user = users;
+  //   });
   // }
+
+  search(searchTerm: string) {
+    this.userService.getAllUserBySearchTerm(searchTerm).subscribe((users) => {
+      this.user = users
+        .filter((user) => user.role && user.role.toLowerCase() !== 'admin') // Apply the admin filter again if needed
+        .map((user) => ({
+          ...user,
+          yearsOfService: this.calculateYearsAndMonths(user.dateOfService),
+          totalMonthsOfService: this.calculateTotalMonths(user.dateOfService),
+        }))
+        .sort((a, b) => {
+          if (a.role.toLowerCase() === 'midwife') return -1;
+          if (b.role.toLowerCase() === 'midwife') return 1;
+          return b.totalMonthsOfService - a.totalMonthsOfService;
+        });
+    });
+  }
 }

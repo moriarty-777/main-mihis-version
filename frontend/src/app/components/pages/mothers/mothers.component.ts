@@ -22,11 +22,53 @@ export class MothersComponent {
   private motherService = inject(MotherService);
   private dialogRef = inject(MatDialog);
   private toastrService = inject(ToastrService);
+  purokFilter: string = '';
+  childrenCountFilter: string = '';
+  transientFilter: string = '';
 
   constructor() {
-    this.motherService.getAll().subscribe((mothers) => {
+    // this.motherService.getAll().subscribe((mothers) => {
+    //   this.mother = mothers;
+    // });
+
+    this.loadMothers();
+  }
+
+  loadMothers() {
+    const filters = {
+      purok: this.purokFilter,
+      childrenCount: this.childrenCountFilter,
+      isTransient: this.transientFilter,
+    };
+
+    this.motherService.getAll(filters).subscribe((mothers) => {
       this.mother = mothers;
     });
+  }
+
+  resetFilters() {
+    this.purokFilter = '';
+    this.childrenCountFilter = '';
+    this.transientFilter = '';
+    this.loadMothers(); // Reload all mothers without any filters
+  }
+  // Filter change methods
+  onPurokChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.purokFilter = selectElement.value;
+    this.loadMothers();
+  }
+
+  onChildrenCountChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.childrenCountFilter = selectElement.value;
+    this.loadMothers();
+  }
+
+  onTransientChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.transientFilter = selectElement.value;
+    this.loadMothers();
   }
 
   search(searchTerm: string) {

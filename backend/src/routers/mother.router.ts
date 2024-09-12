@@ -21,13 +21,41 @@ router.get(
   })
 );
 
+// router.get(
+//   "/",
+//   expressAsyncHandler(async (req, res) => {
+//     const mothers = await MotherModel.find().populate(
+//       "children",
+//       "firstName lastName"
+//     ); // get all the value from the database without parameter
+//     res.send(mothers);
+//   })
+// );
 router.get(
   "/",
   expressAsyncHandler(async (req, res) => {
-    const mothers = await MotherModel.find().populate(
+    const { purok, childrenCount, isTransient } = req.query;
+
+    // Build filter object dynamically based on query parameters
+    const filter: any = {};
+
+    if (purok) filter.purok = purok;
+    if (isTransient) filter.isTransient = isTransient === "true";
+
+    // Apply filtering by children count
+    if (childrenCount) {
+      if (childrenCount === "1") {
+        filter["children"] = { $size: 1 };
+      } else if (childrenCount === "2") {
+        filter["children"] = { $size: 2 };
+      }
+    }
+
+    const mothers = await MotherModel.find(filter).populate(
       "children",
       "firstName lastName"
-    ); // get all the value from the database without parameter
+    );
+
     res.send(mothers);
   })
 );

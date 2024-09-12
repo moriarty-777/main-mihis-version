@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { Mother } from '../shared/models/mother';
@@ -13,8 +13,13 @@ export class MotherService {
   private toastrService = inject(ToastrService);
   constructor() {}
 
-  getAll(): Observable<Mother[]> {
-    return this.http.get<Mother[]>(MOTHER_URL);
+  // getAll(): Observable<Mother[]> {
+  //   return this.http.get<Mother[]>(MOTHER_URL);
+  // }
+
+  getAll(filters?: any): Observable<Mother[]> {
+    const params = new HttpParams({ fromObject: filters || {} });
+    return this.http.get<Mother[]>(MOTHER_URL, { params });
   }
 
   getAllMotherBySearchTerm(searchTerm: string) {

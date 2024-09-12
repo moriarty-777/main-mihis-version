@@ -48,7 +48,7 @@
         <div class="user-statistics">
           <div class="usr-stat-graph">
             <div class="title-wrap">
-              <h2 class="stat-title">Mother Statistics</h2>
+              <h2 class="stat-title">User Statistics</h2>
             </div>
             <div class="the-graph"></div>
           </div>
@@ -56,24 +56,16 @@
             <table class="stat-table">
               <thead>
                 <tr>
-                  <th>Number of Children</th>
-                  <th>Barangay Residency Status</th>
+                  <th>Years of Experience</th>
+                  <th>Role</th>
                   <!-- <th>Number of Missed Vaccines</th>
                   <th>Number of Adverse Reaction</th> -->
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <!-- <td>{{ mother.childrenCount }}</td>
-                  <td>
-                    {{ mother.isTransient ? "Transient" : "Native Resident" }}
-                  </td> -->
-                  <!--<td>
-                    {{ getVaccinationPercentage(child) | number : "1.2-2" }}%
-                  </td>
-
-                  <td>{{ calculateMissedVaccines(child) }}</td>
-                  <td>{{ countAEFIOccurrences(child) }}</td> -->
+                  <td>{{ calculateYearsAndMonths(user.dateOfService) }}</td>
+                  <td>{{ user.role }}</td>
                 </tr>
               </tbody>
             </table>
