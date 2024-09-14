@@ -1,10 +1,10 @@
-import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Child } from '../shared/models/child';
-import { child } from '../../data';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
-import { CHILD_URL, CHILDREN_PROFILE_URL } from '../shared/constants/urls';
+import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { map, tap } from 'rxjs/operators';
+import { CHILD_URL, CHILDREN_PROFILE_URL } from '../shared/constants/urls';
 
 @Injectable({
   providedIn: 'root',
@@ -12,23 +12,22 @@ import { ToastrService } from 'ngx-toastr';
 export class ChildService {
   private http = inject(HttpClient);
   private toastrService = inject(ToastrService);
-  constructor() {}
 
-  // TODO:
-  // getAll(): Observable<Child[]> {
-  //   return this.http.get<Child[]>(CHILD_URL);
-  // }
-  // TODO:
-
-  getAll(filters?: any): Observable<Child[]> {
-    // Build query parameters from filters
-    const params = new HttpParams({ fromObject: filters || {} });
-
-    // Make GET request with query parameters to the backend
-    return this.http.get<Child[]>(CHILD_URL, { params });
+  // Function to get the token from local storage
+  private getToken(): string {
+    const user = JSON.parse(localStorage.getItem('User') || '{}');
+    return user?.token || '';
   }
 
-  getAllChildrenBySearchTerm(searchTerm: string) {
+  getAll(filters?: any): Observable<Child[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    const params = new HttpParams({ fromObject: filters || {} });
+    return this.http.get<Child[]>(CHILD_URL, { headers, params });
+  }
+
+  getAllChildrenBySearchTerm(searchTerm: string): Observable<Child[]> {
     return this.getAll().pipe(
       map((children) =>
         children.filter((child) =>
@@ -39,34 +38,41 @@ export class ChildService {
   }
 
   getChildrenById(id: string): Observable<Child> {
-    // const url = `${CHILDREN_PROFILE_URL}${id}`;
-    return this.http.get<Child>(CHILDREN_PROFILE_URL + id);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<Child>(CHILDREN_PROFILE_URL + id, { headers });
   }
 
-  // Update
   updateChild(id: string, childData: Partial<Child>): Observable<Child> {
-    return this.http.patch<Child>(`${CHILD_URL}/${id}`, childData).pipe(
-      tap({
-        next: (updatedChild) => {
-          this.toastrService.success('Child updated successfully!', '', {
-            timeOut: 2000, // 2000 milliseconds = 2 seconds
-            closeButton: true,
-            progressBar: true,
-            positionClass: 'toast-bottom-right',
-          });
-        },
-        error: (error) => {
-          this.toastrService.error('Failed to update Child');
-        },
-      })
-    );
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http
+      .patch<Child>(`${CHILD_URL}/${id}`, childData, { headers })
+      .pipe(
+        tap({
+          next: (updatedChild) => {
+            this.toastrService.success('Child updated successfully!', '', {
+              timeOut: 2000,
+              closeButton: true,
+              progressBar: true,
+              positionClass: 'toast-bottom-right',
+            });
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to update Child');
+          },
+        })
+      );
   }
 
-  // Delete
   deleteChild(id: string): Observable<any> {
-    return this.http.delete(`${CHILD_URL}/${id}`);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.delete(`${CHILD_URL}/${id}`, { headers });
   }
-
   // Original
   getExpectedVaccinationSchedule(birthdate: string) {
     const birthDateObj = new Date(birthdate);

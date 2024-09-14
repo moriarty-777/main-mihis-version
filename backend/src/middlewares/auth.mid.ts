@@ -1,48 +1,63 @@
-import { verify } from "jsonwebtoken";
+// import { verify } from "jsonwebtoken";
+// import { HTTP_UNAUTHORIZED } from "../constants/http_status";
+
+// export default (req: any, res: any, next: any) => {
+//   const token = req.headers.access_token as string;
+//   if (!token) return res.status(HTTP_UNAUTHORIZED).send();
+
+//   try {
+//     const decodedUser = verify(token, process.env.JWT_SECRET!); // check the token if it is valid
+//     req.user = decodedUser;
+//   } catch (error) {
+//     res.status(HTTP_UNAUTHORIZED).send();
+//   }
+
+//   return next();
+// };
+
+import { verify, JwtPayload } from "jsonwebtoken";
 import { HTTP_UNAUTHORIZED } from "../constants/http_status";
 
-export default (req: any, res: any, next: any) => {
-  const token = req.headers.access_token as string;
-  if (!token) return res.status(HTTP_UNAUTHORIZED).send();
-
-  try {
-    const decodedUser = verify(token, process.env.JWT_SECRET!); // check the token if it is valid
-    req.user = decodedUser;
-  } catch (error) {
-    res.status(HTTP_UNAUTHORIZED).send();
+export const authMiddleware = (req: any, res: any, next: any) => {
+  let token: string | undefined = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    token = req.headers.access_token as string;
   }
 
-  return next();
-};
+  if (!token) {
+    return res
+      .status(HTTP_UNAUTHORIZED)
+      .send({ message: "Access token missing. Unauthorized access." });
+  }
 
-// router.use(auth)
-// export default router
-// responsible for checking of the user when we do request on an API that is necessary for the user to be authenticated
+  try {
+    const decodedUser = verify(token, process.env.JWT_SECRET!);
 
-// Adding HTTP interceptor
-/*
-ng g interceptor auth
+    // Cast decodedUser to JwtPayload to access the `id` property
+    const userPayload = decodedUser as JwtPayload;
 
-ng g interceptor guards/auth
--> auth.interceptor.ts
-inject userService
-
-inside intercept function
-const user = this.userService.currentUser;
-
-if(user.token)
-{
-  request = request.clone({
-    setHeaders:{
-      access_token: user.token
+    // Ensure that the decoded token contains `id`, which is userId in your schema
+    if (userPayload && userPayload.id) {
+      req.user = userPayload; // Assign the decoded user object to `req.user`
+      next();
+    } else {
+      return res
+        .status(HTTP_UNAUTHORIZED)
+        .send({ message: "Invalid token. Unauthorized access." });
     }
-  })
-}
-
-providers: [
-  {provide: HTTP_INTERCEPTORS, useClass:AuthInterceptor, multi: true}
-]
-
-
-
-*/
+  } catch (error: any) {
+    if (error.name === "TokenExpiredError") {
+      return res
+        .status(HTTP_UNAUTHORIZED)
+        .send({ message: "Token expired. Please log in again." });
+    } else if (error.name === "JsonWebTokenError") {
+      return res
+        .status(HTTP_UNAUTHORIZED)
+        .send({ message: "Invalid token. Unauthorized access." });
+    } else {
+      return res
+        .status(HTTP_UNAUTHORIZED)
+        .send({ message: "Token verification failed. Unauthorized access." });
+    }
+  }
+};

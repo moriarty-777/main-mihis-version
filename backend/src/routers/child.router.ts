@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { child } from "../data";
 import expressAsyncHandler from "express-async-handler";
+import { loggerMiddleware } from "../middlewares/logger.mid";
 import { ChildModel } from "../models/child.model";
 import { MotherModel } from "../models/mother.model";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
+import { authMiddleware } from "../middlewares/auth.mid";
 const router = Router();
 
 // seed to db
@@ -52,6 +54,8 @@ const router = Router();
 // child.router.ts
 router.get(
   "/child",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const { gender, purok, nutritionalStatus, vaxStatus } = req.query; // Capture filters from query parameters
 
@@ -82,6 +86,8 @@ router.get(
 // FIXME:
 router.get(
   "/children-page/:id",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     // console.log("Fetching child by ID:", req.params.id); // Add log here
     const specificChild = await ChildModel.findById(req.params.id).populate(
@@ -101,6 +107,7 @@ router.get(
 // Delete
 router.delete(
   "/child/:id",
+  authMiddleware,
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
     const deletedChild = await ChildModel.findByIdAndDelete(childId);
@@ -116,6 +123,7 @@ router.delete(
 
 router.patch(
   "/child/:id",
+  authMiddleware,
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
     const updatedChild = await ChildModel.findByIdAndUpdate(childId, req.body, {

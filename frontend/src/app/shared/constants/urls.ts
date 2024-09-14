@@ -11,3 +11,6 @@ export const USER_PROFILE_URL = BASE_URL + '/api/users/';
 // export const MIDWIVES_URL = BASE_URL + '/api/users/midwives';
 export const MOTHER_URL = BASE_URL + '/api/mother';
 export const MOTHER_PROFILE_URL = BASE_URL + '/api/mother/';
+
+// Log
+export const AUDIT_LOGS_URL = BASE_URL + '/api/users/logs';

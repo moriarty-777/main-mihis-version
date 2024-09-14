@@ -1,9 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Mother } from '../shared/models/mother';
-import { MOTHER_PROFILE_URL, MOTHER_URL } from '../shared/constants/urls';
 import { ToastrService } from 'ngx-toastr';
+import { MOTHER_URL, MOTHER_PROFILE_URL } from '../shared/constants/urls';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,18 +12,21 @@ import { ToastrService } from 'ngx-toastr';
 export class MotherService {
   private http = inject(HttpClient);
   private toastrService = inject(ToastrService);
-  constructor() {}
 
-  // getAll(): Observable<Mother[]> {
-  //   return this.http.get<Mother[]>(MOTHER_URL);
-  // }
-
-  getAll(filters?: any): Observable<Mother[]> {
-    const params = new HttpParams({ fromObject: filters || {} });
-    return this.http.get<Mother[]>(MOTHER_URL, { params });
+  private getToken(): string {
+    const user = JSON.parse(localStorage.getItem('User') || '{}');
+    return user?.token || '';
   }
 
-  getAllMotherBySearchTerm(searchTerm: string) {
+  getAll(filters?: any): Observable<Mother[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    const params = new HttpParams({ fromObject: filters || {} });
+    return this.http.get<Mother[]>(MOTHER_URL, { headers, params });
+  }
+
+  getAllMotherBySearchTerm(searchTerm: string): Observable<Mother[]> {
     return this.getAll().pipe(
       map((mothers) =>
         mothers.filter((mother) =>
@@ -33,30 +37,35 @@ export class MotherService {
   }
 
   getMotherById(id: string): Observable<Mother> {
-    return this.http.get<Mother>(MOTHER_PROFILE_URL + id);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<Mother>(MOTHER_PROFILE_URL + id, { headers });
   }
 
-  // Update
   updateMother(id: string, motherdData: Partial<Mother>): Observable<Mother> {
-    return this.http.patch<Mother>(`${MOTHER_URL}/${id}`, motherdData).pipe(
-      tap({
-        next: (updatedMother) => {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http
+      .patch<Mother>(`${MOTHER_URL}/${id}`, motherdData, { headers })
+      .pipe(
+        map((updatedMother) => {
           this.toastrService.success('Mother updated successfully!', '', {
-            timeOut: 2000, // 2000 milliseconds = 2 seconds
+            timeOut: 2000,
             closeButton: true,
             progressBar: true,
             positionClass: 'toast-bottom-right',
           });
-        },
-        error: (error) => {
-          this.toastrService.error('Failed to update Mother');
-        },
-      })
-    );
+          return updatedMother;
+        })
+      );
   }
 
-  // Delete
   deleteMother(id: string): Observable<any> {
-    return this.http.delete(`${MOTHER_URL}/${id}`);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.delete(`${MOTHER_URL}/${id}`, { headers });
   }
 }

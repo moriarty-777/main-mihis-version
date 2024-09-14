@@ -2,7 +2,9 @@ import { Router } from "express";
 import { mother } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import { Mother, MotherModel } from "../models/mother.model";
+import { loggerMiddleware } from "../middlewares/logger.mid";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
+import { authMiddleware } from "../middlewares/auth.mid";
 
 const router = Router();
 
@@ -33,6 +35,8 @@ router.get(
 // );
 router.get(
   "/",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const { purok, childrenCount, isTransient } = req.query;
 
@@ -62,6 +66,8 @@ router.get(
 
 router.get(
   "/:id",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const specificMother = await MotherModel.findById(req.params.id).populate(
       "children",
@@ -85,6 +91,8 @@ router.get(
 
 router.delete(
   "/:id",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const motherId = req.params.id;
     const deletedMother = await MotherModel.findByIdAndDelete(motherId);
@@ -99,6 +107,8 @@ router.delete(
 
 router.patch(
   "/:id",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const motherId = req.params.id;
     const updatedMother = await MotherModel.findByIdAndUpdate(

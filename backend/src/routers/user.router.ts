@@ -3,8 +3,11 @@ import { users } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import { User, UserModel } from "../models/user.model";
+// import { loggerMiddleware } from "../middlewares/logger.mid";
 import { HTTP_BAD_REQUEST, HTTP_NOT_FOUND } from "../constants/http_status";
 import bcrypt from "bcryptjs";
+import { LogModel } from "../models/log.model";
+import { getLogHistory } from "../controller/admin.controller";
 
 const router = Router();
 
@@ -22,7 +25,7 @@ router.get(
     res.send("Seed is Done");
   })
 );
-
+router.get("/logs", getLogHistory);
 router.get(
   "/",
   expressAsyncHandler(async (req, res) => {
@@ -61,6 +64,16 @@ router.post(
     const user = await UserModel.findOne({ username });
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      //
+      const log = new LogModel({
+        userId: user.id,
+        username: user.username,
+        role: user.role,
+        action: "login",
+        timestamp: new Date(),
+      });
+      await log.save();
+      //
       res.send(generateTokenResponse(user));
     } else {
       res.status(HTTP_BAD_REQUEST).send("Username or password is invalid!");

@@ -1,18 +1,21 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../shared/models/user';
-import { IUserLogin } from '../shared/models/iuserLogin';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 import {
   USER_LOGIN_URL,
-  USER_PROFILE_URL,
   USER_SIGNUP_URL,
   USER_URL,
+  AUDIT_LOGS_URL,
+  USER_PROFILE_URL,
 } from '../shared/constants/urls';
-import { ToastrService } from 'ngx-toastr';
+import { tap, map } from 'rxjs/operators';
+import { IUserLogin } from '../shared/models/iuserLogin';
 import { IUserSignUp } from '../shared/models/iuserSignup';
 
 const USER_KEY = 'User';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,8 +26,14 @@ export class UserService {
     this.getUserFromLocalStorage()
   );
   public userObservable: Observable<User>;
+
   constructor() {
-    this.userObservable = this.userSubject.asObservable(); //Read only version to eposed outside the user service
+    this.userObservable = this.userSubject.asObservable();
+  }
+
+  private getToken(): string {
+    const user = JSON.parse(localStorage.getItem(USER_KEY) || '{}');
+    return user?.token || '';
   }
 
   public get currentUser(): User {
@@ -32,24 +41,24 @@ export class UserService {
   }
 
   getAll(): Observable<User[]> {
-    return this.http.get<User[]>(USER_URL);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<User[]>(USER_URL, { headers });
   }
 
-  // getAllUserBySearchTerm(searchTerm: string) {
-  //   return this.getAll().pipe(
-  //     map((users) =>
-  //       users.filter((user) =>
-  //         user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
-  //       )
-  //     )
-  //   );
-  // }
+  getLogs(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<any[]>(AUDIT_LOGS_URL, { headers });
+  }
 
-  getAllUserBySearchTerm(searchTerm: string) {
+  getAllUserBySearchTerm(searchTerm: string): Observable<User[]> {
     return this.getAll().pipe(
       map((users) =>
         users
-          .filter((user) => user.role && user.role.toLowerCase() !== 'admin') // Filter out admin users
+          .filter((user) => user.role && user.role.toLowerCase() !== 'admin')
           .filter((user) =>
             user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
           )
@@ -58,7 +67,10 @@ export class UserService {
   }
 
   getUserById(id: string): Observable<User> {
-    return this.http.get<User>(USER_PROFILE_URL + id);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<User>(USER_PROFILE_URL + id, { headers });
   }
 
   login(userLogin: IUserLogin): Observable<User> {
@@ -71,26 +83,14 @@ export class UserService {
             `Welcome to MIHIS ${user.firstName + ' ' + user.lastName}!`,
             'Login Successful'
           );
-          // if (user.token) {
-          //   this.setUserToLocalStorage(user);
-          //   this.userSubject.next(user);
-          //   this.toastrService.success(
-          //     `Welcome ${user.firstName + ' ' + user.lastName}!`,
-          //     'Login Successful'
-          //   );
-          // } else {
-          //   // Handle the case where the token is not set
-          //   this.toastrService.error('Token not received', 'Login Failed');
-          // }
         },
         error: (HttpErrorResponse) => {
           this.toastrService.error(HttpErrorResponse.error, 'Login Failed');
         },
       })
     );
-  } //
+  }
 
-  // register signup
   signup(userRegister: IUserSignUp): Observable<User> {
     return this.http.post<User>(USER_SIGNUP_URL, userRegister).pipe(
       tap({
@@ -98,8 +98,8 @@ export class UserService {
           this.setUserToLocalStorage(user);
           this.userSubject.next(user);
           this.toastrService.success(
-            `Welcome to the MIHIS ${user.firstName}`,
-            'Signup Successfule!'
+            `Welcome to MIHIS ${user.firstName}`,
+            'Signup Successful!'
           );
         },
         error: (HttpErrorResponse) => {
@@ -117,9 +117,6 @@ export class UserService {
 
   private setUserToLocalStorage(user: User) {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
-    // if (user.token) {
-    //   localStorage.setItem(USER_KEY, JSON.stringify(user));
-    // }
   }
 
   private getUserFromLocalStorage(): User {
@@ -129,24 +126,32 @@ export class UserService {
   }
 
   updateUser(id: string, userData: Partial<User>): Observable<User> {
-    return this.http.patch<User>(`${USER_URL}/${id}`, userData).pipe(
-      tap({
-        next: (updatedUser) => {
-          this.toastrService.success('User updated successfully!', '', {
-            timeOut: 2000, // 2000 milliseconds = 2 seconds
-            closeButton: true,
-            progressBar: true,
-            positionClass: 'toast-bottom-right',
-          });
-        },
-        error: (error) => {
-          this.toastrService.error('Failed to update user');
-        },
-      })
-    );
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http
+      .patch<User>(`${USER_URL}/${id}`, userData, { headers })
+      .pipe(
+        tap({
+          next: (updatedUser) => {
+            this.toastrService.success('User updated successfully!', '', {
+              timeOut: 2000,
+              closeButton: true,
+              progressBar: true,
+              positionClass: 'toast-bottom-right',
+            });
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to update user');
+          },
+        })
+      );
   }
 
   deleteUser(userId: string): Observable<any> {
-    return this.http.delete(`${USER_URL}/${userId}`);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.delete(`${USER_URL}/${userId}`, { headers });
   }
-} //
+}

@@ -1,0 +1,25 @@
+<div class="logs">
+  <h2>User Activity Logs</h2>
+  <div class="table-group">
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Role</th>
+          <th>Action</th>
+          <th>Timestamp</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs">
+          <td>{{ log.username }}</td>
+          <td>{{ log.role }}</td>
+          <td>{{ log.action }}</td>
+          <td>{{ log.timestamp | date : "short" }}</td>
+          <td>{{ log.ipAddress || "N/A" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
