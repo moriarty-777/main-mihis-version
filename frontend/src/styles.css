@@ -488,3 +488,10 @@ body {
   margin-bottom: 16px;
 }
 /* #endregion popup */
+
+/* #region Mat Icon Outlined */
+.mat-icon-outlined {
+  -webkit-text-stroke: 1px black;
+  color: transparent;
+}
+/* #endregion Mat Icon Outlined */

@@ -1,2 +1,69 @@
 <!-- <admin-logs></admin-logs> -->
-<div style="margin-top: 60px">Hello world!</div>
+<div style="margin-top: 60px">
+  <div class="admin-dashboard">
+    <div class="side-panel">
+      <div class="panel-title main">
+        <h2>User Panel</h2>
+      </div>
+      <ul class="panel-links">
+        <li>
+          <a routerLink="/">
+            <span>
+              <mat-icon
+                fontIcon="dashboard"
+                class="mat-icon-outlined"
+              ></mat-icon>
+            </span>
+            <span class="panel-data">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/">
+            <span>
+              <mat-icon
+                fontIcon="pie_chart"
+                class="mat-icon-outlined"
+              ></mat-icon>
+            </span>
+            <span class="panel-data">Analytics</span></a
+          >
+        </li>
+        <li>
+          <a routerLink="healthworker-schedule">
+            <span>
+              <mat-icon
+                fontIcon="schedule"
+                class="mat-icon-outlined"
+              ></mat-icon>
+            </span>
+            <span class="panel-data">Health Worker Schedule</span></a
+          >
+        </li>
+        <li>
+          <a routerLink="audit-trail">
+            <span>
+              <mat-icon
+                fontIcon="assignment"
+                class="mat-icon-outlined"
+              ></mat-icon>
+            </span>
+            <span class="panel-data">Audit Trail</span></a
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="main-panel">
+      <div class="panel-header">
+        <div class="panel-title sub">
+          <h2>
+            Welcome {{ user.firstName }}!
+            <!-- Username -->
+          </h2>
+        </div>
+      </div>
+      <div class="panel-body">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

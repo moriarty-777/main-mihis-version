@@ -109,6 +109,33 @@ export class UserService {
     );
   }
 
+  // signup(userRegister: IUserSignUp): Observable<User> {
+  //   return this.http.post<User>(USER_SIGNUP_URL, userRegister).pipe(
+  //     tap({
+  //       next: (user) => {
+  //         this.setUserToLocalStorage(user);
+  //         this.userSubject.next(user);
+
+  //         if (!user.role || user.role === 'pending') {
+  //           // Display a message that the user needs to wait for admin approval
+  //           this.toastrService.info(
+  //             'You are a new user. Please wait for an admin to assign a role.',
+  //             'Role Pending'
+  //           );
+  //         } else {
+  //           this.toastrService.success(
+  //             `Welcome to MIHIS ${user.firstName}`,
+  //             'Signup Successful!'
+  //           );
+  //         }
+  //       },
+  //       error: (HttpErrorResponse) => {
+  //         this.toastrService.error(HttpErrorResponse.error, 'Signup Failed');
+  //       },
+  //     })
+  //   );
+  // }
+
   logout() {
     this.userSubject.next(new User());
     localStorage.removeItem(USER_KEY);

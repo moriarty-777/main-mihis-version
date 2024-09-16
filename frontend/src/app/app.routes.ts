@@ -13,6 +13,8 @@ import { UserComponent } from './components/pages/user/user.component';
 import { authGuard } from './auth/guards/auth.guard';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { roleGuard } from './auth/guards/role.guard';
+import { AdminLogsComponent } from './components/pages/admin-logs/admin-logs.component';
+import { ScheduleWorkerComponent } from './components/pages/schedule-worker/schedule-worker.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -80,6 +82,16 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     title: 'Dashboard Page',
+    children: [
+      {
+        path: 'audit-trail',
+        component: AdminLogsComponent,
+      },
+      {
+        path: 'healthworker-schedule',
+        component: ScheduleWorkerComponent,
+      },
+    ],
     canActivate: [authGuard, roleGuard],
   },
 ];

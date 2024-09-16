@@ -12,6 +12,7 @@ import { UsernameValidators } from '../../../shared/validators/username.validato
 import { PasswordValidators } from '../../../shared/validators/password.validators';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IUserSignUp } from '../../../shared/models/iuserSignup';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'signup',
@@ -30,6 +31,8 @@ export class SignupComponent implements OnInit {
   private userService = inject(UserService);
   private ActivatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
+
+  private toastrService = inject(ToastrService);
 
   constructor() {}
 
@@ -134,4 +137,43 @@ export class SignupComponent implements OnInit {
       this.router.navigateByUrl(this.returnUrl);
     });
   }
+  // submit() {
+  //   this.isSubmitted = true;
+
+  //   if (this.signUpForm.invalid) {
+  //     this.signUpForm.markAllAsTouched();
+  //     return;
+  //   }
+
+  //   const formValue = this.signUpForm.value;
+  //   const user: IUserSignUp = {
+  //     firstName: formValue.firstName,
+  //     lastName: formValue.lastName,
+  //     username: formValue.username,
+  //     password: formValue.password,
+  //     confirmPassword: formValue.confirmPassword,
+  //   };
+
+  //   this.userService.signup(user).subscribe({
+  //     next: (user) => {
+  //       if (!user.role || user.role === 'pending') {
+  //         // Notify the user and log them out or navigate to a waiting page
+  //         this.toastrService.info(
+  //           'Please wait for an admin to assign a role.',
+  //           'Role Pending'
+  //         );
+
+  //         // Clear user data and navigate them to a "waiting" page or logout
+  //         this.userService.logout(); // Log them out
+  //         this.router.navigateByUrl('/role-pending'); // Optionally redirect to a page explaining the situation
+  //       } else {
+  //         this.router.navigateByUrl(this.returnUrl);
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Signup failed:', error);
+  //       this.toastrService.error('Signup failed. Please try again.');
+  //     },
+  //   });
+  // }
 }

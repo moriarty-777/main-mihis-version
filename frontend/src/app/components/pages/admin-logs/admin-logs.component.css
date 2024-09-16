@@ -136,9 +136,9 @@ a:hover {
 .action .delete:hover {
   background: #b51233;
 }
-.logs {
+/* .logs {
   margin-top: 96px;
-}
+} */
 
 .stat-title {
   text-transform: uppercase;

@@ -31,15 +31,21 @@ export const authMiddleware = (req: any, res: any, next: any) => {
   }
 
   try {
-    const decodedUser = verify(token, process.env.JWT_SECRET!);
+    // Decode the token using JWT and cast the result to `JwtPayload` to access its properties
+    const decodedUser = verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
-    // Cast decodedUser to JwtPayload to access the `id` property
-    const userPayload = decodedUser as JwtPayload;
+    // Ensure that the decoded token contains `id` (user ID) and role
+    if (decodedUser && decodedUser.id) {
+      req.user = decodedUser;
 
-    // Ensure that the decoded token contains `id`, which is userId in your schema
-    if (userPayload && userPayload.id) {
-      req.user = userPayload; // Assign the decoded user object to `req.user`
-      next();
+      // Check if user has a valid role (e.g., admin, midwife, bhw). Block the request if the role is not assigned.
+      if (!decodedUser.role || decodedUser.role === "pending") {
+        return res
+          .status(HTTP_UNAUTHORIZED)
+          .send({ message: "User role not assigned. Contact admin." });
+      }
+
+      next(); // Continue to the next middleware or route handler
     } else {
       return res
         .status(HTTP_UNAUTHORIZED)
