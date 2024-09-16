@@ -93,18 +93,56 @@ export const loggerMiddleware = async (req: any, res: any, next: any) => {
 
     if (user && user.id) {
       const action = req.method + " " + req.originalUrl; // Example: 'POST /api/child'
+      // FIXME:
+      // Define action messages based on HTTP methods
+      let actionMessage = "";
 
-      const log = new LogModel({
-        userId: user.id, // Use the `id` from the authenticated user
-        username: user.username,
-        role: user.role,
-        action: action,
-        timestamp: new Date(),
-        ipAddress: req.ip,
-      });
+      switch (req.method) {
+        case "POST":
+          actionMessage = `${user.firstName} ${user.lastName} added a new record`;
+          break;
+        case "PATCH":
+          actionMessage = `${user.firstName} ${user.lastName} updated a record`;
+          break;
+        case "DELETE":
+          actionMessage = `${user.firstName} ${user.lastName} deleted a record`;
+          break;
+        default:
+          actionMessage = `${user.firstName} ${user.lastName} performed an action`;
+      }
 
-      await log.save();
-      console.log("Log saved successfully:", log);
+      if (req.originalUrl.includes("/child")) {
+        actionMessage += " for child";
+      } else if (req.originalUrl.includes("/mother")) {
+        actionMessage += " for mother";
+      }
+
+      // Log to the database (optional, based on whether you want to log it)
+      // TODO: Disable Logging to save database space
+      // const log = new LogModel({
+      //   userId: user.id,
+      //   username: user.username,
+      //   role: user.role,
+      //   action: actionMessage,
+      //   timestamp: new Date(),
+      //   ipAddress: req.ip,
+      // });
+
+      // await log.save();
+      // TODO: Disable Logging to save database space
+      console.log("Log saved successfully:", actionMessage);
+      // FIXME:
+      // const log = new LogModel({
+      //   userId: user.id, // Use the `id` from the authenticated user
+      //   username: user.username,
+      //   role: user.role,
+      //   action: action,
+      //   timestamp: new Date(),
+      //   ipAddress: req.ip,
+      // });
+
+      // await log.save();
+      // console.log("Log saved successfully:", log);
     } else {
       console.log("No user information available, skipping logging.");
     }

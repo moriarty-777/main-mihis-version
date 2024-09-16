@@ -120,6 +120,8 @@ const generateTokenResponse = (user: any) => {
       id: user.id,
       username: user.username,
       role: user.role,
+      firstName: user.firstName, // Add firstName
+      lastName: user.lastName,
     },
     process.env.JWT_SECRET!,
     {
