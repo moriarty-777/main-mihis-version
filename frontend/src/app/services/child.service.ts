@@ -4,7 +4,11 @@ import { Child } from '../shared/models/child';
 import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { map, tap } from 'rxjs/operators';
-import { CHILD_URL, CHILDREN_PROFILE_URL } from '../shared/constants/urls';
+import {
+  CHILD_URL,
+  CHILD_VAX_SUMMARY_URL,
+  CHILDREN_PROFILE_URL,
+} from '../shared/constants/urls';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +29,10 @@ export class ChildService {
     });
     const params = new HttpParams({ fromObject: filters || {} });
     return this.http.get<Child[]>(CHILD_URL, { headers, params });
+  }
+
+  getVaccinationSummary(): Observable<any> {
+    return this.http.get(CHILD_VAX_SUMMARY_URL);
   }
 
   getAllChildrenBySearchTerm(searchTerm: string): Observable<Child[]> {

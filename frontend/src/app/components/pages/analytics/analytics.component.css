@@ -1,0 +1,26 @@
+.analytics-container {
+  margin: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: start;
+}
+
+.analytics-container > * {
+  flex: 1;
+}
+
+.chhart {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.analytics-item {
+  max-width: 450px;
+  border-radius: 8px;
+  background: #f2f2f2;
+  box-shadow: 6px 5px 5px #b2b2b2, 5px 5px 5px #fcfcfc;
+}
+.analytics-item canvas {
+  padding: 20px;
+}

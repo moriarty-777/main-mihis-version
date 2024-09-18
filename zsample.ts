@@ -209,3 +209,44 @@ export const mother: any[] = [
     children: ["66ce8d2718d2e9429cebaf7e"],
   },
 ];
+
+export const loggerMiddleware = async (req: any, res: any, next: any) => {
+  try {
+    const user = req.user; // Ensure req.user is populated by authMiddleware
+
+    if (user && user.id) {
+      const action = req.method + " " + req.originalUrl; // Example: 'POST /api/child'
+      // FIXME:
+
+      let actionMessage = "";
+
+      switch (req.method) {
+        case "POST":
+          actionMessage = `${user.firstName} ${user.lastName} added a new record`;
+          break;
+        case "PATCH":
+          actionMessage = `${user.firstName} ${user.lastName} updated a record`;
+          break;
+        case "DELETE":
+          actionMessage = `${user.firstName} ${user.lastName} deleted a record`;
+          break;
+        default:
+          actionMessage = `${user.firstName} ${user.lastName} performed an action`;
+      }
+
+      if (req.originalUrl.includes("/child")) {
+        actionMessage += " for child";
+      } else if (req.originalUrl.includes("/mother")) {
+        actionMessage += " for mother";
+      }
+      console.log("Log saved successfully:", actionMessage);
+    } else {
+      console.log("No user information available, skipping logging.");
+    }
+
+    next(); // Pass control to the next middleware
+  } catch (error) {
+    console.error("Error in loggerMiddleware:", error);
+    next(); // Continue even if logging fails
+  }
+};

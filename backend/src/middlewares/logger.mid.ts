@@ -95,20 +95,20 @@ export const loggerMiddleware = async (req: any, res: any, next: any) => {
       const action = req.method + " " + req.originalUrl; // Example: 'POST /api/child'
       // FIXME:
       // Define action messages based on HTTP methods
-      let actionMessage = "";
+      let actionMessage = `${user.firstName} ${user.lastName} `;
 
       switch (req.method) {
         case "POST":
-          actionMessage = `${user.firstName} ${user.lastName} added a new record`;
+          actionMessage += `added a new record`;
           break;
         case "PATCH":
-          actionMessage = `${user.firstName} ${user.lastName} updated a record`;
+          actionMessage += `updated a record`;
           break;
         case "DELETE":
-          actionMessage = `${user.firstName} ${user.lastName} deleted a record`;
+          actionMessage += `deleted a record`;
           break;
         default:
-          actionMessage = `${user.firstName} ${user.lastName} performed an action`;
+          actionMessage += `performed an action`;
       }
 
       if (req.originalUrl.includes("/child")) {
@@ -130,6 +130,7 @@ export const loggerMiddleware = async (req: any, res: any, next: any) => {
 
       // await log.save();
       // TODO: Disable Logging to save database space
+      actionMessage += ` at URL: ${req.originalUrl}`;
       console.log("Log saved successfully:", actionMessage);
       // FIXME:
       // const log = new LogModel({

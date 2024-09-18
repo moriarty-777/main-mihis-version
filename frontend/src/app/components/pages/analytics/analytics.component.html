@@ -1,0 +1,25 @@
+<div class="analytics-container">
+  <!-- <canvas baseChart [type]="'bar'" [data]="data"></canvas> -->
+
+  <div class="analytics-item">
+    <charts-gender
+      [maleCount]="maleCount"
+      [femaleCount]="femaleCount"
+    ></charts-gender>
+  </div>
+
+  <div class="analytics-item">
+    <charts-purok
+      [purokLabels]="purokLabels"
+      [purokData]="purokData"
+    ></charts-purok>
+  </div>
+
+  <div class="analytics-item">
+    <charts-complete-immunization
+      [fullyVaccinatedCount]="fullyVaccinatedCount"
+      [partiallyVaccinatedCount]="partiallyVaccinatedCount"
+      [notVaccinatedCount]="notVaccinatedCount"
+    ></charts-complete-immunization>
+  </div>
+</div>

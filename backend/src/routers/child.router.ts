@@ -104,10 +104,45 @@ router.get(
   })
 );
 
+// Get Vaccination Data Fully Partially Not Vaccinated
+router.get(
+  "/child/vaccination-summary",
+
+  expressAsyncHandler(async (req, res) => {
+    const fullyVaccinatedCount = await ChildModel.countDocuments({
+      isFullyVaccinated: true,
+    });
+
+    const partiallyVaccinatedCount = await ChildModel.countDocuments({
+      isFullyVaccinated: false,
+      vaccinations: { $exists: true, $not: { $size: 0 } }, // Has some vaccinations
+    });
+
+    const notVaccinatedCount = await ChildModel.countDocuments({
+      vaccinations: { $size: 0 }, // No vaccinations
+    });
+
+    console.log(
+      fullyVaccinatedCount,
+      "pv",
+      partiallyVaccinatedCount,
+      "nv",
+      notVaccinatedCount
+    );
+
+    res.json({
+      fullyVaccinatedCount,
+      partiallyVaccinatedCount,
+      notVaccinatedCount,
+    });
+  })
+);
+
 // Delete
 router.delete(
   "/child/:id",
   authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
     const deletedChild = await ChildModel.findByIdAndDelete(childId);
@@ -124,6 +159,7 @@ router.delete(
 router.patch(
   "/child/:id",
   authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
     const updatedChild = await ChildModel.findByIdAndUpdate(childId, req.body, {

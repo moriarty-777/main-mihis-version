@@ -15,6 +15,7 @@ import { DashboardComponent } from './components/pages/dashboard/dashboard.compo
 import { roleGuard } from './auth/guards/role.guard';
 import { AdminLogsComponent } from './components/pages/admin-logs/admin-logs.component';
 import { ScheduleWorkerComponent } from './components/pages/schedule-worker/schedule-worker.component';
+import { AnalyticsComponent } from './components/pages/analytics/analytics.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -90,6 +91,10 @@ export const routes: Routes = [
       {
         path: 'healthworker-schedule',
         component: ScheduleWorkerComponent,
+      },
+      {
+        path: 'analytics',
+        component: AnalyticsComponent,
       },
     ],
     canActivate: [authGuard, roleGuard],
