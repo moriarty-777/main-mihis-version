@@ -1,21 +1,18 @@
 <div class="analytics-container">
   <!-- <canvas baseChart [type]="'bar'" [data]="data"></canvas> -->
-
-  <div class="analytics-item">
+  <div class="analytics-item ai-gender">
     <charts-gender
       [maleCount]="maleCount"
       [femaleCount]="femaleCount"
     ></charts-gender>
   </div>
-
-  <div class="analytics-item">
+  <div class="analytics-item ai-purok">
     <charts-purok
       [purokLabels]="purokLabels"
       [purokData]="purokData"
     ></charts-purok>
   </div>
-
-  <div class="analytics-item">
+  <div class="analytics-item ai-complete-immunization">
     <charts-complete-immunization
       [fullyVaccinatedCount]="fullyVaccinatedCount"
       [partiallyVaccinatedCount]="partiallyVaccinatedCount"

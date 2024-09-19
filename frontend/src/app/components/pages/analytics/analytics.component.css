@@ -1,13 +1,28 @@
 .analytics-container {
   margin: 20px;
-  display: flex;
+  display: grid;
   gap: 20px;
-  align-items: start;
+  grid-template-columns: repeat(3, 1fr);
 }
 
-.analytics-container > * {
-  flex: 1;
+.ai-gender {
+  grid-column: 1/2;
+  grid-row: 1/2;
 }
+
+.ai-purok {
+  grid-column: 1/2;
+  grid-row: 2/3;
+}
+
+.ai-complete-immunization {
+  grid-column: 2/4;
+  grid-row: 1/2;
+}
+
+/* .analytics-container > * {
+  flex: 1;
+} */
 
 .chhart {
   display: flex;
@@ -16,7 +31,6 @@
 }
 
 .analytics-item {
-  max-width: 450px;
   border-radius: 8px;
   background: #f2f2f2;
   box-shadow: 6px 5px 5px #b2b2b2, 5px 5px 5px #fcfcfc;

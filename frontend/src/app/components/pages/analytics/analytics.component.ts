@@ -57,10 +57,16 @@ export class AnalyticsComponent {
           purokCountMap[purok] = 1;
         }
       });
-
       // Extract labels and data for the Purok chart
-      this.purokLabels = Object.keys(purokCountMap); // Labels: Purok 1, Purok 2, etc.
-      this.purokData = Object.values(purokCountMap); // Data: [number of children in each purok]
+      this.purokLabels = Object.keys(purokCountMap) // Labels: Purok 1, Purok 2, etc.
+        .sort((a, b) => {
+          // Extract numerical parts and sort numerically
+          const numA = parseInt(a.replace('Purok ', ''));
+          const numB = parseInt(b.replace('Purok ', ''));
+          return numA - numB;
+        });
+
+      this.purokData = this.purokLabels.map((label) => purokCountMap[label]);
 
       console.log('Purok Labels:', this.purokLabels); // Debugging
       console.log('Purok Data:', this.purokData); // Debugging
@@ -103,23 +109,23 @@ export class AnalyticsComponent {
   //   ],
   // };
 
-  getSubs() {
-    return [100, 200, 300, 250, 500, 450, 150, 200, 550, 350, 200, 300];
-  }
-  getWatchTime() {
-    return [100, 150, 120, 250, 230, 450, 150, 210, 220, 140, 200, 100];
-  }
+  // getSubs() {
+  //   return [100, 200, 300, 250, 500, 450, 150, 200, 550, 350, 200, 300];
+  // }
+  // getWatchTime() {
+  //   return [100, 150, 120, 250, 230, 450, 150, 210, 220, 140, 200, 100];
+  // }
 
-  // Get headers
-  getTotalSubs() {
-    let sum = 0;
-    this.getSubs().forEach((v) => (sum += v));
-    return sum;
-  }
+  // // Get headers
+  // getTotalSubs() {
+  //   let sum = 0;
+  //   this.getSubs().forEach((v) => (sum += v));
+  //   return sum;
+  // }
 
-  getTotalWatchTime() {
-    let sum = 0;
-    this.getWatchTime().forEach((v) => (sum += v));
-    return sum;
-  }
+  // getTotalWatchTime() {
+  //   let sum = 0;
+  //   this.getWatchTime().forEach((v) => (sum += v));
+  //   return sum;
+  // }
 }

@@ -1,11 +1,12 @@
 import { Chart, ChartData, ChartOptions } from 'chart.js';
 import { Component, Input, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'charts-purok',
   standalone: true,
-  imports: [BaseChartDirective],
+  imports: [BaseChartDirective, CommonModule],
   templateUrl: './charts-purok.component.html',
   styleUrl: './charts-purok.component.css',
 })
