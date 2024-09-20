@@ -197,3 +197,43 @@ export default router;
 //     });
 //   })
 // );
+
+// update bhw
+// router.put(
+//   "/update-bhw-id",
+//   expressAsyncHandler(async (req, res) => {
+//     // Mapping of old and new bhwIds
+//     const updates = [
+//       {
+//         oldBhwId: "66cc86cfcec65103d4abdfe4",
+//         newBhwId: "66ec1a5cc96da2bdd388b410",
+//       },
+//       {
+//         oldBhwId: "66cc86cfcec65103d4abdfe6",
+//         newBhwId: "66ec1ff1ce1b7ec7340eec63",
+//       },
+//       {
+//         oldBhwId: "66cc86cfcec65103d4abdfe7",
+//         newBhwId: "66ec242da635b2a3664ca66b",
+//       },
+//     ];
+
+//     // Loop through each update pair and apply the update
+//     for (const update of updates) {
+//       const result = await ChildModel.updateMany(
+//         { "vaccinations.bhwId": update.oldBhwId }, // Filter to match old bhwId
+//         { $set: { "vaccinations.$[elem].bhwId": update.newBhwId } }, // Update to new bhwId
+//         { arrayFilters: [{ "elem.bhwId": update.oldBhwId }] } // Apply to specific vaccination element
+//       );
+
+//       console.log(
+//         `Successfully updated ${result.modifiedCount} records for bhwId ${update.oldBhwId}`
+//       );
+//     }
+
+//     // Return the result of the update
+//     res.send({
+//       message: "Successfully updated child records with new bhwIds",
+//     });
+//   })
+// );

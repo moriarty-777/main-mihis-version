@@ -37,6 +37,7 @@ export class PopupUserComponent {
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         username: user.username || '',
+        role: user.role,
         dateOfService: formattedDate || '',
         photoPath: user.photoPath || 'assets/img/default-user-profile.jpg',
         gender: user.gender || '',
@@ -52,6 +53,7 @@ export class PopupUserComponent {
           '',
           [Validators.required, UsernameValidators.isEmailOrPhone],
         ],
+        role: ['', [Validators.required]],
         dateOfService: ['', [Validators.required]],
         photoPath: ['', [Validators.required]],
         gender: ['', [Validators.required]],
@@ -87,6 +89,10 @@ export class PopupUserComponent {
 
   get dateOfService() {
     return this.updateForm.get('dateOfService');
+  }
+
+  get role() {
+    return this.updateForm.get('role');
   }
 
   get photoPath() {

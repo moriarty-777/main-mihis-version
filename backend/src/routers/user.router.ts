@@ -8,6 +8,8 @@ import { HTTP_BAD_REQUEST, HTTP_NOT_FOUND } from "../constants/http_status";
 import bcrypt from "bcryptjs";
 import { LogModel } from "../models/log.model";
 import { getLogHistory } from "../controller/admin.controller";
+import { authMiddleware } from "../middlewares/auth.mid";
+import { loggerMiddleware } from "../middlewares/logger.mid";
 
 const router = Router();
 
@@ -104,6 +106,7 @@ router.post(
       lastName,
       username: username.toLowerCase(),
       password: encryptedPassword,
+      role: "pending", // Default role, change as needed
     }; // create new user
 
     //save to the database
@@ -147,6 +150,8 @@ const generateTokenResponse = (user: any) => {
 // Update
 router.patch(
   "/:id",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const userId = req.params.id;
     const updatedData = req.body;
@@ -167,6 +172,8 @@ router.patch(
 // Delete User
 router.delete(
   "/:id",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const userId = req.params.id;
     const deletedUser = await UserModel.findByIdAndDelete(userId);

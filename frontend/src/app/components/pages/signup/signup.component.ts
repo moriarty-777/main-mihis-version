@@ -133,8 +133,36 @@ export class SignupComponent implements OnInit {
       confirmPassword: formValue.confirmPassword,
     };
 
-    this.userService.signup(user).subscribe((_) => {
-      this.router.navigateByUrl(this.returnUrl);
+    // this.userService.signup(user).subscribe((_) => {
+    //   this.router.navigateByUrl(this.returnUrl);
+    // });
+    this.userService.signup(user).subscribe({
+      next: (user) => {
+        if (!user.role || user.role === 'pending') {
+          // Notify the user and log them out or navigate to a waiting page
+          this.toastrService.info(
+            'Please wait for an admin to assign a role.',
+            'Role Pending',
+            {
+              timeOut: 3000, // Notification will disappear after 3 seconds
+              closeButton: true, // Optional: Add a close button if needed
+              progressBar: true, // Optional: Show a progress bar
+            }
+          );
+
+          // Wait for 3 seconds before logging the user out and redirecting
+          setTimeout(() => {
+            this.userService.logout(); // Log them out
+            // this.router.navigateByUrl('/role-pending'); // Optionally redirect to a page explaining the situation
+          }, 3000); // 3-second delay
+        } else {
+          this.router.navigateByUrl(this.returnUrl);
+        }
+      },
+      error: (error) => {
+        console.error('Signup failed:', error);
+        this.toastrService.error('Signup failed. Please try again.');
+      },
     });
   }
   // submit() {

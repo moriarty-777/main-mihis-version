@@ -97,10 +97,19 @@ export class UserService {
         next: (user) => {
           this.setUserToLocalStorage(user);
           this.userSubject.next(user);
-          this.toastrService.success(
-            `Welcome to MIHIS ${user.firstName}`,
-            'Signup Successful!'
-          );
+
+          if (!user.role || user.role === 'pending') {
+            // Display a message that the user needs to wait for admin approval
+            this.toastrService.info(
+              'You are a new user. Please wait for an admin to assign a role.',
+              'Role Pending'
+            );
+          } else {
+            this.toastrService.success(
+              `Welcome to MIHIS ${user.firstName}`,
+              'Signup Successful!'
+            );
+          }
         },
         error: (HttpErrorResponse) => {
           this.toastrService.error(HttpErrorResponse.error, 'Signup Failed');

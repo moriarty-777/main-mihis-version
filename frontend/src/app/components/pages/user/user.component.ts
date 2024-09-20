@@ -48,7 +48,12 @@ export class UserComponent {
   loadUsers() {
     this.userService.getAll().subscribe((users) => {
       this.user = users
-        .filter((user) => user.role && user.role.toLowerCase() !== 'admin') // Hide admins
+        .filter(
+          (user) =>
+            user.role &&
+            (user.role.toLowerCase() !== 'admin' ||
+              user.role.toLowerCase() === 'pending')
+        ) // Hide admins
         .filter((user) => this.applyRoleFilter(user)) // Apply role filter
         .filter((user) => this.applyExperienceFilter(user)) // Apply experience filter
         .map((user) => ({

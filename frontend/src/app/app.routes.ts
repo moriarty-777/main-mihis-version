@@ -16,6 +16,7 @@ import { roleGuard } from './auth/guards/role.guard';
 import { AdminLogsComponent } from './components/pages/admin-logs/admin-logs.component';
 import { ScheduleWorkerComponent } from './components/pages/schedule-worker/schedule-worker.component';
 import { AnalyticsComponent } from './components/pages/analytics/analytics.component';
+import { RolePendingComponent } from './components/partials/role-pending/role-pending.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -37,6 +38,11 @@ export const routes: Routes = [
   {
     path: 'donate',
     component: DonateComponent,
+    title: 'Donate Page',
+  },
+  {
+    path: 'role-pending',
+    component: RolePendingComponent,
     title: 'Donate Page',
   },
 

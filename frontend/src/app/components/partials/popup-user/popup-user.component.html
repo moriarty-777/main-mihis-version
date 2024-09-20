@@ -80,6 +80,21 @@
           </div>
         </div>
       </div>
+      <!-- role -->
+      <div class="vvld-form-group">
+        <label for="role">Role</label>
+        <select formControlName="role" id="role" class="form-ctrl">
+          <option value="" disabled selected>Select role</option>
+          <!-- Unclickable default -->
+          <option value="midwife">midwife</option>
+          <option value="bhw">bhw</option>
+        </select>
+        <div *ngIf="role?.touched && role?.invalid" class="form-error">
+          <div *ngIf="role?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
       <!-- gender -->
       <div class="vvld-form-group">
         <label for="gender">Gender</label>

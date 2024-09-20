@@ -115,6 +115,8 @@ export const loggerMiddleware = async (req: any, res: any, next: any) => {
         actionMessage += " for child";
       } else if (req.originalUrl.includes("/mother")) {
         actionMessage += " for mother";
+      } else if (req.originalUrl.includes("/user")) {
+        actionMessage += " for user";
       }
 
       // Log to the database (optional, based on whether you want to log it)

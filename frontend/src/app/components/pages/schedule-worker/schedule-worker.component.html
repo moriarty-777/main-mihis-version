@@ -1,4 +1,4 @@
-<div class="schedulerr">
+<!-- <div class="schedulerr">
   <div class="title-wrap">
     <h2 class="stat-title">Schedule by Day</h2>
   </div>
@@ -28,9 +28,11 @@
         </li>
       </ul>
     </div>
+    @for(users of user; track $index){
     <div class="bhw-sched">
       <div class="bhw-sched-item">
         <div class="bhw-name">
+
           <span class="bhw-title">Health Worker Name</span>
           <span class="bhw-data">Eliza Cruz</span>
         </div>
@@ -60,7 +62,53 @@
           <span class="bhw-data">Barangay Health Worker</span>
         </div>
         <div class="bhw-info">
-          <span class="bhw-data"><a routerLink="/">View Info</a></span>
+          <span class="bhw-data"
+            ><a routerLink="/user/{{ users.id }}">View Info</a></span
+          >
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div> -->
+<div class="schedulerr">
+  <div class="title-wrap">
+    <h2 class="stat-title">Schedule by Day</h2>
+  </div>
+  <div class="main-schedule">
+    <div class="days">
+      <ul>
+        <li *ngFor="let day of days; let i = index">
+          <!-- Toggle active class on click and load the schedule for the selected day -->
+          <button
+            [ngClass]="{ active: selectedDay === i }"
+            (click)="selectDay(i)"
+          >
+            {{ day }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Display schedule for the selected day -->
+    <div *ngIf="bhwSchedule[selectedDay]" class="bhw-sched">
+      <div *ngFor="let bhw of bhwSchedule[selectedDay]" class="bhw-sched-item">
+        <div class="bhw-name">
+          <span class="bhw-title">Health Worker</span>
+          <span class="bhw-data">{{ bhw.firstName }} {{ bhw.lastName }}</span>
+        </div>
+        <div class="bhw-time">
+          <span class="bhw-title">Time</span>
+          <span class="bhw-data">{{ bhw.shift }}</span>
+        </div>
+        <div class="bhw-role">
+          <span class="bhw-title">Role</span>
+          <span class="bhw-data">Barangay Health Worker</span>
+        </div>
+        <div class="bhw-info">
+          <span class="bhw-data">
+            <a [routerLink]="['/user', bhw.id]">View Info</a>
+          </span>
         </div>
       </div>
     </div>
