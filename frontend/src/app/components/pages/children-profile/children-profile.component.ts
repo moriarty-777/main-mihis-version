@@ -12,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { VaccinePopupComponent } from '../../partials/vaccine-popup/vaccine-popup.component';
 import { Vaccination } from '../../../shared/models/vaccination';
 import { ChangeDetectorRef } from '@angular/core';
+import { ChartsRadarVaccineTypeComponent } from '../../charts/charts-radar-vaccine-type/charts-radar-vaccine-type.component';
 
 @Component({
   selector: 'app-children-profile',
@@ -23,6 +24,7 @@ import { ChangeDetectorRef } from '@angular/core';
     CommonModule,
     PaginationComponent,
     MatDialogModule,
+    ChartsRadarVaccineTypeComponent,
   ],
   templateUrl: './children-profile.component.html',
   styleUrl: './children-profile.component.css',
