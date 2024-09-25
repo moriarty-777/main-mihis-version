@@ -17,6 +17,7 @@ import { AdminLogsComponent } from './components/pages/admin-logs/admin-logs.com
 import { ScheduleWorkerComponent } from './components/pages/schedule-worker/schedule-worker.component';
 import { AnalyticsComponent } from './components/pages/analytics/analytics.component';
 import { RolePendingComponent } from './components/partials/role-pending/role-pending.component';
+import { NutritionalStatusCalcComponent } from './components/pages/nutritional-status-calc/nutritional-status-calc.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -101,6 +102,10 @@ export const routes: Routes = [
       {
         path: 'analytics',
         component: AnalyticsComponent,
+      },
+      {
+        path: 'nut-calculator',
+        component: NutritionalStatusCalcComponent,
       },
     ],
     canActivate: [authGuard, roleGuard],
