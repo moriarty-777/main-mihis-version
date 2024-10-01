@@ -5,12 +5,19 @@ import { FooterComponent } from './components/partials/footer/footer.component';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { LoadingComponent } from './components/partials/loading/loading.component';
 //
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, CommonModule],
+  imports: [
+    RouterOutlet,
+    HeaderComponent,
+    FooterComponent,
+    CommonModule,
+    LoadingComponent,
+  ],
 
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
