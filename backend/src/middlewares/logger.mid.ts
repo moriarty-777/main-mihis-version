@@ -121,16 +121,16 @@ export const loggerMiddleware = async (req: any, res: any, next: any) => {
 
       // Log to the database (optional, based on whether you want to log it)
       // TODO: Disable Logging to save database space
-      // const log = new LogModel({
-      //   userId: user.id,
-      //   username: user.username,
-      //   role: user.role,
-      //   action: actionMessage,
-      //   timestamp: new Date(),
-      //   ipAddress: req.ip,
-      // });
+      const log = new LogModel({
+        userId: user.id,
+        username: user.username,
+        role: user.role,
+        action: actionMessage,
+        timestamp: new Date(),
+        ipAddress: req.ip,
+      });
 
-      // await log.save();
+      await log.save();
       // TODO: Disable Logging to save database space
       actionMessage += ` at URL: ${req.originalUrl}`;
       console.log("Log saved successfully:", actionMessage);

@@ -1,1 +1,219 @@
-<p>nutritional-status-calc works!</p>
+<!-- <div class="nut-container">
+  <h2>Nutritional Health Status Calculator</h2>
+  <div class="nut-calc">
+    <form class="nut-form">
+      <div class="nut-item vvld-form-group">
+        <label for="age" class="nut-group">
+          <mat-icon>calendar_today</mat-icon>
+          Age in months
+        </label>
+        <input
+          type="text"
+          id="age"
+          placeholder="Enter number from 0 - 59"
+          formControlName="age"
+          class="form-ctrl"
+        />
+      </div>
+      <div class="nut-item vvld-form-group">
+        <label for="height" class="nut-group">
+          <mat-icon>height </mat-icon>
+          Height
+        </label>
+        <input
+          placeholder="Enter height in cm"
+          type="text"
+          formControlName="height"
+          id="height"
+          class="form-ctrl"
+        />
+      </div>
+      <div class="nut-item vvld-form-group">
+        <label for="weight" class="nut-group">
+          <mat-icon>scale </mat-icon>
+          Weight
+        </label>
+        <input
+          placeholder="Enter weight in kg"
+          type="text"
+          id="weight"
+          formControlName="weight"
+          class="form-ctrl"
+        />
+      </div>
+      <div class="nut-item vvld-form-group">
+        <label for="gender" class="nut-group">
+          <mat-icon>wc </mat-icon>
+          Gender
+        </label>
+        <select formControlName="gender" id="gender" class="form-ctrl">
+          <option value="" disabled selected>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <button type="submit" class="global-btn">Calculate</button>
+    </form>
+  </div>
+  <div class="table-group">
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>Nutritional Status</th>
+          <th>Weight For Age</th>
+          <th>Height For Age</th>
+          <th>Weight For Length/Height</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Malnourished</td>
+          <td>Underweight</td>
+          <td>Stunted</td>
+          <td>Normal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->
+
+<!-- <form class="nut-form" (ngSubmit)="calculateNutritionalStatus()">
+  <div class="nut-item vvld-form-group">
+    <label for="age" class="nut-group">
+      <mat-icon>calendar_today</mat-icon>
+      Age in months
+    </label>
+    <input
+      type="number"
+      id="age"
+      placeholder="Enter number from 0 - 59"
+      [(ngModel)]="ageInMonths"
+      name="age"
+      class="form-ctrl"
+    />
+  </div>
+  <div class="nut-item vvld-form-group">
+    <label for="height" class="nut-group">
+      <mat-icon>height</mat-icon>
+      Height
+    </label>
+    <input
+      type="number"
+      placeholder="Enter height in cm"
+      id="height"
+      [(ngModel)]="height"
+      name="height"
+      class="form-ctrl"
+    />
+  </div>
+  <div class="nut-item vvld-form-group">
+    <label for="weight" class="nut-group">
+      <mat-icon>scale</mat-icon>
+      Weight
+    </label>
+    <input
+      type="number"
+      placeholder="Enter weight in kg"
+      id="weight"
+      [(ngModel)]="weight"
+      name="weight"
+      class="form-ctrl"
+    />
+  </div>
+  <div class="nut-item vvld-form-group">
+    <label for="gender" class="nut-group">
+      <mat-icon>wc</mat-icon>
+      Gender
+    </label>
+    <select [(ngModel)]="gender" name="gender" id="gender" class="form-ctrl">
+      <option value="" disabled selected>Select Gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+  <button type="submit" class="global-btn">Calculate</button>
+</form> -->
+
+<form class="nut-form" (ngSubmit)="calculateNutritionalStatus()">
+  <div class="nut-item vvld-form-group">
+    <label for="age" class="nut-group">
+      <mat-icon>calendar_today</mat-icon>
+      Age in months
+    </label>
+    <input
+      type="number"
+      id="age"
+      placeholder="Enter number from 0 - 59"
+      [(ngModel)]="ageInMonths"
+      name="age"
+      class="form-ctrl"
+    />
+  </div>
+  <div class="nut-item vvld-form-group">
+    <label for="height" class="nut-group">
+      <mat-icon>height</mat-icon>
+      Height
+    </label>
+    <input
+      type="number"
+      placeholder="Enter height in cm"
+      id="height"
+      [(ngModel)]="height"
+      name="height"
+      class="form-ctrl"
+    />
+  </div>
+  <div class="nut-item vvld-form-group">
+    <label for="weight" class="nut-group">
+      <mat-icon>scale</mat-icon>
+      Weight
+    </label>
+    <input
+      type="number"
+      placeholder="Enter weight in kg"
+      id="weight"
+      [(ngModel)]="weight"
+      name="weight"
+      class="form-ctrl"
+    />
+  </div>
+  <div class="nut-item vvld-form-group">
+    <label for="gender" class="nut-group">
+      <mat-icon>wc</mat-icon>
+      Gender
+    </label>
+    <select [(ngModel)]="gender" name="gender" id="gender" class="form-ctrl">
+      <option value="" disabled selected>Select Gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+  <button type="submit" class="global-btn">Calculate</button>
+</form>
+
+<div class="table-group">
+  <table class="stat-table">
+    <thead>
+      <tr>
+        <th>Nutritional Status</th>
+        <th>Weight For Age</th>
+        <th>Height For Age</th>
+        <th>Weight For Length/Height</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- <tr>
+        <td>{{ classification ? classification.split(",")[0] : "" }}</td>
+        <td>{{ classification ? classification.split(",")[1] : "" }}</td>
+        <td>{{ classification ? classification.split(",")[2] : "" }}</td>
+        <td>{{ classification ? classification.split(",")[3] : "" }}</td>
+      </tr> -->
+      <tr>
+        <td>{{ classification ? classification.split(",")[0] : "" }}</td>
+        <td>{{ classification ? classification.split(",")[1] : "" }}</td>
+        <td>{{ classification ? classification.split(",")[2] : "" }}</td>
+        <td>{{ classification ? classification.split(",")[3] : "" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

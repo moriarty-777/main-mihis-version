@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:4200", "http://your-deployment-domain.com"], // Add your deployment domain here
+    origin: ["http://localhost:4200", "http://mihis.tech"], // Add your deployment domain here
   })
 );
 
