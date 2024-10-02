@@ -28,6 +28,14 @@ export class AppComponent implements OnInit {
 
   private router = inject(Router);
 
+  constructor() {
+    window.addEventListener('popstate', () => {
+      if (localStorage.getItem('token')) {
+        this.router.navigate(['/home']);
+      }
+    });
+  }
+
   // ngOnInit(): void {
   //   this.router.events
   //     .pipe(

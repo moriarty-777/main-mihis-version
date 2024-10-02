@@ -18,7 +18,11 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:4200", "http://mihis.tech"], // Add your deployment domain here
+    origin: [
+      "http://localhost:4200",
+      "http://mihis.tech",
+      "https://mihis.tech",
+    ], // Add your deployment domain here
   })
 );
 
@@ -28,7 +32,7 @@ app.use("/api/users", userRouter);
 app.use("/api/mother", motherRouter);
 
 // Serve static files
-const publicPath = path.join(__dirname, "public");
+const publicPath = path.join(__dirname, "../../mihis/htdocs/mihis.tech");
 app.use(express.static(publicPath));
 
 // Serve frontend

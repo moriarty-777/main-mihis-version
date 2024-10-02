@@ -18,6 +18,7 @@ import { ScheduleWorkerComponent } from './components/pages/schedule-worker/sche
 import { AnalyticsComponent } from './components/pages/analytics/analytics.component';
 import { RolePendingComponent } from './components/partials/role-pending/role-pending.component';
 import { NutritionalStatusCalcComponent } from './components/pages/nutritional-status-calc/nutritional-status-calc.component';
+import { authenticatedGuard } from './auth/guards/authenticated.guard';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -30,11 +31,13 @@ export const routes: Routes = [
     path: 'login',
     component: LoginPageComponent,
     title: 'Login to MIHIS',
+    canActivate: [authenticatedGuard],
   },
   {
     path: 'signup',
     component: SignupComponent,
     title: 'Signup to MIHIS',
+    canActivate: [authenticatedGuard],
   },
   {
     path: 'donate',

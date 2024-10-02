@@ -11,13 +11,4 @@ export const authGuard: CanActivateFn = (route, state) => {
     router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
     return false;
   }
-
-  // This auth guard protects routes from anonymous user
-  // const localData = localStorage.getItem('wesa');
-  // if (localData) {
-  //   return true;
-  // } else {
-  //   router.navigateByUrl('login');
-  //   return false;
-  // }
 };
