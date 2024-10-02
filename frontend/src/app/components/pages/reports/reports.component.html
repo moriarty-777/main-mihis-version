@@ -1,0 +1,124 @@
+<div class="reports">
+  <div class="title-wrap">
+    <h2 class="stat-title">Nutritional Status Reports</h2>
+  </div>
+  <div class="children">
+    <div class="children-container">
+      <div class="c-table-header">
+        <div class="c-table-item">
+          <!-- <button type="button">All Children</button> -->
+          <button type="button" class="all-btn" (click)="resetFilters()">
+            All Children
+          </button>
+        </div>
+        <div class="c-table-item">
+          <!-- <select id="gender"> -->
+          <select id="gender" (change)="onGenderChange($event)">
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <!-- <select id="purok"> -->
+          <select id="purok" (change)="onPurokChange($event)">
+            <option value="">Purok</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <select id="heightForAge" (change)="onHeightForAgeChange($event)">
+            <option value="">Height for Age</option>
+            <option value="Severely Stunted">Severely Stunted</option>
+            <option value="Stunted">Stunted</option>
+            <option value="Normal">Normal</option>
+            <option value="Tall">Tall</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <select id="weightForAge" (change)="onWeightForAgeChange($event)">
+            <option value="">Weight for Age</option>
+            <option value="Severely Underweight">Severely Underweight</option>
+            <option value="Underweight">Underweight</option>
+            <option value="Normal">Normal</option>
+            <option value="Overweight">Overweight</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <select
+            id="weightForLength"
+            (change)="onWeightForLengthChange($event)"
+          >
+            <option value="">Weight for Length</option>
+            <option value="Severely Wasted">Severely Wasted</option>
+            <option value="Wasted">Wasted</option>
+            <option value="Normal">Normal</option>
+            <option value="Overweight">Overweight</option>
+            <option value="Obese">Obese</option>
+          </select>
+        </div>
+        <!-- FIXME: -->
+
+        <!-- FIXME: -->
+
+        <div class="c-table-item">
+          <p class="ssearch">
+            <input
+              #query
+              type="text"
+              placeholder="Search..."
+              (keyup)="search(query.value)"
+            />
+            <button (click)="search(query.value)">
+              <mat-icon
+                ><span class="hidden">Search</span
+                ><span> search </span></mat-icon
+              >
+            </button>
+          </p>
+        </div>
+      </div>
+      <div class="c-table-body">
+        <div class="table-group">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Children</th>
+                <th>Gender</th>
+                <th>Purok</th>
+                <th>Weight for Age Status</th>
+                <th>Height for Age Status</th>
+                <th>Weight for Length/Height Status</th>
+              </tr>
+            </thead>
+            @for(children of child; track children.id){
+            <tbody>
+              <tr>
+                <td class="t-icon">
+                  <img src="/assets/img/ph_flag.png" alt="PH Flag" />
+
+                  <a routerLink="/children-page/{{ children.id }}">
+                    {{ children.firstName + " " + children.lastName }}</a
+                  >
+                </td>
+                <td>{{ children.gender }}</td>
+                <td>{{ children.purok }}</td>
+                <td>{{ children.weighingHistory[0].weightForAgeStatus }}</td>
+                <td>
+                  {{ children.weighingHistory[0].heightForAgeStatus }}
+                </td>
+                <td>
+                  {{ children.weighingHistory[0].weightForLengthHeightStatus }}
+                </td>
+              </tr>
+            </tbody>
+            }
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,8 @@ import { ChildService } from '../../../services/child.service';
 import { ChartsGenderComponent } from '../../charts/charts-gender/charts-gender.component';
 import { ChartsPurokComponent } from '../../charts/charts-purok/charts-purok.component';
 import { ChartsCompleteImmunizationComponent } from '../../charts/charts-complete-immunization/charts-complete-immunization.component';
+import { ChartsMissedVaccineReasonComponent } from '../../charts/charts-missed-vaccine-reason/charts-missed-vaccine-reason.component';
+import { ChartsCoverageHeatmapPurokComponent } from '../../charts/charts-coverage-heatmap-purok/charts-coverage-heatmap-purok.component';
 
 @Component({
   selector: 'app-analytics',
@@ -15,6 +17,8 @@ import { ChartsCompleteImmunizationComponent } from '../../charts/charts-complet
     ChartsGenderComponent,
     ChartsPurokComponent,
     ChartsCompleteImmunizationComponent,
+    ChartsMissedVaccineReasonComponent,
+    ChartsCoverageHeatmapPurokComponent,
   ],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.css',
@@ -31,10 +35,45 @@ export class AnalyticsComponent {
   purokLabels: string[] = []; // Dynamic labels for Purok
   purokData: number[] = []; // Dynamic data for Purok
 
+  // TODO: Hard Coded Data
+  missedVaccineReasons: { label: string; value: number }[] = [
+    { label: 'Child Was Sick', value: 4 },
+    { label: 'Lack of Awareness', value: 5 },
+    { label: 'Went Out of Town', value: 6 },
+    { label: 'Parental Refusal', value: 3 },
+    { label: 'Fear of Side Effects', value: 8 },
+    { label: 'Other', value: 1 },
+  ];
+
+  purokCoverageData: { label: string; value: number }[] = [
+    { label: 'Purok 1', value: 85 },
+    { label: 'Purok 2', value: 60 },
+    { label: 'Purok 3', value: 95 },
+    { label: 'Purok 4', value: 40 },
+    { label: 'Purok 5', value: 75 },
+  ];
+
+  // FIXME: End hard coded data
+
   ngOnInit() {
     this.loadChildren(); // Fetch data on initialization
     this.loadVaccinationSummary(); // Fetch immunization data
+    // TODO: Hard coded data
+    this.loadMissedVaccineData(); // Fetch missed vaccine data
+    this.loadCoveragePurok();
   }
+  // TODO: Hard coded data
+  loadMissedVaccineData() {
+    // Hardcoded data for now, you can replace this with an API call once the database is set up
+    console.log('Missed Vaccine Data:', this.missedVaccineReasons); // Debugging
+  }
+
+  loadCoveragePurok() {
+    // Hardcoded data for now, you can replace this with an API call once the database is set up
+    console.log('Missed Vaccine Data:', this.missedVaccineReasons); // Debugging
+  }
+
+  // FIXME: End hard coded data
 
   loadChildren() {
     this.childService.getAll().subscribe((children: Child[]) => {

@@ -468,7 +468,9 @@ export class NutritionalStatusCalcComponent {
 
     // Determine the overall nutritional status based on the individual statuses
     let overallStatus = 'Normal';
-    if (
+    if (lengthForAgeStatus === 'Tall') {
+      overallStatus = 'Normal';
+    } else if (
       weightForLengthStatus !== 'Normal' ||
       lengthForAgeStatus !== 'Normal' ||
       weightForAgeStatus !== 'Normal'

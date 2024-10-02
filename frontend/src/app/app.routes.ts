@@ -19,6 +19,7 @@ import { AnalyticsComponent } from './components/pages/analytics/analytics.compo
 import { RolePendingComponent } from './components/partials/role-pending/role-pending.component';
 import { NutritionalStatusCalcComponent } from './components/pages/nutritional-status-calc/nutritional-status-calc.component';
 import { authenticatedGuard } from './auth/guards/authenticated.guard';
+import { ReportsComponent } from './components/pages/reports/reports.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -109,6 +110,10 @@ export const routes: Routes = [
       {
         path: 'nut-calculator',
         component: NutritionalStatusCalcComponent,
+      },
+      {
+        path: 'reports',
+        component: ReportsComponent,
       },
     ],
     canActivate: [authGuard, roleGuard],

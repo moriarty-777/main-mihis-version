@@ -20,6 +20,11 @@
   grid-row: 1/2;
 }
 
+.ai-missed-vaccine-reason {
+  grid-column: 2/4;
+  grid-row: 2/3;
+}
+
 /* .analytics-container > * {
   flex: 1;
 } */

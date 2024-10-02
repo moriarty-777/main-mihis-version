@@ -1,0 +1,14 @@
+<div class="chart-wrapper">
+  <h2>Missed Vaccines Reasons Distribution</h2>
+  <div class="chart-data">
+    <table>
+      <tr *ngFor="let reason of missedVaccineReasons; let i = index">
+        <td>{{ reason.label }}:</td>
+        <td>
+          <span>{{ reason.value }}</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <canvas baseChart [type]="'bar'" [data]="missedVaccineChartData"></canvas>
+</div>

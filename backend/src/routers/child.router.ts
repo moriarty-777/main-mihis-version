@@ -57,7 +57,15 @@ router.get(
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
-    const { gender, purok, nutritionalStatus, vaxStatus } = req.query; // Capture filters from query parameters
+    const {
+      gender,
+      purok,
+      nutritionalStatus,
+      vaxStatus,
+      heightForAge,
+      weightForAge,
+      weightForLength,
+    } = req.query; // Capture filters from query parameters
 
     // Build filter object dynamically based on query parameters
     const filter: any = {};
@@ -65,6 +73,12 @@ router.get(
     if (gender) filter.gender = gender; // Filter by gender if provided
     if (purok) filter.purok = purok; // Filter by purok if provided
     if (nutritionalStatus) filter.nutritionalStatus = nutritionalStatus; // Filter by nutritional status
+    if (heightForAge)
+      filter["weighingHistory.heightForAgeStatus"] = heightForAge; // Filter by height for age if provided
+    if (weightForAge)
+      filter["weighingHistory.weightForAgeStatus"] = weightForAge; // Filter by weight for age if provided
+    if (weightForLength)
+      filter["weighingHistory.weightForLengthHeightStatus"] = weightForLength; // Filter by weight for length if provided
     // Apply vaccination status filter only if vaxStatus is not empty
     if (vaxStatus) {
       if (vaxStatus === "Fully Vaccinated") {
