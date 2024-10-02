@@ -28,6 +28,43 @@ export class ReportsComponent {
   weightForLengthFilter: string = '';
 
   // FIXME: start
+  // sample_data: any;
+  sample_data: any[] = [
+    { indicator: 'CPAB', male: 0, female: 1, total: 1 },
+    { indicator: 'BCG', male: 0, female: 0, total: 0 },
+    { indicator: 'HepB, within 24 hours', male: 0, female: 0, total: 0 },
+    { indicator: 'DPT-HiB-HepB 1', male: 0, female: 1, total: 1 },
+    { indicator: 'DPT-HiB-HepB 2', male: 2, female: 2, total: 4 },
+    { indicator: 'DPT-HiB-HepB 3', male: 1, female: 3, total: 4 },
+    { indicator: 'OPV 1', male: 0, female: 1, total: 1 },
+    { indicator: 'OPV 2', male: 2, female: 2, total: 4 },
+    { indicator: 'OPV 3', male: 1, female: 3, total: 4 },
+    { indicator: 'IPV 2 (routine)', male: 0, female: 2, total: 2 },
+    { indicator: 'IPV 2 (catch-up)', male: 0, female: 2, total: 2 },
+    //
+    { indicator: 'PCV 1', male: 0, female: 1, total: 1 },
+    { indicator: 'PCV 2', male: 2, female: 2, total: 4 },
+    { indicator: 'PCV 3', male: 1, female: 3, total: 4 },
+    { indicator: 'MCV 1', male: 1, female: 0, total: 1 },
+    { indicator: 'MCV 2', male: 1, female: 1, total: 2 },
+    { indicator: 'FIC', male: 1, female: 0, total: 1 },
+    { indicator: 'CIC', male: 1, female: 0, total: 1 },
+    //
+    { indicator: 'Td, Grade 1 (October)', male: 0, female: 0, total: 0 },
+    { indicator: 'MR, Grade 1 (October)', male: 0, female: 0, total: 0 },
+    { indicator: 'Td, Grade 7 (October)', male: 0, female: 0, total: 0 },
+    { indicator: 'MR, Grade 7 (October)', male: 0, female: 0, total: 0 },
+  ];
+
+  showVaccinationReports: boolean = true;
+
+  toggleReports(reportType: string) {
+    if (reportType === 'vaccination') {
+      this.showVaccinationReports = true;
+    } else if (reportType === 'nutrition') {
+      this.showVaccinationReports = false;
+    }
+  }
   // FIXME: end
 
   constructor() {

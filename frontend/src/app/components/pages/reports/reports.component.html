@@ -1,4 +1,49 @@
-<div class="reports">
+<!-- Hello -->
+<div class="children-container">
+  <div class="reports-header">
+    <button
+      class="vcard-popup global-btn"
+      (click)="toggleReports('vaccination')"
+    >
+      Vaccination Count Reports
+    </button>
+    <button class="vcard-popup global-btn" (click)="toggleReports('nutrition')">
+      Nutritional Status Reports
+    </button>
+  </div>
+</div>
+
+<div *ngIf="showVaccinationReports" class="vaccination-reports">
+  <div class="children-container">
+    <div class="title-wrap">
+      <h2 class="stat-title">Vaccination Count Reports</h2>
+    </div>
+    <div class="table-group">
+      <table class="stat-table">
+        <thead>
+          <tr>
+            <th>Indicators</th>
+            <th>Male</th>
+            <th>Female</th>
+            <th>Total</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of sample_data">
+            <td>{{ item.indicator }}</td>
+            <td>{{ item.male }}</td>
+            <td>{{ item.female }}</td>
+            <td>{{ item.total }}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!showVaccinationReports" class="nutritional-status-reports reports">
   <div class="title-wrap">
     <h2 class="stat-title">Nutritional Status Reports</h2>
   </div>

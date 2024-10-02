@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 // Define the MissedVaccine schema
 export interface MissedVaccine {
-  childId: string; // Reference to the child who missed the vaccine
+  childId: any; // Reference to the child who missed the vaccine
   vaccineName: string;
   reason: string; // Reason for missing the vaccine (e.g., health reasons, distance)
   dateMissed: Date;
