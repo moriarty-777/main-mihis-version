@@ -83,3 +83,6 @@ hr {
 /* #endregion vvld form */
 
 /*  */
+.form-ctrl.multi {
+  height: auto;
+}

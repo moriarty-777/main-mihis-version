@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -22,28 +22,40 @@ import { User } from '../../../shared/models/user';
 export class PopupUserComponent {
   updateForm!: FormGroup;
   isSubmitted = false;
+  // private cdr = inject(ChangeDetectorRef);
   private dialogRef = inject(MatDialogRef);
   private activatedRoute = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { userId: string }) {}
+  constructor(
+    //private cdr: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: { userId: string }
+  ) {}
 
   ngOnInit(): void {
-    this.userService.getUserById(this.data.userId).subscribe((user: User) => {
-      // Initialize the form with fetched user data
-      const formattedDate = this.formatDate(user.dateOfService);
-      this.updateForm.patchValue({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        username: user.username || '',
-        role: user.role,
-        dateOfService: formattedDate || '',
-        photoPath: user.photoPath || 'assets/img/default-user-profile.jpg',
-        gender: user.gender || '',
+    setTimeout(() => {
+      this.userService.getUserById(this.data.userId).subscribe((user: User) => {
+        // Initialize the form with fetched user data
+        const formattedDate = this.formatDate(user.dateOfService);
+        // setTimeout(() => {
+        this.updateForm.patchValue({
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          username: user.username || '',
+          role: user.role,
+          dateOfService: formattedDate || '',
+          photoPath: user.photoPath || 'assets/img/default-user-profile.jpg',
+          gender: user.gender || '',
+          shift: user.shift || '', // Add shift value
+          daySchedule: user.daySchedule || [], // Add daySchedule value
+        });
+        // }); // this
+        // Manually trigger change detection
+        // this.cdr.detectChanges();
+        console.log(formattedDate);
       });
-      console.log(formattedDate);
-    });
+    }, 1); // this
 
     this.updateForm = this.fb.group(
       {
@@ -57,6 +69,8 @@ export class PopupUserComponent {
         dateOfService: ['', [Validators.required]],
         photoPath: ['', [Validators.required]],
         gender: ['', [Validators.required]],
+        shift: ['', [Validators.required]], // Add shift form control
+        daySchedule: [[], [Validators.required]], // Add daySchedule form control
 
         // password: ['', [Validators.required, Validators.minLength(6)]],
         // confirmPassword: ['', Validators.required],
@@ -65,7 +79,7 @@ export class PopupUserComponent {
       //   validators: PasswordValidators.passwordShouldMatch,
       // }
     );
-  }
+  } // here
   // Helper function to format the date to 'YYYY-MM-DD'
   formatDate(date: string | Date): string {
     const d = new Date(date);
@@ -101,6 +115,14 @@ export class PopupUserComponent {
 
   get gender() {
     return this.updateForm.get('gender');
+  }
+
+  get shift() {
+    return this.updateForm.get('shift');
+  }
+
+  get daySchedule() {
+    return this.updateForm.get('daySchedule');
   }
 
   update() {

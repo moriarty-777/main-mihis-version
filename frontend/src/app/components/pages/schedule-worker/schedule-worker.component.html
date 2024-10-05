@@ -71,7 +71,7 @@
     }
   </div>
 </div> -->
-<div class="schedulerr">
+<!-- <div class="schedulerr">
   <div class="title-wrap">
     <h2 class="stat-title">Schedule by Day</h2>
   </div>
@@ -79,7 +79,7 @@
     <div class="days">
       <ul>
         <li *ngFor="let day of days; let i = index">
-          <!-- Toggle active class on click and load the schedule for the selected day -->
+
           <button
             [ngClass]="{ active: selectedDay === i }"
             (click)="selectDay(i)"
@@ -90,7 +90,6 @@
       </ul>
     </div>
 
-    <!-- Display schedule for the selected day -->
     <div *ngIf="bhwSchedule[selectedDay]" class="bhw-sched">
       <div *ngFor="let bhw of bhwSchedule[selectedDay]" class="bhw-sched-item">
         <div class="bhw-name">
@@ -109,6 +108,75 @@
           <span class="bhw-data">
             <a [routerLink]="['/user', bhw.id]">View Info</a>
           </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="schedulerr">
+  <div class="title-wrap">
+    <h2 class="stat-title">Schedule by Day</h2>
+  </div>
+  <div class="main-schedule">
+    <div class="days">
+      <ul>
+        <li *ngFor="let day of days; let i = index">
+          <button
+            [ngClass]="{ active: selectedDay === i }"
+            (click)="selectDay(i)"
+          >
+            {{ day | titlecase }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="griddy">
+      <div *ngIf="morningWorkers.length > 0" class="bhw-sched">
+        <div *ngFor="let worker of morningWorkers" class="bhw-sched-item">
+          <div class="bhw-name">
+            <span class="bhw-title">Health Worker</span>
+            <span class="bhw-data"
+              >{{ worker.firstName }} {{ worker.lastName }}</span
+            >
+          </div>
+          <div class="bhw-time">
+            <span class="bhw-title">Time</span>
+            <span class="bhw-data">8:00am - 12:00pm</span>
+          </div>
+          <div class="bhw-role">
+            <span class="bhw-title">Role</span>
+            <span class="bhw-data">{{ worker.role | titlecase }}</span>
+          </div>
+          <div class="bhw-info">
+            <span class="bhw-data">
+              <a [routerLink]="['/user', worker.id]">View Info</a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="afternoonWorkers.length > 0" class="bhw-sched">
+        <div *ngFor="let worker of afternoonWorkers" class="bhw-sched-item">
+          <div class="bhw-name">
+            <span class="bhw-title">Health Worker</span>
+            <span class="bhw-data"
+              >{{ worker.firstName }} {{ worker.lastName }}</span
+            >
+          </div>
+          <div class="bhw-time">
+            <span class="bhw-title">Time</span>
+            <span class="bhw-data">1:00pm - 5:00pm</span>
+          </div>
+          <div class="bhw-role">
+            <span class="bhw-title">Role</span>
+            <span class="bhw-data">{{ worker.role | titlecase }}</span>
+          </div>
+          <div class="bhw-info">
+            <span class="bhw-data">
+              <a [routerLink]="['/user', worker.id]">View Info</a>
+            </span>
+          </div>
         </div>
       </div>
     </div>

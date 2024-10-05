@@ -9,19 +9,19 @@ import { authMiddleware } from "../middlewares/auth.mid";
 const router = Router();
 
 // seed
-router.get(
-  "/seed",
-  expressAsyncHandler(async (req, res) => {
-    const motherCount = await MotherModel.countDocuments();
-    if (motherCount > 0) {
-      res.send("Seed is already Done!");
-      return;
-    }
+// router.get(
+//   "/seed",
+//   expressAsyncHandler(async (req, res) => {
+//     const motherCount = await MotherModel.countDocuments();
+//     if (motherCount > 0) {
+//       res.send("Seed is already Done!");
+//       return;
+//     }
 
-    await MotherModel.create(mother);
-    res.send("Seed is Done");
-  })
-);
+//     await MotherModel.create(mother);
+//     res.send("Seed is Done");
+//   })
+// );
 
 // router.get(
 //   "/",

@@ -13,18 +13,8 @@ export class User {
   gender?: any;
   formattedDate?: any;
   _id?: any;
-  // dateOfService: Date;
-}
 
-// export interface User {
-//   id: string;
-//   role: string; // BHW, Midwife, Admin
-//   firstName: string;
-//   lastName: string;
-//   // dateOfService: Date;
-//   dateOfService: string;
-//   username: string; // Either Gmail or phone number
-//   password: string; // Hashed password
-//   secretKey: string; // Used for validating roles like BHW and Midwife
-//   token: string;
-// }
+  // New Fields
+  shift?: string; // "morning" or "afternoon"
+  daySchedule?: string[]; // Days of the week ["monday", "tuesday", ...]
+}

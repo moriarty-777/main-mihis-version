@@ -75,7 +75,7 @@ button.active {
 }
 .bhw-sched {
   display: grid;
-  gap: 41px;
+  gap: 16px;
 }
 .bhw-sched-item {
   display: flex;
@@ -96,4 +96,9 @@ button.active {
 
 .schedulerr .title-wrap {
   margin: 0;
+}
+.griddy {
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
 }

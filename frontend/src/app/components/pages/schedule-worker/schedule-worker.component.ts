@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+/*import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../shared/models/user';
@@ -70,5 +70,76 @@ export class ScheduleWorkerComponent {
   // Function to select the day
   selectDay(index: number) {
     this.selectedDay = index;
+  }
+}
+*/
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { UserService } from '../../../services/user.service';
+import { User } from '../../../shared/models/user';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-schedule-worker',
+  standalone: true,
+  imports: [RouterLink, CommonModule],
+  templateUrl: './schedule-worker.component.html',
+  styleUrl: './schedule-worker.component.css',
+})
+export class ScheduleWorkerComponent {
+  private userService = inject(UserService);
+
+  // Days of the week
+  days = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
+
+  // Index of the selected day (starts with Monday)
+  selectedDay = 0;
+
+  // List of users to be displayed per day and shift
+  morningWorkers: User[] = [];
+  afternoonWorkers: User[] = [];
+
+  constructor() {
+    this.userService.getAll().subscribe((users) => {
+      // Filter and prepare schedules for the selected day
+      this.filterWorkersByDay(this.selectedDay, users);
+    });
+  }
+
+  // Function to select the day and filter workers accordingly
+  selectDay(index: number) {
+    this.selectedDay = index;
+    this.userService.getAll().subscribe((users) => {
+      this.filterWorkersByDay(index, users);
+    });
+  }
+
+  // Function to filter workers by the selected day
+  filterWorkersByDay(dayIndex: number, users: User[]) {
+    const day = this.days[dayIndex].toLowerCase();
+
+    this.morningWorkers = users.filter(
+      (user) =>
+        user.daySchedule &&
+        user.daySchedule.includes(day) &&
+        user.shift &&
+        user.shift.includes('morning')
+    );
+
+    this.afternoonWorkers = users.filter(
+      (user) =>
+        user.daySchedule &&
+        user.daySchedule.includes(day) &&
+        user.shift &&
+        user.shift.includes('afternoon')
+    );
   }
 }

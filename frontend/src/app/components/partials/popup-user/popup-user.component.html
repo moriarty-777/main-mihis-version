@@ -98,16 +98,8 @@
       <!-- gender -->
       <div class="vvld-form-group">
         <label for="gender">Gender</label>
-        <!-- <input
-          formControlName="gender"
-          type="text"
-          id="gender"
-          placeholder="Gender"
-          class="form-ctrl"
-        /> -->
         <select formControlName="gender" id="gender" class="form-ctrl">
           <option value="" disabled selected>Select Gender</option>
-          <!-- Unclickable default -->
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
@@ -133,6 +125,51 @@
         >
           <div *ngIf="photoPath?.errors?.['required']">
             &#42; This field is required
+          </div>
+        </div>
+      </div>
+      <!-- Shift -->
+      <div class="vvld-form-group">
+        <label for="shift">Shift</label>
+        <select
+          formControlName="shift"
+          id="shift"
+          multiple
+          class="form-ctrl multi"
+        >
+          <option value="" disabled selected>Select Shift</option>
+          <option value="morning">Morning</option>
+          <option value="afternoon">Afternoon</option>
+        </select>
+        <div *ngIf="shift?.touched && shift?.invalid" class="form-error">
+          <div *ngIf="shift?.errors?.['required']">&#42; Shift is required</div>
+        </div>
+      </div>
+
+      <!-- Day Schedule -->
+      <div class="vvld-form-group">
+        <label for="daySchedule">Day Schedule</label>
+        <select
+          multiple
+          formControlName="daySchedule"
+          id="daySchedule"
+          class="form-ctrl multi"
+        >
+          <option value="" disabled selected>Select Day Schedule</option>
+          <option value="monday">Monday</option>
+          <option value="tuesday">Tuesday</option>
+          <option value="wednesday">Wednesday</option>
+          <option value="thursday">Thursday</option>
+          <option value="friday">Friday</option>
+          <option value="saturday">Saturday</option>
+          <option value="sunday">Sunday</option>
+        </select>
+        <div
+          *ngIf="daySchedule?.touched && daySchedule?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="daySchedule?.errors?.['required']">
+            &#42; Day schedule is required
           </div>
         </div>
       </div>
