@@ -8,6 +8,7 @@ import cors from "cors";
 import childRouter from "./routers/child.router";
 import userRouter from "./routers/user.router";
 import motherRouter from "./routers/mother.router";
+import smsRouter from "./routers/sendsms.router";
 import { dbConnect } from "./configs/database.config";
 
 dbConnect();
@@ -30,6 +31,7 @@ app.use(
 app.use("/api", childRouter);
 app.use("/api/users", userRouter);
 app.use("/api/mother", motherRouter);
+app.use("/api/sms", smsRouter); // Use the send SMS router
 
 // Serve static files
 const publicPath = path.join(__dirname, "../../mihis/htdocs/mihis.tech");
