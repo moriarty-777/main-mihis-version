@@ -9,10 +9,12 @@ import {
   USER_URL,
   AUDIT_LOGS_URL,
   USER_PROFILE_URL,
+  USER_LOGOUT_URL,
 } from '../shared/constants/urls';
 import { tap, map } from 'rxjs/operators';
 import { IUserLogin } from '../shared/models/iuserLogin';
 import { IUserSignUp } from '../shared/models/iuserSignup';
+import { Router } from '@angular/router';
 
 const USER_KEY = 'User';
 
@@ -22,6 +24,7 @@ const USER_KEY = 'User';
 export class UserService {
   private http = inject(HttpClient);
   private toastrService = inject(ToastrService);
+  private router = inject(Router);
   private userSubject = new BehaviorSubject<User>(
     this.getUserFromLocalStorage()
   );
@@ -118,10 +121,36 @@ export class UserService {
     );
   }
 
-  logout() {
+  // logout() {
+  //   this.userSubject.next(new User());
+  //   localStorage.removeItem(USER_KEY);
+  //   window.location.reload();
+  // }
+
+  logout(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    // Make a request to log the logout action and return the observable
+    return this.http.post<any>(`${USER_LOGOUT_URL}`, {}, { headers }).pipe(
+      tap({
+        next: () => {
+          this.clearUser(); // Clear user info after a successful logout
+        },
+        error: (error) => {
+          console.error('Failed to log out:', error);
+          this.clearUser(); // Proceed with logout even if the log fails
+        },
+      })
+    );
+  }
+
+  clearUser() {
     this.userSubject.next(new User());
     localStorage.removeItem(USER_KEY);
     window.location.reload();
+    this.router.navigate(['/']);
   }
 
   private setUserToLocalStorage(user: User) {

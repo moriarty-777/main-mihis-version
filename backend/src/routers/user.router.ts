@@ -10,6 +10,7 @@ import { LogModel } from "../models/log.model";
 import { getLogHistory } from "../controller/admin.controller";
 import { authMiddleware } from "../middlewares/auth.mid";
 import { loggerMiddleware } from "../middlewares/logger.mid";
+import { AuthenticatedRequest } from "../types/types";
 
 const router = Router();
 
@@ -58,7 +59,7 @@ router.get(
 //     res.send(midwives);
 //   })
 // );
-
+// login
 router.post(
   "/login",
   expressAsyncHandler(async (req, res) => {
@@ -85,6 +86,34 @@ router.post(
     // } else {
     //   res.status(HTTP_BAD_REQUEST).send("Username or Password is not valid");
     // }
+  })
+);
+// logout
+router.post(
+  "/logout",
+  authMiddleware,
+  expressAsyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.user?.id; // Get the user ID from middleware
+    if (!userId) {
+      res.status(HTTP_BAD_REQUEST).send("User ID is missing");
+      return;
+    }
+
+    const user = await UserModel.findById(userId);
+    if (user) {
+      const log = new LogModel({
+        userId: user.id,
+        username: user.username,
+        role: user.role,
+        action: "logout",
+        timestamp: new Date(),
+      });
+
+      await log.save();
+      res.send({ message: "Logout logged successfully" });
+    } else {
+      res.status(HTTP_BAD_REQUEST).send("User not found");
+    }
   })
 );
 

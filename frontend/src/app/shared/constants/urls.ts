@@ -7,6 +7,7 @@ export const CHILD_VAX_SUMMARY_URL =
 export const CHILDREN_PROFILE_URL = BASE_URL + '/api/children-page/';
 
 export const USER_LOGIN_URL = BASE_URL + '/api/users/login';
+export const USER_LOGOUT_URL = BASE_URL + '/api/users/logout';
 export const USER_SIGNUP_URL = BASE_URL + '/api/users/signup';
 export const USER_URL = BASE_URL + '/api/users';
 export const USER_PROFILE_URL = BASE_URL + '/api/users/';
