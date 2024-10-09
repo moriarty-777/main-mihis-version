@@ -13,6 +13,7 @@ import { PasswordValidators } from '../../../shared/validators/password.validato
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IUserSignUp } from '../../../shared/models/iuserSignup';
 import { ToastrService } from 'ngx-toastr';
+import { SmsService } from '../../../services/sms.service';
 
 @Component({
   selector: 'signup',
@@ -27,8 +28,13 @@ export class SignupComponent implements OnInit {
   returnUrl = '';
   isSubmitted = false;
 
+  // OTP
+  otpSent = false;
+  otpVerified = false;
+
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
+  private smsService = inject(SmsService);
   private ActivatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -56,6 +62,10 @@ export class SignupComponent implements OnInit {
     return this.signUpForm.get('confirmPassword');
   }
 
+  get otp() {
+    return this.signUpForm.get('otp');
+  }
+
   confirmPasswordValid: boolean = false;
   passwordMismatchError: boolean = false;
 
@@ -71,6 +81,7 @@ export class SignupComponent implements OnInit {
         ],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required],
+        otp: ['', Validators.required],
       },
       {
         validators: PasswordValidators.passwordShouldMatch,
@@ -78,6 +89,7 @@ export class SignupComponent implements OnInit {
     );
 
     this.returnUrl = this.ActivatedRoute.snapshot.queryParams['returnUrl'];
+
     // form
     // Subscribe to form value changes
     this.signUpForm.valueChanges
@@ -106,23 +118,112 @@ export class SignupComponent implements OnInit {
         this.passwordMismatchError =
           this.signUpForm.errors?.['passwordShouldMatch'] || false;
       });
+  } // end ng on init
+
+  // Method to send OTP
+  /* sendOTP() {
+    const username = this.signUpForm.value.username;
+
+    // Send OTP to phone number
+    this.smsService.sendOTP(username).subscribe({
+      next: (response) => {
+        this.otpSent = true;
+        this.toastrService.success('OTP sent successfully!');
+        this.signUpForm.get('otp')?.enable(); // Enable OTP input after OTP is sent
+      },
+      error: (err) => {
+        this.toastrService.error('Failed to send OTP. Please try again.');
+      },
+    });
   }
 
-  // submitSignUpApplication() {
-  //   this.UserService.signup(
-  //     this.signUpForm.value.firstName ?? '',
-  //     this.signUpForm.value.lastName ?? '',
-  //     this.signUpForm.value.emailOrPhone ?? '',
-  //     this.signUpForm.value.password ?? ''
-  //   );
-  // }
+  */
+
+  sendOTP() {
+    const username = this.signUpForm.value.username;
+
+    // Check if the username is an email or phone number
+    if (this.isEmail(username)) {
+      this.smsService.sendOTP(username).subscribe({
+        next: (response) => {
+          this.otpSent = true;
+          this.toastrService.success('OTP sent to email successfully!');
+          this.signUpForm.get('otp')?.enable(); // Enable OTP input after OTP is sent
+        },
+        error: (err) => {
+          this.toastrService.error(
+            'Failed to send OTP via email. Please try again.'
+          );
+        },
+      });
+    } else if (this.isPhoneNumber(username)) {
+      this.smsService.sendOTP(username).subscribe({
+        next: (response) => {
+          this.otpSent = true;
+          this.toastrService.success('OTP sent to phone number successfully!');
+          this.signUpForm.get('otp')?.enable(); // Enable OTP input after OTP is sent
+        },
+        error: (err) => {
+          this.toastrService.error(
+            'Failed to send OTP via SMS. Please try again.'
+          );
+        },
+      });
+    } else {
+      this.toastrService.error('Please enter a valid email or phone number.');
+    }
+  }
+
+  isEmail(username: string): boolean {
+    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(username);
+  }
+
+  isPhoneNumber(username: string): boolean {
+    return /^\+?[1-9]\d{1,14}$/.test(username); // E.164 format for phone numbers
+  }
+
+  // Method to verify OTP
+  verifyOTP() {
+    const username = this.signUpForm.value.username;
+    const otp = this.signUpForm.value.otp;
+
+    this.smsService.verifyOTP(username, otp).subscribe({
+      next: (response) => {
+        this.otpVerified = true;
+        this.toastrService.success('OTP verified successfully!');
+      },
+      error: (err) => {
+        this.toastrService.error('Invalid OTP. Please try again.');
+      },
+    });
+  }
 
   submit() {
     this.isSubmitted = true;
-    if (this.signUpForm.invalid) {
-      this.signUpForm.markAllAsTouched(); // Mark all controls as touched
+
+    // Enable the OTP field if it's disabled
+    if (this.signUpForm.get('otp')?.disabled) {
+      this.signUpForm.get('otp')?.enable();
+    }
+
+    // Mark all controls as touched
+    this.signUpForm.markAllAsTouched();
+
+    // Check if the form is invalid or OTP has not been verified
+    if (this.signUpForm.invalid || !this.otpVerified) {
+      if (!this.otpVerified) {
+        this.toastrService.error('Please verify OTP before proceeding.');
+      }
       return;
     }
+
+    // this.signUpForm.markAllAsTouched(); // Mark all controls as touched
+    // if (this.signUpForm.invalid || !this.otpVerified) {
+    //   if (!this.otpVerified) {
+    //     this.toastrService.error('Please verify OTP before proceeding.');
+    //   }
+    //   return;
+    // }
 
     const formValue = this.signUpForm.value;
     const user: IUserSignUp = {
@@ -133,9 +234,6 @@ export class SignupComponent implements OnInit {
       confirmPassword: formValue.confirmPassword,
     };
 
-    // this.userService.signup(user).subscribe((_) => {
-    //   this.router.navigateByUrl(this.returnUrl);
-    // });
     this.userService.signup(user).subscribe({
       next: (user) => {
         if (!user.role || user.role === 'pending') {
@@ -165,43 +263,4 @@ export class SignupComponent implements OnInit {
       },
     });
   }
-  // submit() {
-  //   this.isSubmitted = true;
-
-  //   if (this.signUpForm.invalid) {
-  //     this.signUpForm.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   const formValue = this.signUpForm.value;
-  //   const user: IUserSignUp = {
-  //     firstName: formValue.firstName,
-  //     lastName: formValue.lastName,
-  //     username: formValue.username,
-  //     password: formValue.password,
-  //     confirmPassword: formValue.confirmPassword,
-  //   };
-
-  //   this.userService.signup(user).subscribe({
-  //     next: (user) => {
-  //       if (!user.role || user.role === 'pending') {
-  //         // Notify the user and log them out or navigate to a waiting page
-  //         this.toastrService.info(
-  //           'Please wait for an admin to assign a role.',
-  //           'Role Pending'
-  //         );
-
-  //         // Clear user data and navigate them to a "waiting" page or logout
-  //         this.userService.logout(); // Log them out
-  //         this.router.navigateByUrl('/role-pending'); // Optionally redirect to a page explaining the situation
-  //       } else {
-  //         this.router.navigateByUrl(this.returnUrl);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Signup failed:', error);
-  //       this.toastrService.error('Signup failed. Please try again.');
-  //     },
-  //   });
-  // }
 }

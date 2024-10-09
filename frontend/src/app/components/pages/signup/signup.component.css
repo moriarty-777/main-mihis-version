@@ -67,4 +67,16 @@ hr {
   background-color: var(--bg-button-hover);
 }
 
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+}
+
+.otp-container .global-btn {
+  background: #098963;
+  border-color: #098963;
+}
+
 /* #endregion vvld form */

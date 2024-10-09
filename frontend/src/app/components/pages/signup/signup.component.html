@@ -109,7 +109,41 @@
         </div>
       </div>
       <!-- Confirm Password -->
-      <button type="submit" class="global-btn">{{ buttonLabel }}</button>
+      <!-- OTP -->
+      <div class="vvld-form-group">
+        <label for="otp">OTP</label>
+        <div class="otp-container">
+          <input
+            formControlName="otp"
+            type="text"
+            placeholder="Enter OTP"
+            id="otp"
+            class="form-ctrl"
+            [disabled]="!otpSent"
+          />
+          <button
+            type="button"
+            class="global-btn"
+            (click)="sendOTP()"
+            [disabled]="otpSent"
+          >
+            {{ otpSent ? "OTP Sent" : "Send OTP" }}
+          </button>
+        </div>
+        <div *ngIf="otp?.touched && otp?.invalid" class="form-error">
+          <div *ngIf="otp?.errors?.['required']">&#42; OTP is required</div>
+        </div>
+      </div>
+
+      <!-- Verify OTP Button -->
+      <div *ngIf="otpSent && !otpVerified">
+        <button type="button" class="global-btn" (click)="verifyOTP()">
+          Verify OTP
+        </button>
+      </div>
+      <button type="submit" class="global-btn">
+        {{ buttonLabel }}
+      </button>
     </form>
     <p class="vvld-text">
       By creating an account, you agree to our Conditions of Use and Privacy

@@ -18,3 +18,7 @@ export const MOTHER_PROFILE_URL = BASE_URL + '/api/mother/';
 
 // Log
 export const AUDIT_LOGS_URL = BASE_URL + '/api/users/logs';
+
+export const SEND_OTP = BASE_URL + '/api/sms/sendOTP';
+export const VERIFY_OTP = BASE_URL + '/api/sms/verifyOTP';
+export const SEND_SMS = BASE_URL + '/api/sms/sendSMS';
