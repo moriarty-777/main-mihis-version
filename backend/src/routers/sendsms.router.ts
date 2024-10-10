@@ -23,13 +23,16 @@ const MOVIDER_BASE_URL =
 //   },
 // });
 
+const GMAIL_USER = process.env.GMAIL_USER || "";
+const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD || "";
+
 let transporter = nodemailer.createTransport({
   service: "gmail", // Replace with your SMTP provider if not using Gmail
   port: 465, // For SSL, use 465. For TLS, use 587.
   secure: true, // true for SSL, false for TLS
   auth: {
-    user: process.env.GMAIL_USER, // Your Gmail email or the SMTP user
-    pass: process.env.GMAIL_PASSWORD, // Your Gmail app-specific password or SMTP password
+    user: GMAIL_USER, // Your Gmail email or the SMTP user
+    pass: GMAIL_PASSWORD, // Your Gmail app-specific password or SMTP password
   },
 });
 
@@ -131,6 +134,7 @@ router.post(
             api_key: MOVIDER_API_KEY,
             api_secret: MOVIDER_API_SECRET,
             to: to,
+            from: "CTCMIHIS",
             text: `Your MIHIS OTP code is: ${otp}`,
           }),
           {

@@ -251,10 +251,13 @@ export class SignupComponent implements OnInit {
           // Wait for 3 seconds before logging the user out and redirecting
           setTimeout(() => {
             this.userService.logout(); // Log them out
-            // this.router.navigateByUrl('/role-pending'); // Optionally redirect to a page explaining the situation
+            this.router.navigate(['/']); // Redirect to homepage after logout
           }, 3000); // 3-second delay
         } else {
-          this.router.navigateByUrl(this.returnUrl);
+          // this.router.navigateByUrl(this.returnUrl);
+          this.userService.logout().subscribe(() => {
+            this.router.navigate(['/']); // Redirect to homepage after successful signup
+          });
         }
       },
       error: (error) => {
