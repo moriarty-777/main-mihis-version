@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+/*import { model, Schema } from "mongoose";
 
 export interface Child {
   id: string;
@@ -125,4 +125,65 @@ const ChildSchema = new Schema<Child>(
 
 //
 
+export const ChildModel = model<Child>("child", ChildSchema);
+*/
+import { model, Schema } from "mongoose";
+
+export interface Child {
+  firstName: string;
+  lastName: string;
+  height: number;
+  weight: number;
+  dateOfBirth: Date;
+  gender: string;
+  purok: string;
+  barangay: string;
+  photoPath?: string;
+  placeOfBirth?: string;
+  weighingHistory?: Schema.Types.ObjectId[];
+  vaccinations?: Schema.Types.ObjectId[];
+  vaccineStatus?: Schema.Types.ObjectId;
+  nutritionalStatus?: Schema.Types.ObjectId;
+  anthropometricStatus?: Schema.Types.ObjectId;
+  missedVaccines?: Schema.Types.ObjectId[];
+}
+
+// Define the Child schema
+const ChildSchema = new Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    height: { type: Number, required: true },
+    weight: { type: Number, required: true },
+    dateOfBirth: { type: Date, required: true },
+    gender: { type: String, required: true },
+    purok: { type: String, required: true },
+    barangay: { type: String, required: true },
+    photoPath: { type: String, required: false },
+    placeOfBirth: { type: String, required: false },
+    weighingHistory: [{ type: Schema.Types.ObjectId, ref: "weighingHistory" }],
+    vaccinations: [{ type: Schema.Types.ObjectId, ref: "vaccination" }],
+    vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },
+    nutritionalStatus: {
+      type: Schema.Types.ObjectId,
+      ref: "nutritionalStatus",
+    },
+    anthropometricStatus: {
+      type: Schema.Types.ObjectId,
+      ref: "anthropometric",
+    },
+    missedVaccines: [{ type: Schema.Types.ObjectId, ref: "missedVaccine" }],
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+    timestamps: true,
+  }
+);
+
+// Create and export the Child model
 export const ChildModel = model<Child>("child", ChildSchema);

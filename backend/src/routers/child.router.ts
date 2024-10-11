@@ -33,6 +33,14 @@ const router = Router();
 // );
 // TODO:
 
+router.delete(
+  "/child/delete-all",
+  expressAsyncHandler(async (req, res) => {
+    // Delete all child data with the old structure
+    const result = await ChildModel.deleteMany({});
+    res.send({ message: "All old child data deleted", result });
+  })
+);
 // router.get(
 //   "/child",
 //   expressAsyncHandler(async (req, res) => {
