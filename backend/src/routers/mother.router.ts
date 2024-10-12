@@ -5,6 +5,7 @@ import { Mother, MotherModel } from "../models/mother.model";
 import { loggerMiddleware } from "../middlewares/logger.mid";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
 import { authMiddleware } from "../middlewares/auth.mid";
+import { ChildModel } from "../models/child.model";
 
 const router = Router();
 
@@ -20,6 +21,19 @@ const router = Router();
 
 //     await MotherModel.create(mother);
 //     res.send("Seed is Done");
+//   })
+// );
+// Seed mother
+// Seed new mother data without deleting existing records
+// FIXME: router.get(
+//   "/seed",
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       await MotherModel.insertMany(mother); // insert new mother data without overwriting
+//       res.send("New mother data seeded successfully!");
+//     } catch (error) {
+//       res.status(500).send({ message: "Error seeding data", error });
+//     }
 //   })
 // );
 
@@ -125,6 +139,25 @@ router.patch(
     }
 
     res.send(updatedMother);
+  })
+);
+
+router.get(
+  "/:motherId/children",
+  expressAsyncHandler(async (req, res) => {
+    const motherId = req.params.motherId;
+
+    // Assuming you have a field in the Child schema linking to the mother
+    const children = await ChildModel.find({ motherId });
+
+    if (!children) {
+      res
+        .status(HTTP_NOT_FOUND)
+        .send({ message: "No children found for this mother" });
+      return;
+    }
+
+    res.send(children); // Send back the list of children
   })
 );
 

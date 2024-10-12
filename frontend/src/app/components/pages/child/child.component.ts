@@ -131,20 +131,9 @@ export class ChildComponent {
     }, 500);
   }
 
-  // openDialog(childId: string) {
-  //   this.dialogRef.open(PopupChildComponent, {
-  //     data: { childId }, // Passing user object to the dialog
-  //   });
-  // }
-
   openDialog(childId: string) {
     this.dialogRef.open(PopupChildComponent, {
       data: { childId: childId }, // Ensure correct data is passed here
     });
   }
 }
-//   search(searchTerm: string) {
-//   this.childService.getAllChildrenBySearchTerm(searchTerm).subscribe((children) => {
-//     this.child = children;
-//   });
-// }

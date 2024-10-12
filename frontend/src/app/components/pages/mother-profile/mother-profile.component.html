@@ -64,6 +64,9 @@
           </div>
         </div>
         <div class="user-statistics">
+          <button class="vcard-popup global-btn" (click)="openDialog()">
+            Add New Child
+          </button>
           <div class="usr-stat-graph">
             <div class="title-wrap">
               <h2 class="stat-title">Mother Statistics</h2>
@@ -76,8 +79,6 @@
                 <tr>
                   <th>Number of Children</th>
                   <th>Barangay Residency Status</th>
-                  <!-- <th>Number of Missed Vaccines</th>
-                  <th>Number of Adverse Reaction</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -86,42 +87,13 @@
                   <td>
                     {{ mother.isTransient ? "Transient" : "Native Resident" }}
                   </td>
-                  <!--<td>
-                    {{ getVaccinationPercentage(child) | number : "1.2-2" }}%
-                  </td>
-
-                  <td>{{ calculateMissedVaccines(child) }}</td>
-                  <td>{{ countAEFIOccurrences(child) }}</td> -->
                 </tr>
               </tbody>
             </table>
-            <!-- <table class="stat-table">
-              <thead>
-                <tr>
-                  <th>Nutritional Status</th>
-
-                  <th>Weight For Age</th>
-                  <th>Height For Age</th>
-                  <th>Weight For Length/Height</th>
-                </tr>
-              </thead>
-
-              @for(weighingHis of child.weighingHistory; track $index){
-              <tbody>
-                <tr>
-
-                  <td>{{ child.nutritionalStatus }}</td>
-                  <td>{{ weighingHis.weightForAgeStatus }}</td>
-                  <td>{{ weighingHis.heightForAgeStatus }}</td>
-                  <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
-                </tr>
-              </tbody>
-              }
-            </table> -->
           </div>
         </div>
       </div>
-      <div class="mother-children">
+      <div *ngIf="mother.children" class="mother-children">
         <div class="user-card-wrap c">
           <div
             class="user-card"

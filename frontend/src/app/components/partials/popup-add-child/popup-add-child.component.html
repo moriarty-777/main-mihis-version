@@ -1,0 +1,126 @@
+<div class="vpopup-container s">
+  <div class="vvld-box-inner">
+    <h2>Add New Child</h2>
+    <form [formGroup]="addChildForm" (submit)="addChild()">
+      <!-- <form [formGroup]="addChildForm"> -->
+      <div class="vvld-form-group">
+        <label for="f-name">Firstname</label>
+        <input
+          formControlName="firstName"
+          type="text"
+          placeholder="First name"
+          id="f-name"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="firstName?.touched && firstName?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="firstName?.errors?.['required']">
+            &#42; Firstname is required
+          </div>
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="l-name">Last name</label>
+        <input
+          formControlName="lastName"
+          type="text"
+          placeholder="Last name"
+          id="l-name"
+          class="form-ctrl"
+        />
+        <div *ngIf="lastName?.touched && lastName?.invalid" class="form-error">
+          <div *ngIf="lastName?.errors?.['required']">
+            &#42; Lastname is required
+          </div>
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="dateOfBirth">Date of Birth</label>
+        <input
+          formControlName="dateOfBirth"
+          type="date"
+          id="dateOfBirth"
+          placeholder="Date of Birth"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="dateOfBirth?.touched && dateOfBirth?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="dateOfBirth?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="gender">Gender</label>
+        <select formControlName="gender" id="gender" class="form-ctrl">
+          <option value="" disabled selected>Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <div *ngIf="gender?.touched && gender?.invalid" class="form-error">
+          <div *ngIf="gender?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="purok">Purok</label>
+        <input
+          formControlName="purok"
+          type="text"
+          placeholder="Purok"
+          id="purok"
+          class="form-ctrl"
+        />
+        <div *ngIf="purok?.touched && purok?.invalid" class="form-error">
+          <div *ngIf="purok?.errors?.['required']">&#42; Purok is required</div>
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="barangay">Barangay</label>
+        <input
+          formControlName="barangay"
+          type="text"
+          placeholder="Barangay"
+          id="barangay"
+          class="form-ctrl"
+        />
+        <div *ngIf="barangay?.touched && barangay?.invalid" class="form-error">
+          <div *ngIf="barangay?.errors?.['required']">
+            &#42; Barangay is required
+          </div>
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="photoPath">Photo Path</label>
+        <input
+          formControlName="photoPath"
+          type="text"
+          id="photoPath"
+          placeholder="Photo Path"
+          class="form-ctrl"
+        />
+        <div
+          *ngIf="photoPath?.touched && photoPath?.invalid"
+          class="form-error"
+        >
+          <div *ngIf="photoPath?.errors?.['required']">
+            &#42; This field is required
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="global-btn">Add Child</button>
+    </form>
+  </div>
+</div>

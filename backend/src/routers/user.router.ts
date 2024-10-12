@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { users } from "../data";
+// import { users } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import { User, UserModel } from "../models/user.model";
@@ -15,19 +15,19 @@ import { AuthenticatedRequest } from "../types/types";
 const router = Router();
 
 // seed
-router.get(
-  "/seed",
-  expressAsyncHandler(async (req, res) => {
-    const userCount = await UserModel.countDocuments();
-    if (userCount > 0) {
-      res.send("Seed is already Done!");
-      return;
-    }
+// router.get(
+//   "/seed",
+//   expressAsyncHandler(async (req, res) => {
+//     const userCount = await UserModel.countDocuments();
+//     if (userCount > 0) {
+//       res.send("Seed is already Done!");
+//       return;
+//     }
 
-    await UserModel.create(users);
-    res.send("Seed is Done");
-  })
-);
+//     await UserModel.create(users);
+//     res.send("Seed is Done");
+//   })
+// );
 router.get("/logs", getLogHistory);
 router.get(
   "/",

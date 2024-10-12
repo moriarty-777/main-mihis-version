@@ -22,7 +22,19 @@ const router = Router();
 //     res.send("Seed is Done");
 //   })
 // );
+router.get(
+  "/child/seed",
+  expressAsyncHandler(async (req, res) => {
+    const childCount = await ChildModel.countDocuments();
+    if (childCount > 0) {
+      res.send("Seed is already Done!");
+      return;
+    }
 
+    await ChildModel.create(child); // Seed the child data
+    res.send("Seed is Done");
+  })
+);
 // get child TODO:
 // router.get(
 //   "/child",
@@ -33,14 +45,14 @@ const router = Router();
 // );
 // TODO:
 
-router.delete(
-  "/child/delete-all",
-  expressAsyncHandler(async (req, res) => {
-    // Delete all child data with the old structure
-    const result = await ChildModel.deleteMany({});
-    res.send({ message: "All old child data deleted", result });
-  })
-);
+// router.delete(
+//   "/child/delete-all",
+//   expressAsyncHandler(async (req, res) => {
+//     // Delete all child data with the old structure
+//     const result = await ChildModel.deleteMany({});
+//     res.send({ message: "All old child data deleted", result });
+//   })
+// );
 // router.get(
 //   "/child",
 //   expressAsyncHandler(async (req, res) => {
@@ -194,6 +206,26 @@ router.patch(
     }
 
     res.send(updatedChild);
+  })
+);
+
+// Add child
+router.post(
+  "/child/add",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const { motherId, ...childData } = req.body;
+
+    // Add the child to the database
+    const newChild = await ChildModel.create(childData);
+
+    // Link the child to the mother
+    await MotherModel.findByIdAndUpdate(motherId, {
+      $push: { children: newChild._id },
+    });
+
+    res.status(201).send(newChild);
   })
 );
 
