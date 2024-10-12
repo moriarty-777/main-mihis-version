@@ -132,8 +132,10 @@ import { model, Schema } from "mongoose";
 export interface Child {
   firstName: string;
   lastName: string;
-  height: number;
-  weight: number;
+  // height: number;
+  // weight: number;
+  heightAtBirth?: number;
+  weightAtBirth?: number;
   dateOfBirth: Date;
   gender: string;
   purok: string;
@@ -153,14 +155,16 @@ const ChildSchema = new Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    height: { type: Number, required: true },
-    weight: { type: Number, required: true },
+    // height: { type: Number, required: true },
+    // weight: { type: Number, required: true },
+    weightAtBirth: { type: Number, required: false }, // Weight at birth
+    heightAtBirth: { type: Number, required: false }, // Height at birth
     dateOfBirth: { type: Date, required: true },
     gender: { type: String, required: true },
     purok: { type: String, required: true },
     barangay: { type: String, required: true },
     photoPath: { type: String, required: false },
-    placeOfBirth: { type: String, required: false },
+    placeOfBirth: { type: String, required: false, default: "Margarito" },
     weighingHistory: [{ type: Schema.Types.ObjectId, ref: "weighingHistory" }],
     vaccinations: [{ type: Schema.Types.ObjectId, ref: "vaccination" }],
     vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },

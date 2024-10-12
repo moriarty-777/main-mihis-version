@@ -21,7 +21,7 @@ export const loggerMiddleware = async (req: any, res: any, next: any) => {
           actionMessage += `deleted a record`;
           break;
         default:
-          actionMessage += `performed an action`;
+          actionMessage += `view page`;
       }
 
       if (req.originalUrl.includes("/child")) {

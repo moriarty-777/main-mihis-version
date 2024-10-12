@@ -1,246 +1,833 @@
-/* I've got this code for weight for length z score threshold, weight for age z score threshold and length for age z score threshold and their computation logic
+/*
+*note delete dela cruz katleen child and dela cruz Evangeline mother
 
-1 Weight for Length Status
-export class NutritionalStatusCalcComponent {
-  classification: any;
- private zScoreThresholds: any = {
-    female: {
-      '0-24': {
-        '-3SD': [
-        ],
-        '-2SD': [
-        ],
-        Median: [
-        ],
-        '+2SD': [
-        ],
-        '+3SD': [
-        ],
-      },
-      '24-60': {
-        '-3SD': [
-        ],
-        '-2SD': [
-        ],
-        Median: [
-        ],
-        '+2SD': [
-        ],
-        '+3SD': [
-        ],
-      },
-    },
-    male: {
-      '0-24': {
-        '-3SD': [
-        ],
-        '-2SD': [
-        ],
-        Median: [
-        ],
-        '+2SD': [
-        ],
-        '+3SD': [
-        ],
-      },
-      '24-60': {
-        '-3SD': [
-        ],
-        '-2SD': [
-        ],
-        Median: [
-        ],
-        '+2SD': [
-        ],
-        '+3SD': [
-        ],
-      },
-    },
-  };
-
-  code logic for weight for length 
-    private getInterpolatedThreshold(zScores: number[], length: number): number {
-    const lengthIndex = Math.floor(length);
-    const remainder = length - lengthIndex;
-
-    if (lengthIndex < 0 || lengthIndex >= zScores.length - 1) {
-      return zScores[lengthIndex]; // If out of bounds, return the closest index
-    }
-
-    const lowerValue = zScores[lengthIndex];
-    const upperValue = zScores[lengthIndex + 1];
-    console.log(zScores);
-    // Interpolate between two closest values if there's a decimal remainder
-    return lowerValue + remainder * (upperValue - lowerValue);
-  }
-
-  getWeightForLengthStatus(
-    gender: 'male' | 'female',
-    ageInMonths: number,
-    weight: number,
-    length: number
-  ): string {
-    const thresholds = this.zScoreThresholds[gender];
-    let group: '0-24' | '24-60' = ageInMonths <= 24 ? '0-24' : '24-60';
-
-    if (length < 45 || length > 120) {
-      return 'Length out of range'; // Adjust according to the dataset range
-    }
-
-    const thresholdValues = {
-      '-3SD': this.getInterpolatedThreshold(thresholds[group]['-3SD'], length),
-      '-2SD': this.getInterpolatedThreshold(thresholds[group]['-2SD'], length),
-      '+2SD': this.getInterpolatedThreshold(thresholds[group]['+2SD'], length),
-      '+3SD': this.getInterpolatedThreshold(thresholds[group]['+3SD'], length),
-    };
-
-    if (weight < thresholdValues['-3SD']) {
-      return 'Severely Wasted';
-    } else if (
-      weight >= thresholdValues['-3SD'] &&
-      weight < thresholdValues['-2SD']
-    ) {
-      return 'Wasted';
-    } else if (
-      weight >= thresholdValues['-2SD'] &&
-      weight <= thresholdValues['+2SD']
-    ) {
-      return 'Normal';
-    } else if (
-      weight > thresholdValues['+2SD'] &&
-      weight <= thresholdValues['+3SD']
-    ) {
-      return 'Overweight';
-    } else if (weight > thresholdValues['+3SD']) {
-      return 'Obese';
-    } else {
-      return 'Invalid Data';
-    }
-  }
-
-  ngOnInit(): void {
-    this.classification = this.getWeightForLengthStatus('female', 10, 13, 80);
-    console.log(this.classification);
-  }
-
-
-  2 Length for Age Status
-
-  // Girls' median values (0-59 months)
-  private girlsMedian: number[] = [
-    49.1,
-  ];
-
-
-  // Girls' SD values (0-59 months)
-  private girlsSD: number[] = [
-    2.4,
-  ];
-
-  // Boys' median values (0-59 months)
-  private boysMedian: number[] = [
-    49.9, 
-  ];
-
-  // Boys' SD values (0-59 months)
-  private boysSD: number[] = [
-    2.5, 
-  ];
-
-  // Z-score calculation method
-  calculateZScore(gender: string, ageInMonths: number, length: number): number {
-    let median: number;
-    let sd: number;
-
-    if (gender === 'female') {
-      median = this.girlsMedian[ageInMonths];
-      sd = this.girlsSD[ageInMonths];
-    } else {
-      median = this.boysMedian[ageInMonths];
-      sd = this.boysSD[ageInMonths];
-    }
-
-    // Z-score formula
-    return (length - median) / sd;
-  }
-
-  // Classification based on Z-score
-  classifyLengthForAge(
-    gender: string,
-    ageInMonths: number,
-    length: number
-  ): string {
-    const zScore = this.calculateZScore(gender, ageInMonths, length);
-
-    if (zScore <= -3) {
-      return 'Severely Stunted';
-    } else if (zScore <= -2) {
-      return 'Stunted';
-    } else if (zScore >= 2) {
-      return 'Tall';
-    } else {
-      return 'Normal';
-    }
-  }
-
-  ngOnInit() {
-    // gender
-    // age in months
-    //  height
-    this.classification = this.classifyLengthForAge('male', 15, 69);
-    console.log(this.classification);
-  }
-
-  3 Weight for Age Status
-
-   private boysMedian: number[] = [
-    3.3,
-  ];
-
-  private boysSD: number[] = [
-    0.6,
-  ];
-  // TODO: NOW
-  // Girls' Median and SD (0-59 months)
-  private girlsMedian: number[] = [
-    3.2, 
-  ];
-
-  private girlsSD: number[] = [
-    0.5, 
-  ];
-
-  calculateZScore(gender: string, ageInMonths: number, weight: number): number {
-    const median =
-      gender === 'male'
-        ? this.boysMedian[ageInMonths]
-        : this.girlsMedian[ageInMonths];
-    const sd =
-      gender === 'male' ? this.boysSD[ageInMonths] : this.girlsSD[ageInMonths];
-    return (weight - median) / sd;
-  }
-
-  classifyWeightForAge(
-    gender: string,
-    ageInMonths: number,
-    weight: number
-  ): string {
-    const zScore = this.calculateZScore(gender, ageInMonths, weight);
-    if (zScore <= -3) {
-      return 'Severely Underweight';
-    } else if (zScore <= -2) {
-      return 'Underweight';
-    } else if (zScore >= 2) {
-      return 'Overweight';
-    } else {
-      return 'Normal';
-    }
-  }
-
-  // Example usage:
-  ngOnInit() {
-    const classification = this.classifyWeightForAge('male', 34, 27);
-    console.log(classification); // Output: 'Normal'
-  }
-}
+M + C
+1 Delacruz, Jherlyn + Delacruz, Jhenzell
+2 Celoza, Joy Ann + Celoza, Raymar Jr.
+3 Bolante, Genelyn + Bolante, John David
+4 Cruz, Rose Ann + Dela Cruz, Fedrick Transient
+5 Cequeña, Andrea + Potal, John Liam
+6 Celoza, Loryann + Mesa, Lance Jake
+7 Gonzal, Jhezzrel + Cate, Jayreel Dylan
+8 Arguilles, Liezel + Arguilles, Zion
+9 Aguilar, Cherry  + Ramirez, Kiesha Mae
+10 Alday, Angelica + Cordovilla, Steven Ryan Jr.
+11 Flordeliz, Lowela + Sison, Iverson Transient
+12 Mendoza, Medy + Mendoza, Kervin Roy
+13 Antinero, Jona + Antinero, Ikishi Venice
+14 Paralejas, Rizalyn + Paralejas, Queen Roshelle Transient
+15 Elomina, Joy Ann + Elomina, Rhianne
+16 Flocencio, Mica  + Flocencio, Prince Kervy Transient
+17 Mallari, Kristilyn + Cadajas, Arnelyn Transient
+18 Cornelio, Scarlet + Celestino, Carl Jasper Transient
+19 Liwanag, Mica + Arabit, Azrah Transient
+20 Cenir, Jessie Ann + Hernandez, Flyne Cydrisse Greese
+21 Dawn, Carmela + Paralejas, Jamaica Rain Transient
+22 Baliwas, Rowena + Baliwas, King Zian
+23 Macalos, Hanna Mae + Macalos, Harren Clyde Transient
+24 Gondraneos, Christine Joy + Gondraneos, James Kyler
+25 Camalig, Elili + Ramirez, Dwayne Archie Transient
+26 Robles, Kisses + Gobres, Cecille
+27 Mendiola, Aireen + Mendiola, Jofree
+28 Sidutan, Arianne + Sidutan, Jass Andre Transient
+29 Salinas, Diana Rose + Salinas, Wendy Lyn
+30 Nones, Lenie + Nones, Jacob 
+31 Goto, Sarah + Goto, Aeryen
+32 Magsakay, Emmalyn + Magsakay, Andrea
 */
+export const child = [
+  {
+    firstName: "Jhenzell",
+    lastName: "Dela Cruz",
+    dateOfBirth: "2020-07-15",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Raymar Jr.",
+    lastName: "Celoza",
+    dateOfBirth: "2019-03-11",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "John David",
+    lastName: "Bolante",
+    dateOfBirth: "2020-06-25",
+    gender: "Male",
+    purok: "4",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Fedrick",
+    lastName: "Dela Cruz",
+    dateOfBirth: "2018-02-16",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "John Liam",
+    lastName: "Potal",
+    dateOfBirth: "2020-09-02",
+    gender: "Male",
+    purok: "3",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Lance Jake",
+    lastName: "Mesa",
+    dateOfBirth: "2021-01-06",
+    gender: "Male",
+    purok: "3",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Jayreel Dylan",
+    lastName: "Cate",
+    dateOfBirth: "2020-04-24",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Zion",
+    lastName: "Arguilles",
+    dateOfBirth: "2021-03-14",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Kiesha Mae",
+    lastName: "Ramirez",
+    dateOfBirth: "2020-11-07",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Steven Ryan Jr.",
+    lastName: "Cordovilla",
+    dateOfBirth: "2020-08-08",
+    gender: "Male",
+    purok: "3",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Iverson",
+    lastName: "Sison",
+    dateOfBirth: "2020-04-28",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Kervin Roy",
+    lastName: "Mendoza",
+    dateOfBirth: "2020-02-22",
+    gender: "Male",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Ikishi Venice",
+    lastName: "Antinero",
+    dateOfBirth: "2020-11-29",
+    gender: "Male",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Queen Roshelle",
+    lastName: "Paralejas",
+    dateOfBirth: "2020-03-16",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Prince Kervy",
+    lastName: "Flocencio",
+    dateOfBirth: "2020-11-19",
+    gender: "Male",
+    purok: "3",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Arnelyn",
+    lastName: "Cadajas",
+    dateOfBirth: "2020-03-30",
+    gender: "Male",
+    purok: "3",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Carl Jasper",
+    lastName: "Celestino",
+    dateOfBirth: "2020-09-09",
+    gender: "Male",
+    purok: "4",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Azrah",
+    lastName: "Arabit",
+    dateOfBirth: "2020-01-12",
+    gender: "Male",
+    purok: "4",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Flyne Cydrisse Greese",
+    lastName: "Hernandez",
+    dateOfBirth: "2020-07-26",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Jamaica Rain",
+    lastName: "Paralejas",
+    dateOfBirth: "2020-09-08",
+    gender: "Male",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "King Zian",
+    lastName: "Baliwas",
+    dateOfBirth: "2021-03-08",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Harren Clyde",
+    lastName: "Macalos",
+    dateOfBirth: "2021-03-08",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "James Kyler",
+    lastName: "Gondraneos",
+    dateOfBirth: "2020-11-25",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Dwayne Archie",
+    lastName: "Ramirez",
+    dateOfBirth: "2020-04-28",
+    gender: "Male",
+    purok: "3",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Cecille",
+    lastName: "Gobres",
+    dateOfBirth: "2020-05-08",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Jofree",
+    lastName: "Mendiola",
+    dateOfBirth: "2021-03-30",
+    gender: "Male",
+    purok: "4",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Jass Andre",
+    lastName: "Sidutan",
+    dateOfBirth: "2017-10-07",
+    gender: "Male",
+    purok: "4",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Wendy Lyn",
+    lastName: "Salinas",
+    dateOfBirth: "2018-02-07",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Jacob",
+    lastName: "Nones",
+    dateOfBirth: "2019-01-05",
+    gender: "Male",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Aeryen",
+    lastName: "Goto",
+    dateOfBirth: "2019-01-05",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Aeryen",
+    lastName: "Goto",
+    dateOfBirth: "2019-01-05",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Andrea",
+    lastName: "Magsakay",
+    dateOfBirth: "2020-08-25",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+  {
+    firstName: "Franz Calleb",
+    lastName: "Cerda",
+    dateOfBirth: "2019-04-08",
+    gender: "Male",
+    purok: "1",
+    barangay: "Bangad",
+    photoPath: "assets/img/child-default.jpg",
+  },
+];
+
+export const mother: any[] = [
+  {
+    firstName: "Joy Ann",
+    lastName: "Celoza",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639587485126",
+    email: "joyann.celoza@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Genelyn",
+    lastName: "Bolante",
+    gender: "Female",
+    purok: "4",
+    barangay: "Bangad",
+    phone: "639522485126",
+    email: "genelyn.bolante@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Rose Ann",
+    lastName: "Cruz",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639522485177",
+    email: "roseann.cruz@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Andrea",
+    lastName: "Cequeña",
+    gender: "Female",
+    purok: "3",
+    barangay: "Bangad",
+    phone: "639522485177",
+    email: "andrea.cequena@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Loryann",
+    lastName: "Celoza",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639533485177",
+    email: "loryann.celoza@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Jhezzrel",
+    lastName: "Gonzal",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639231485177",
+    email: "jhezzrel.gonzal@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Liezel",
+    lastName: "Arguilles",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639111485177",
+    email: "liezel.arguilles@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Cherry",
+    lastName: "Aguilar",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639909485177",
+    email: "cherry.aguilar@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Angelica",
+    lastName: "Alday",
+    gender: "Female",
+    purok: "3",
+    barangay: "Bangad",
+    phone: "639548756329",
+    email: "angelica.alday@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Lowela",
+    lastName: "Flordeliz",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639232756329",
+    email: "lowela.flordeliz@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Medy",
+    lastName: "Mendoza",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    phone: "639232756545",
+    email: "medy.mendoza@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Jona",
+    lastName: "Antinero",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    phone: "63999756545",
+    email: "jona.antinero@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Rizalyn",
+    lastName: "Paralejas",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    phone: "63994587545",
+    email: "rizalyn.paralejas@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Joy Ann",
+    lastName: "Elomina",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "63994587588",
+    email: "joyann.elomina@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Mica",
+    lastName: "Flocencio",
+    gender: "Female",
+    purok: "3",
+    barangay: "Bangad",
+    phone: "63965657588",
+    email: "mica.flocencio@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Kristilyn",
+    lastName: "Mallari",
+    gender: "Female",
+    purok: "3",
+    barangay: "Bangad",
+    phone: "63911657588",
+    email: "kristilyn.mallari@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Scarlet",
+    lastName: "Cornelio",
+    gender: "Female",
+    purok: "4",
+    barangay: "Bangad",
+    phone: "63955657588",
+    email: "scarlet.cornelio@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Mica",
+    lastName: "Liwanag",
+    gender: "Female",
+    purok: "4",
+    barangay: "Bangad",
+    phone: "63998658588",
+    email: "mica.liwanag@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Jessie Ann",
+    lastName: "Ceñir",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    phone: "63912358588",
+    email: "jessieann.cenir@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Dawn",
+    lastName: "Carmela",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    phone: "63912656888",
+    email: "carmela.dawn@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: true,
+  },
+  {
+    firstName: "Rowena",
+    lastName: "Baliwas",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "63978756888",
+    email: "rewena.baliwas@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Kisses",
+    lastName: "Robles",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "63963456888",
+    email: "kisses.robles@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Arianne",
+    lastName: "Sidutan",
+    gender: "Female",
+    purok: "4",
+    barangay: "Bangad",
+    phone: "639658974219",
+    email: "arianne.sidutan@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Diana Rose",
+    lastName: "Salinas",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639128974219",
+    email: "dianarose.salinas@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Lenie",
+    lastName: "Nones",
+    gender: "Female",
+    purok: "2",
+    barangay: "Bangad",
+    phone: "639128955219",
+    email: "lenie.nones@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+  {
+    firstName: "Emmalyn",
+    lastName: "Magsakay",
+    gender: "Female",
+    purok: "1",
+    barangay: "Bangad",
+    phone: "639156785219",
+    email: "emmalyn.magsakay@gmail.com",
+    photoPath: "assets/img/default-user-profile.jpg",
+    isTransient: false,
+  },
+];
+// FIXME: END END END END END END NED
+const wesa = [
+  {
+    id: "child1",
+    firstName: "Katleen",
+    lastName: "Dela Cruz",
+    purok: "2",
+    gender: "Female",
+    weight: 17,
+    height: 98,
+    barangay: "Bangad",
+    dateOfBirth: "2020-11-26",
+    photoPath: "assets/img/child-default.jpg",
+    vaccinations: [
+      {
+        vaccineType: "BCG",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2020-12-02",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Hepatitis B Vaccine",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2020-12-09",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Pentavalent Vaccine",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-02-03",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: true,
+          description: "Low-grade fever lasting for a few hours",
+          severity: "Mild",
+        },
+      },
+      {
+        vaccineType: "Oral Polio Vaccine (OPV)",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-02-03",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Pneumococcal Conjugate Vaccine (PCV)",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-02-03",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe5",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Pentavalent Vaccine",
+        doseNumber: "2nd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-03-10",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Oral Polio Vaccine (OPV)",
+        doseNumber: "2nd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-03-10",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Pneumococcal Conjugate Vaccine (PCV)",
+        doseNumber: "2nd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-03-10",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe5",
+        aefi: {
+          occurred: true,
+          description: "Low-grade fever lasting for a few hours",
+          severity: "Mild",
+        },
+      },
+
+      {
+        vaccineType: "Pentavalent Vaccine",
+        doseNumber: "3rd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-04-14",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: true,
+          description: "Moderate swelling and redness at the injection site",
+          severity: "Moderate",
+        },
+      },
+      {
+        vaccineType: "Oral Polio Vaccine (OPV)",
+        doseNumber: "3rd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-04-14",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Pneumococcal Conjugate Vaccine (PCV)",
+        doseNumber: "3rd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-04-14",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe5",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Inactivated Polio Vaccine (IPV)",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-04-14",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe4",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Inactivated Polio Vaccine (IPV)",
+        doseNumber: "2nd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-09-01",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe5",
+        aefi: {
+          occurred: true,
+          description: "Mild fever and soreness at the injection site",
+          severity: "Mild",
+        },
+      },
+
+      {
+        vaccineType: "Measles, Mumps, Rubella Vaccine (MMR)",
+        doseNumber: "1st Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-09-01",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe5",
+        aefi: {
+          occurred: false,
+        },
+      },
+      {
+        vaccineType: "Measles, Mumps, Rubella Vaccine (MMR)",
+        doseNumber: "2nd Dose",
+        placeOfVaccination: "Barangay Health Center",
+        dateOfVaccination: "2021-11-24",
+        midwifeId: "66cc86cfcec65103d4abdfe3",
+        bhwId: "66cc86cfcec65103d4abdfe5",
+        aefi: {
+          occurred: true,
+          description: "Moderate swelling and redness at the injection site",
+          severity: "Moderate",
+        },
+      },
+    ],
+    isFullyVaccinated: true,
+    dateFullyVaccinated: "2021-11-24",
+    weighingHistory: [
+      {
+        date: "2024-01-25",
+        weight: 17,
+        height: 98,
+        weightForAgeStatus: "Normal",
+        heightForAgeStatus: "Normal",
+        weightForLengthHeightStatus: "Normal",
+        notes: "",
+      },
+    ],
+    nutritionalStatus: "Normal",
+  },
+];

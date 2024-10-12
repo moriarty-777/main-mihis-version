@@ -30,30 +30,32 @@ export class PopupMotherComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { motherId: string }) {}
 
   ngOnInit(): void {
-    // Check if the motherId exists before fetching data
-    if (this.data && this.data.motherId) {
-      this.motherService.getMotherById(this.data.motherId).subscribe(
-        (mother: Mother) => {
-          this.updatesForm.patchValue({
-            firstName: mother.firstName || '',
-            lastName: mother.lastName || '',
-            phone: mother.phone || '',
-            email: mother.email || '',
-            barangay: mother.barangay || '',
-            isTransient: mother.isTransient ? 'true' : 'false',
-            purok: mother.purok || '',
-            photoPath:
-              mother.photoPath || 'assets/img/default-user-profile.jpg',
-            gender: mother.gender || '',
-          });
-        },
-        (error) => {
-          console.error('Error fetching Mother data:', error);
-        }
-      );
-    } else {
-      console.error('MotherId is missing in MAT_DIALOG_DATA');
-    }
+    setTimeout(() => {
+      // Check if the motherId exists before fetching data
+      if (this.data && this.data.motherId) {
+        this.motherService.getMotherById(this.data.motherId).subscribe(
+          (mother: Mother) => {
+            this.updatesForm.patchValue({
+              firstName: mother.firstName || '',
+              lastName: mother.lastName || '',
+              phone: mother.phone || '',
+              email: mother.email || '',
+              barangay: mother.barangay || '',
+              isTransient: mother.isTransient ? 'true' : 'false',
+              purok: mother.purok || '',
+              photoPath:
+                mother.photoPath || 'assets/img/default-user-profile.jpg',
+              gender: mother.gender || '',
+            });
+          },
+          (error) => {
+            console.error('Error fetching Mother data:', error);
+          }
+        );
+      } else {
+        console.error('MotherId is missing in MAT_DIALOG_DATA');
+      }
+    }, 1); // this
 
     // Initialize the form
     this.updatesForm = this.fb.group({
