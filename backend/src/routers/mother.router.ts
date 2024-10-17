@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { mother } from "../data";
+import { mother, mother2022, mother111 } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import { Mother, MotherModel } from "../models/mother.model";
 import { loggerMiddleware } from "../middlewares/logger.mid";
@@ -36,6 +36,63 @@ const router = Router();
 //     }
 //   })
 // );
+// TODO: Seeding
+// router.get(
+//   "/seed",
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       for (const mother of mother111) {
+//         // Check if the mother already exists based on firstName and lastName or any unique field (e.g., phone, email)
+//         const existingMother = await MotherModel.findOne({
+//           firstName: mother.firstName,
+//           lastName: mother.lastName,
+//         });
+
+//         // Insert the mother data only if it doesn't exist
+//         if (!existingMother) {
+//           await MotherModel.create(mother);
+//         }
+//       }
+
+//       res.send("New mother data seeded successfully without overwriting!");
+//     } catch (error) {
+//       res.status(500).send({ message: "Error seeding data", error });
+//     }
+//   })
+// );
+
+// Link Child to Mother
+// Link child to mother via child ID
+router.post(
+  "/link-child",
+  expressAsyncHandler(async (req, res) => {
+    const { motherId, childId } = req.body;
+
+    // Check if the child exists
+    const childExists = await ChildModel.findById(childId);
+    if (!childExists) {
+      res.status(404).send({ message: "Child not found" });
+    }
+
+    // Update the mother document by pushing the child's ID into the children array
+    const updatedMother = await MotherModel.findByIdAndUpdate(
+      motherId,
+      { $addToSet: { children: childId } }, // Ensure the child isn't already linked
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedMother) {
+      res.status(404).send({ message: "Mother not found" });
+    }
+
+    res
+      .status(200)
+      .send({
+        message: "Child linked to mother successfully",
+        mother: updatedMother,
+      });
+  })
+);
 
 // router.get(
 //   "/",

@@ -3,7 +3,6 @@
     <div class="user-profile-container">
       <div class="user-header">
         <div class="usr-hdr-left">
-          <!-- <pre>{{ child | json }}</pre> -->
           {{ child.firstName + " " + child.lastName }}
         </div>
         <a routerLink="/child" class="usr-hdr-right global-btn"
@@ -30,10 +29,10 @@
                     <td>Name</td>
                     <td>{{ child.firstName + " " + child.lastName }}</td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <td>Age</td>
                     <td>{{ getAgeInMonths(child.dateOfBirth) }} months</td>
-                  </tr>
+                  </tr> -->
                   <tr>
                     <td>Gender</td>
                     <td>{{ child.gender }}</td>
@@ -63,7 +62,7 @@
                   </tr>
                   <tr>
                     <td>Vaccine</td>
-                    <td class="u_icon">
+                    <!-- <td class="u_icon">
                       {{ countVaccinations(child) }} /
                       <span class="gray">15</span>
                       <span class="question"
@@ -74,7 +73,7 @@
                           >help</mat-icon
                         ></span
                       >
-                    </td>
+                    </td> -->
                   </tr>
                   <tr>
                     <td>Mother</td>
@@ -89,7 +88,7 @@
             </div>
           </div>
         </div>
-        <div class="user-statistics">
+        <!-- <div class="user-statistics">
           <button class="vcard-popup global-btn" (click)="openDialog()">
             Vaccination Card
           </button>
@@ -131,20 +130,14 @@
               <thead>
                 <tr>
                   <th>Nutritional Status</th>
-                  <!-- Normal At Risk Malnourished -->
                   <th>Weight For Age</th>
                   <th>Height For Age</th>
                   <th>Weight For Length/Height</th>
                 </tr>
               </thead>
-              <!-- <tbody *ngIf="getLatestWeighing(child) as latestWeighing"> -->
               @for(weighingHis of child.weighingHistory; track $index){
               <tbody>
                 <tr>
-                  <!-- <p>Date: {{ latestWeighing.date }}</p>
-                  <p>Weight: {{ latestWeighing.weight }}</p>
-                  <p>Height: {{ latestWeighing.height }}</p> -->
-                  <!-- <td>{{ getNutritionalStatus(latestWeighing) }}</td> -->
                   <td>{{ child.nutritionalStatus }}</td>
                   <td>{{ weighingHis.weightForAgeStatus }}</td>
                   <td>{{ weighingHis.heightForAgeStatus }}</td>
@@ -154,11 +147,10 @@
               }
             </table>
           </div>
-        </div>
+        </div> -->
       </div>
-      <!--  -->
 
-      <div class="child-schedule-log">
+      <!-- <div class="child-schedule-log">
         <div class="title-wrap">
           <h2 class="stat-title">
             Recent {{ child.firstName + " " + child.lastName }} Vaccinations and
@@ -176,7 +168,6 @@
                 <th>Vaccine Type</th>
                 <th>Dose Number</th>
                 <th>Administered By</th>
-                <!-- FIXME: -->
                 <th>BHW</th>
                 <th>Location</th>
               </tr>
@@ -237,7 +228,6 @@
             }
           </table>
         </div>
-        <!-- Schedule Logs for every child -->
         <div class="title-wrap bosst">
           <h3 class="stat-sub-title">Child Schedule</h3>
         </div>
@@ -268,8 +258,7 @@
             }
           </table>
         </div>
-      </div>
-      <!--  -->
+      </div> -->
     </div>
   </div>
 </div>

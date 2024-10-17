@@ -71,127 +71,127 @@ export class ChildrenProfileComponent {
       this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
       this.motherId = `${data.mother.id}`;
 
-      this.vaccinationSchedule =
-        this.childrenService.getExpectedVaccinationSchedule(
-          data.child.dateOfBirth
-        );
+      // this.vaccinationSchedule =
+      //   this.childrenService.getExpectedVaccinationSchedule(
+      //     data.child.dateOfBirth
+      //   );
 
-      // Sort the vaccinations after loading the child data
-      this.child.vaccinations.sort((a, b) => {
-        return (
-          new Date(b.dateOfVaccination).getTime() -
-          new Date(a.dateOfVaccination).getTime()
-        );
-      });
+      // // Sort the vaccinations after loading the child data
+      // this.child.vaccinations.sort((a, b) => {
+      //   return (
+      //     new Date(b.dateOfVaccination).getTime() -
+      //     new Date(a.dateOfVaccination).getTime()
+      //   );
+      // });
 
-      // Sort weighingHistory by date
-      this.child.weighingHistory.sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      });
+      // // Sort weighingHistory by date
+      // this.child.weighingHistory.sort((a, b) => {
+      //   return new Date(b.date).getTime() - new Date(a.date).getTime();
+      // });
 
       this.cdr.detectChanges(); // Detect changes if necessary
     });
   }
 
-  calculateMissedVaccines(child: Child): number {
-    const expectedVaccines =
-      this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
-    const administeredVaccines = child.vaccinations || []; // Handle if vaccinations are empty
+  // calculateMissedVaccines(child: Child): number {
+  //   const expectedVaccines =
+  //     this.childrenService.getExpectedVaccinationSchedule(child.dateOfBirth);
+  //   const administeredVaccines = child.vaccinations || []; // Handle if vaccinations are empty
 
-    // Calculate the current date
-    const today = new Date();
+  //   // Calculate the current date
+  //   const today = new Date();
 
-    // Filter out the expected vaccines that were not administered or were missed
-    const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
-      // Find if this expected vaccine was administered
-      const administered = administeredVaccines.some(
-        (administeredVaccine) =>
-          administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
-          administeredVaccine.doseNumber === expectedVaccine.doseNumber
-      );
+  //   // Filter out the expected vaccines that were not administered or were missed
+  //   const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
+  //     // Find if this expected vaccine was administered
+  //     const administered = administeredVaccines.some(
+  //       (administeredVaccine) =>
+  //         administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
+  //         administeredVaccine.doseNumber === expectedVaccine.doseNumber
+  //     );
 
-      // If the vaccine was not administered and the scheduled date has passed, count it as missed
-      return (
-        !administered && new Date(expectedVaccine.dateOfVaccination) < today
-      );
-    });
+  //     // If the vaccine was not administered and the scheduled date has passed, count it as missed
+  //     return (
+  //       !administered && new Date(expectedVaccine.dateOfVaccination) < today
+  //     );
+  //   });
 
-    // Return the number of missed vaccines
-    return missedVaccines.length;
-  }
+  //   // Return the number of missed vaccines
+  //   return missedVaccines.length;
+  // }
 
-  // Pagination
-  itemsPerPage = 5;
-  currentPage = 1;
+  // // Pagination
+  // itemsPerPage = 5;
+  // currentPage = 1;
 
-  get paginatedChildren() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.child.vaccinations.slice(start, end);
-  }
+  // get paginatedChildren() {
+  //   const start = (this.currentPage - 1) * this.itemsPerPage;
+  //   const end = start + this.itemsPerPage;
+  //   return this.child.vaccinations.slice(start, end);
+  // }
 
-  changePage(page: number) {
-    this.currentPage = page;
-  }
+  // changePage(page: number) {
+  //   this.currentPage = page;
+  // }
 
-  // Pop up Vaccination
-  openDialog() {
-    this.dialogRef.open(VaccinePopupComponent, {
-      data: {
-        child: this.child, // Pass the child object
-        motherName: this.motherName, // Pass the mother's name
-      },
-    });
-  }
+  // // Pop up Vaccination
+  // openDialog() {
+  //   this.dialogRef.open(VaccinePopupComponent, {
+  //     data: {
+  //       child: this.child, // Pass the child object
+  //       motherName: this.motherName, // Pass the mother's name
+  //     },
+  //   });
+  // }
 
-  // Vaccination
+  // // Vaccination
 
-  getVaccinationStatus(child: Child): string {
-    if (child.isFullyVaccinated) {
-      return 'Fully Vaccinated';
-    } else if (child.vaccinations.length > 0) {
-      return 'Partially Vaccinated';
-    } else {
-      return 'Not Vaccinated';
-    }
-  }
+  // getVaccinationStatus(child: Child): string {
+  //   if (child.isFullyVaccinated) {
+  //     return 'Fully Vaccinated';
+  //   } else if (child.vaccinations.length > 0) {
+  //     return 'Partially Vaccinated';
+  //   } else {
+  //     return 'Not Vaccinated';
+  //   }
+  // }
 
-  getAgeInMonths(dateOfBirth: string): number {
-    const dob = new Date(dateOfBirth);
-    const now = new Date();
-    const ageInMonths =
-      (now.getFullYear() - dob.getFullYear()) * 12 +
-      (now.getMonth() - dob.getMonth());
-    return ageInMonths;
-  }
+  // getAgeInMonths(dateOfBirth: string): number {
+  //   const dob = new Date(dateOfBirth);
+  //   const now = new Date();
+  //   const ageInMonths =
+  //     (now.getFullYear() - dob.getFullYear()) * 12 +
+  //     (now.getMonth() - dob.getMonth());
+  //   return ageInMonths;
+  // }
 
-  countVaccinations(child: Child): number {
-    const oneYearAndSixWeeksAfterBirth = new Date(child.dateOfBirth);
-    oneYearAndSixWeeksAfterBirth.setFullYear(
-      oneYearAndSixWeeksAfterBirth.getFullYear() + 1
-    );
-    oneYearAndSixWeeksAfterBirth.setDate(
-      oneYearAndSixWeeksAfterBirth.getDate() + 42
-    ); // Add 6 weeks (42 days)
+  // countVaccinations(child: Child): number {
+  //   const oneYearAndSixWeeksAfterBirth = new Date(child.dateOfBirth);
+  //   oneYearAndSixWeeksAfterBirth.setFullYear(
+  //     oneYearAndSixWeeksAfterBirth.getFullYear() + 1
+  //   );
+  //   oneYearAndSixWeeksAfterBirth.setDate(
+  //     oneYearAndSixWeeksAfterBirth.getDate() + 42
+  //   ); // Add 6 weeks (42 days)
 
-    return child.vaccinations.filter((vaccine) => {
-      const vaccineDate = new Date(vaccine.dateOfVaccination);
-      return (
-        vaccineDate >= new Date(child.dateOfBirth) &&
-        vaccineDate <= oneYearAndSixWeeksAfterBirth
-      );
-    }).length;
-  }
+  //   return child.vaccinations.filter((vaccine) => {
+  //     const vaccineDate = new Date(vaccine.dateOfVaccination);
+  //     return (
+  //       vaccineDate >= new Date(child.dateOfBirth) &&
+  //       vaccineDate <= oneYearAndSixWeeksAfterBirth
+  //     );
+  //   }).length;
+  // }
 
-  getVaccinationPercentage(child: Child): number {
-    const totalRequiredVaccines = 15; //  total
-    const administeredVaccines = this.countVaccinations(child);
-    return (administeredVaccines / totalRequiredVaccines) * 100;
-  }
+  // getVaccinationPercentage(child: Child): number {
+  //   const totalRequiredVaccines = 15; //  total
+  //   const administeredVaccines = this.countVaccinations(child);
+  //   return (administeredVaccines / totalRequiredVaccines) * 100;
+  // }
 
-  countAEFIOccurrences(child: Child): number {
-    return child.vaccinations.filter(
-      (vaccination) => vaccination.aefi && vaccination.aefi.occurred
-    ).length;
-  }
+  // countAEFIOccurrences(child: Child): number {
+  //   return child.vaccinations.filter(
+  //     (vaccination) => vaccination.aefi && vaccination.aefi.occurred
+  //   ).length;
+  // }
 }

@@ -53,4 +53,20 @@ export class MotherProfileComponent {
       data: { motherId: this.mother.id }, /// Ensure correct data is passed here
     });
   }
+  // linkChild() {
+  //   const motherId = '67103e8ebd8e366d0c92b288'; // From form or selected data
+  //   const childId = '67103e67b3bf97ca89f10a74'; // From form or selected data
+
+  //   this.motherService
+  //     .linkChildToMother(motherId, childId)
+  //     .subscribe((response) => {
+  //       console.log(response);
+  //       // Optionally reload or refresh the page
+  //     });
+
+  //   // Link Id
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 3000);
+  // }
 }

@@ -302,3 +302,6 @@ button.global-btn.hey {
   position: relative;
 }
 /* #endregion User Profile */
+.s.vcard-popup.global-btn {
+    right: 180px;
+}

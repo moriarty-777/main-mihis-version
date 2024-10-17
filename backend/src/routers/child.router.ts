@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { child } from "../data";
+import { child, child22, child111 } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import { loggerMiddleware } from "../middlewares/logger.mid";
 import { ChildModel } from "../models/child.model";
@@ -8,7 +8,7 @@ import { HTTP_NOT_FOUND } from "../constants/http_status";
 import { authMiddleware } from "../middlewares/auth.mid";
 const router = Router();
 
-// seed to db
+// seed first
 // router.get(
 //   "/child/seed",
 //   expressAsyncHandler(async (req, res) => {
@@ -18,32 +18,33 @@ const router = Router();
 //       return;
 //     }
 
-//     await ChildModel.create(child);
+//     await ChildModel.create(child); // Seed the child data
 //     res.send("Seed is Done");
 //   })
 // );
 router.get(
   "/child/seed",
   expressAsyncHandler(async (req, res) => {
-    const childCount = await ChildModel.countDocuments();
-    if (childCount > 0) {
-      res.send("Seed is already Done!");
-      return;
+    const existingChildren = await ChildModel.countDocuments();
+
+    if (existingChildren > 0) {
+      res.send("Some data already exists! Adding more data...");
     }
 
-    await ChildModel.create(child); // Seed the child data
-    res.send("Seed is Done");
+    // Use the child22 array to seed more data
+    for (const child of child111) {
+      const existingChild = await ChildModel.findOne({
+        firstName: child.firstName,
+        lastName: child.lastName,
+      });
+      if (!existingChild) {
+        await ChildModel.create(child);
+      }
+    }
+
+    res.send("Seeding additional data from child111 is complete.");
   })
 );
-// get child TODO:
-// router.get(
-//   "/child",
-//   expressAsyncHandler(async (req, res) => {
-//     const children = await ChildModel.find(); // get all the value from the database without parameter
-//     res.send(children);
-//   })
-// );
-// TODO:
 
 // router.delete(
 //   "/child/delete-all",
@@ -53,23 +54,7 @@ router.get(
 //     res.send({ message: "All old child data deleted", result });
 //   })
 // );
-// router.get(
-//   "/child",
-//   expressAsyncHandler(async (req, res) => {
-//     const { gender, purok, nutritionalStatus, vaxStatus } = req.query;
 
-//     // Create filter object based on available query parameters
-//     const filter: any = {};
-
-//     if (gender) filter.gender = gender;
-//     if (purok) filter.purok = purok;
-//     if (nutritionalStatus) filter.nutritionalStatus = nutritionalStatus;
-//     if (vaxStatus) filter.vaxStatus = vaxStatus;
-
-//     const children = await ChildModel.find(filter); // Apply filtering
-//     res.send(children);
-//   })
-// );
 // FIXME:
 // child.router.ts
 router.get(
@@ -125,7 +110,7 @@ router.get(
   expressAsyncHandler(async (req, res) => {
     // console.log("Fetching child by ID:", req.params.id); // Add log here
     const specificChild = await ChildModel.findById(req.params.id).populate(
-      "vaccinations.midwifeId",
+      // "vaccinations.midwifeId",
       "firstName lastName"
     );
     // Now fetch the mother associated with this child

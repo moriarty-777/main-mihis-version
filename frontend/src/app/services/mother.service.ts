@@ -9,6 +9,7 @@ import {
   MOTHER_PROFILE_URL,
   GET_CHILDREN_BY_MOTHER_ID,
   CHILD_ADD_URL,
+  MOTHER_LINK_CHILD_URL,
 } from '../shared/constants/urls';
 import { Child } from '../shared/models/child';
 
@@ -103,5 +104,27 @@ export class MotherService {
       Authorization: `Bearer ${this.getToken()}`,
     });
     return this.http.delete(`${MOTHER_URL}/${id}`, { headers });
+  }
+  // Link Mother to Child
+  linkChildToMother(motherId: string, childId: string): Observable<any> {
+    return this.http.post(MOTHER_LINK_CHILD_URL, { motherId, childId }).pipe(
+      tap({
+        next: () => {
+          this.toastrService.success(
+            'Child linked to mother successfully!',
+            '',
+            {
+              timeOut: 2000,
+              closeButton: true,
+              progressBar: true,
+              positionClass: 'toast-bottom-right',
+            }
+          );
+        },
+        error: (error) => {
+          this.toastrService.error('Failed to link child to mother');
+        },
+      })
+    );
   }
 }
