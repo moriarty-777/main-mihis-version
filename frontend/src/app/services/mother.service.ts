@@ -80,6 +80,30 @@ export class MotherService {
     );
   }
 
+  addMother(mother: Mother): Observable<Mother> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`, // Ensure token is included for authorization
+    });
+
+    return this.http
+      .post<Mother>(`${MOTHER_URL}/add`, mother, { headers })
+      .pipe(
+        tap({
+          next: (newMother) => {
+            this.toastrService.success('Mother added successfully!', '', {
+              timeOut: 2000,
+              closeButton: true,
+              progressBar: true,
+              positionClass: 'toast-bottom-right',
+            });
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to add Mother');
+          },
+        })
+      );
+  }
+
   updateMother(id: string, motherdData: Partial<Mother>): Observable<Mother> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.getToken()}`,

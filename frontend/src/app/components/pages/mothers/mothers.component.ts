@@ -8,6 +8,7 @@ import { Mother } from '../../../shared/models/mother';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { PopupMotherComponent } from '../../partials/popup-mother/popup-mother.component';
+import { PopupAddMotherComponent } from '../../partials/popup-add-mother/popup-add-mother.component';
 
 @Component({
   selector: 'app-mothers',
@@ -82,6 +83,10 @@ export class MothersComponent {
     this.dialogRef.open(PopupMotherComponent, {
       data: { motherId: motherId }, // Ensure correct data is passed here
     });
+  }
+
+  openAddDialog() {
+    this.dialogRef.open(PopupAddMotherComponent);
   }
 
   deleteMother(motherId: string): void {

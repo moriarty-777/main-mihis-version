@@ -85,12 +85,10 @@ router.post(
       res.status(404).send({ message: "Mother not found" });
     }
 
-    res
-      .status(200)
-      .send({
-        message: "Child linked to mother successfully",
-        mother: updatedMother,
-      });
+    res.status(200).send({
+      message: "Child linked to mother successfully",
+      mother: updatedMother,
+    });
   })
 );
 
@@ -215,6 +213,47 @@ router.get(
     }
 
     res.send(children); // Send back the list of children
+  })
+);
+
+router.post(
+  "/add",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const {
+      firstName,
+      lastName,
+      gender,
+      phone,
+      email,
+      barangay,
+      purok,
+      photoPath,
+      isTransient,
+    } = req.body;
+
+    // Create the new mother
+    const newMother = new MotherModel({
+      firstName,
+      lastName,
+      gender,
+      phone,
+      email,
+      barangay,
+      purok,
+      photoPath: photoPath || "assets/img/default-user-profile.jpg", // default image if none provided
+      isTransient: isTransient || false,
+      children: [], // Initialize with empty children
+    });
+
+    const savedMother = await newMother.save();
+
+    if (!savedMother) {
+      res.status(500).send({ message: "Error adding mother" });
+    } else {
+      res.status(201).send(savedMother); // Send the created mother
+    }
   })
 );
 

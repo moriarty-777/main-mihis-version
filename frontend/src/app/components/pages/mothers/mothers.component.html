@@ -1,50 +1,59 @@
 <div class="children">
   <div class="children-container">
-    <div class="c-table-header">
-      <div class="c-table-item">
-        <!-- Button to reset filters for All Mothers -->
-        <button type="button" class="all-btn" (click)="resetFilters()">
-          All Mothers
-        </button>
-      </div>
-      <div class="c-table-item">
-        <select id="purok" (change)="onPurokChange($event)">
-          <option value="">Purok</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-      </div>
-      <div class="c-table-item">
-        <select id="childrenCount" (change)="onChildrenCountChange($event)">
-          <option value="">Children Count</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
-      </div>
-      <div class="c-table-item">
-        <select id="transient" (change)="onTransientChange($event)">
-          <option value="">Residency Status</option>
-          <option value="true">Transient</option>
-          <option value="false">Native Resident</option>
-        </select>
-      </div>
-      <div class="c-table-item">
-        <p class="ssearch">
-          <input
-            #query
-            type="text"
-            placeholder="Search..."
-            (keyup)="search(query.value)"
-          />
-          <button (click)="search(query.value)">
-            <mat-icon
-              ><span class="hidden">Search</span><span> search </span></mat-icon
-            >
+    <div class="d-tag-container">
+      <h3 class="d-tag">All Mothers</h3>
+    </div>
+    <div class="cth-container">
+      <div class="c-table-header">
+        <div class="c-table-item">
+          <!-- Button to reset filters for All Mothers -->
+          <button type="button" class="all-btn" (click)="resetFilters()">
+            All Mothers
           </button>
-        </p>
+        </div>
+        <div class="c-table-item">
+          <select id="purok" (change)="onPurokChange($event)">
+            <option value="">Purok</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <select id="childrenCount" (change)="onChildrenCountChange($event)">
+            <option value="">Children Count</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <select id="transient" (change)="onTransientChange($event)">
+            <option value="">Residency Status</option>
+            <option value="true">Transient</option>
+            <option value="false">Native Resident</option>
+          </select>
+        </div>
+        <div class="c-table-item">
+          <p class="ssearch">
+            <input
+              #query
+              type="text"
+              placeholder="Search..."
+              (keyup)="search(query.value)"
+            />
+            <button (click)="search(query.value)">
+              <mat-icon
+                ><span class="hidden">Search</span
+                ><span> search </span></mat-icon
+              >
+            </button>
+          </p>
+        </div>
       </div>
+      <button class="vcard-popup global-btn" (click)="openAddDialog()">
+        Add Mother
+      </button>
     </div>
     <div class="c-table-body">
       <div class="table-group">

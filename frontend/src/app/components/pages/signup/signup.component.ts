@@ -120,25 +120,6 @@ export class SignupComponent implements OnInit {
       });
   } // end ng on init
 
-  // Method to send OTP
-  /* sendOTP() {
-    const username = this.signUpForm.value.username;
-
-    // Send OTP to phone number
-    this.smsService.sendOTP(username).subscribe({
-      next: (response) => {
-        this.otpSent = true;
-        this.toastrService.success('OTP sent successfully!');
-        this.signUpForm.get('otp')?.enable(); // Enable OTP input after OTP is sent
-      },
-      error: (err) => {
-        this.toastrService.error('Failed to send OTP. Please try again.');
-      },
-    });
-  }
-
-  */
-
   sendOTP() {
     const username = this.signUpForm.value.username;
 

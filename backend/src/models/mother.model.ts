@@ -21,12 +21,12 @@ const MotherSchema = new Schema(
     lastName: { type: String, required: true },
     gender: { type: String, required: false },
     purok: { type: String, required: false },
-    barangay: { type: String, required: true }, // Either Gmail or phone number, must be unique
+    barangay: { type: String, required: true },
     phone: { type: String, required: false },
-    email: { type: String, required: false }, // Consider changing to Date if performing date operations
-    photoPath: { type: String, required: false }, // Optional secret key for future use
-    children: [{ type: Schema.Types.ObjectId, ref: "child", required: false }], // Array of ObjectIds
-    isTransient: { type: Boolean, required: false }, // Ensure this is hashed before storing
+    email: { type: String, required: false },
+    photoPath: { type: String, required: false },
+    children: [{ type: Schema.Types.ObjectId, ref: "child", required: false }],
+    isTransient: { type: Boolean, required: false },
   },
   {
     toJSON: {
