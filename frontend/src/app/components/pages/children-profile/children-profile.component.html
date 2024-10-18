@@ -88,24 +88,24 @@
             </div>
           </div>
         </div>
-        <!-- <div class="user-statistics">
-          <button class="vcard-popup global-btn" (click)="openDialog()">
+        <div class="user-statistics">
+          <!--     <button class="vcard-popup global-btn" (click)="openDialog()">
             Vaccination Card
-          </button>
+          </button> -->
           <div class="usr-stat-graph">
             <div class="title-wrap">
               <h2 class="stat-title">Child Statistics</h2>
             </div>
-            <div class="the-graph">
+            <!--       <div class="the-graph">
               <div class="children-chart">
                 <charts-radar-vaccine-type
                   [child]="child"
                 ></charts-radar-vaccine-type>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="table-group">
-            <table class="stat-table">
+            <!--          <table class="stat-table">
               <thead>
                 <tr>
                   <th>Vaccine Status</th>
@@ -125,7 +125,7 @@
                   <td>{{ countAEFIOccurrences(child) }}</td>
                 </tr>
               </tbody>
-            </table>
+            </table> -->
             <table class="stat-table">
               <thead>
                 <tr>
@@ -138,7 +138,10 @@
               @for(weighingHis of child.weighingHistory; track $index){
               <tbody>
                 <tr>
-                  <td>{{ child.nutritionalStatus }}</td>
+                  <td>
+                    <!-- {{ child.nutritionalStatus }} -->
+                    wait lang
+                  </td>
                   <td>{{ weighingHis.weightForAgeStatus }}</td>
                   <td>{{ weighingHis.heightForAgeStatus }}</td>
                   <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
@@ -147,7 +150,7 @@
               }
             </table>
           </div>
-        </div> -->
+        </div>
       </div>
 
       <!-- <div class="child-schedule-log">

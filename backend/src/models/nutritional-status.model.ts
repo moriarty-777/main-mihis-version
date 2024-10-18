@@ -25,6 +25,7 @@ const NutritionalStatusSchema = new Schema(
     timestamps: true,
   }
 );
-
-module.exports = model("nutritionalStatus", NutritionalStatusSchema);
-// default: Date.now
+export const NutritionalStatusModel = model<NutritionalStatus>(
+  "nutritionalStatus",
+  NutritionalStatusSchema
+);

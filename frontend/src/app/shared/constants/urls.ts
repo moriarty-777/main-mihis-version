@@ -13,7 +13,7 @@ export const USER_SIGNUP_URL = BASE_URL + '/api/users/signup';
 export const USER_URL = BASE_URL + '/api/users';
 export const USER_PROFILE_URL = BASE_URL + '/api/users/';
 
-// export const MIDWIVES_URL = BASE_URL + '/api/users/midwives';
+// export const MIDWIVES_URL = BASE_URL + '/api/users/midwsives';
 export const MOTHER_URL = BASE_URL + '/api/mother';
 export const MOTHER_PROFILE_URL = BASE_URL + '/api/mother/';
 export const MOTHER_ADD_CHILD_URL = BASE_URL + '/api/';

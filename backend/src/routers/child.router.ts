@@ -6,6 +6,10 @@ import { ChildModel } from "../models/child.model";
 import { MotherModel } from "../models/mother.model";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
 import { authMiddleware } from "../middlewares/auth.mid";
+import { weighingHistoryData, anthropometricData } from "../data2";
+import { WeighingHistoryModel } from "../models/weighing-history.model";
+import { AnthropometricModel } from "../models/anthropometric.model";
+
 const router = Router();
 
 // seed first
@@ -22,29 +26,72 @@ const router = Router();
 //     res.send("Seed is Done");
 //   })
 // );
-router.get(
-  "/child/seed",
-  expressAsyncHandler(async (req, res) => {
-    const existingChildren = await ChildModel.countDocuments();
+// This seed :TODO:
+// router.get(
+//   "/child/seed",
+//   expressAsyncHandler(async (req, res) => {
+//     const existingChildren = await ChildModel.countDocuments();
 
-    if (existingChildren > 0) {
-      res.send("Some data already exists! Adding more data...");
-    }
+//     if (existingChildren > 0) {
+//       res.send("Some data already exists! Adding more data...");
+//     }
 
-    // Use the child22 array to seed more data
-    for (const child of child111) {
-      const existingChild = await ChildModel.findOne({
-        firstName: child.firstName,
-        lastName: child.lastName,
-      });
-      if (!existingChild) {
-        await ChildModel.create(child);
-      }
-    }
+//     // Use the child22 array to seed more data
+//     for (const child of child111) {
+//       const existingChild = await ChildModel.findOne({
+//         firstName: child.firstName,
+//         lastName: child.lastName,
+//       });
+//       if (!existingChild) {
+//         await ChildModel.create(child);
+//       }
+//     }
 
-    res.send("Seeding additional data from child111 is complete.");
-  })
-);
+//     res.send("Seeding additional data from child111 is complete.");
+//   })
+// );
+
+// Seed antro and weighing history
+// Seed weighing history and anthropometric data
+// router.get(
+//   "/child/seed/weighing-anthro",
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       // Step 1: Seed Weighing History Data
+//       for (const history of weighingHistoryData) {
+//         const newWeighingHistory = await WeighingHistoryModel.create(history);
+//         console.log(
+//           `Weighing history created for child: ${newWeighingHistory.child}`
+//         );
+
+//         // Step 2: Update the child to include the weighing history reference
+//         await ChildModel.findByIdAndUpdate(newWeighingHistory.child, {
+//           $push: { weighingHistory: newWeighingHistory._id },
+//         });
+//       }
+
+//       // Step 3: Seed Anthropometric Data
+//       for (const anthro of anthropometricData) {
+//         const newAnthropometric = await AnthropometricModel.create(anthro);
+//         console.log(
+//           `Anthropometric data created for child: ${newAnthropometric.childId}`
+//         );
+
+//         // Step 4: Update the child to include the anthropometric reference
+//         await ChildModel.findByIdAndUpdate(newAnthropometric.childId, {
+//           anthropometricStatus: newAnthropometric._id,
+//         });
+//       }
+
+//       res.send(
+//         "Weighing history and anthropometric data seeding completed successfully."
+//       );
+//     } catch (error) {
+//       console.error("Error during seeding process:", error);
+//       res.status(500).send("Seeding failed");
+//     }
+//   })
+// );
 
 // router.delete(
 //   "/child/delete-all",

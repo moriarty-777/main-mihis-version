@@ -23,6 +23,12 @@ const WeighingHistorySchema = new Schema(
     notes: { type: String, required: false },
   },
   {
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
     timestamps: true,
   }
 );

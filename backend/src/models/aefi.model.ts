@@ -26,4 +26,3 @@ const AefiSchema = new Schema<Aefi>(
 );
 
 export const AefiModel = model<Aefi>("aefi", AefiSchema);
-//   enum: ["Mild", "Moderate", "Severe"],

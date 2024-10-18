@@ -40,7 +40,17 @@ const AnthropometricSchema = new Schema(
     },
     dateOfWeighing: { type: Date, default: Date.now, required: true }, // Date of the measurement
   },
-  { timestamps: true }
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+    timestamps: true,
+  }
 );
-
-module.exports = model("anthropometric", AnthropometricSchema);
+export const AnthropometricModel = model<Anthropometric>(
+  "anthropometric",
+  AnthropometricSchema
+);
