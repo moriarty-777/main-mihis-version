@@ -9,6 +9,7 @@ import {
   CHILD_VAX_SUMMARY_URL,
   CHILDREN_PROFILE_URL,
 } from '../shared/constants/urls';
+import { AnthropometricStatus } from '../shared/models/anthropometric';
 
 @Injectable({
   providedIn: 'root',

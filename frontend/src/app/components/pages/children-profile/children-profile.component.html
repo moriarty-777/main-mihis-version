@@ -135,19 +135,25 @@
                   <th>Weight For Length/Height</th>
                 </tr>
               </thead>
-              @for(weighingHis of child.weighingHistory; track $index){
+              <!-- @for(status of child.anthropometricStatus; track $index){
               <tbody>
                 <tr>
-                  <td>
-                    <!-- {{ child.nutritionalStatus }} -->
-                    wait lang
-                  </td>
-                  <td>{{ weighingHis.weightForAgeStatus }}</td>
-                  <td>{{ weighingHis.heightForAgeStatus }}</td>
-                  <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
+                  <td>Normal</td>
+                  <td>{{ status.weightForAge }}</td>
+                  <td>{{ status.heightForAge }}</td>
+                  <td>{{ status.weightForHeight }}</td>
                 </tr>
               </tbody>
-              }
+              } -->
+
+              <tbody>
+                <tr>
+                  <td>Normal</td>
+                  <td>{{ child.anthropometricStatus.weightForAge }}</td>
+                  <td>{{ child.anthropometricStatus.heightForAge }}</td>
+                  <td>{{ child.anthropometricStatus.weightForHeight }}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -265,3 +271,18 @@
     </div>
   </div>
 </div>
+
+<!-- FIXME: WAIT LANG -->
+<!--      @for(weighingHis of child.weighingHistory; track $index){
+              <tbody>
+                <tr>
+                  <td> -->
+<!-- {{ child.nutritionalStatus }} -->
+<!--       wait lang
+                  </td>
+                  <td>{{ weighingHis.weightForAgeStatus }}</td>
+                  <td>{{ weighingHis.heightForAgeStatus }}</td>
+                  <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
+                </tr>
+              </tbody>
+              }-->

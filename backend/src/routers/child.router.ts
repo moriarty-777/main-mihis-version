@@ -2,13 +2,13 @@ import { Router } from "express";
 import { child, child22, child111 } from "../data";
 import expressAsyncHandler from "express-async-handler";
 import { loggerMiddleware } from "../middlewares/logger.mid";
+import { AnthropometricModel } from "../models/anthropometric.model";
 import { ChildModel } from "../models/child.model";
 import { MotherModel } from "../models/mother.model";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
 import { authMiddleware } from "../middlewares/auth.mid";
 import { weighingHistoryData, anthropometricData } from "../data2";
 import { WeighingHistoryModel } from "../models/weighing-history.model";
-import { AnthropometricModel } from "../models/anthropometric.model";
 
 const router = Router();
 
@@ -149,17 +149,16 @@ router.get(
   })
 );
 
-// FIXME:
+// FIXME: get childprofile
 router.get(
   "/children-page/:id",
-  authMiddleware,
+  // authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
-    // console.log("Fetching child by ID:", req.params.id); // Add log here
     const specificChild = await ChildModel.findById(req.params.id).populate(
-      // "vaccinations.midwifeId",
-      "firstName lastName"
+      "anthropometricStatus"
     );
+
     // Now fetch the mother associated with this child
     const mother = await MotherModel.findOne({
       children: req.params.id,
@@ -169,6 +168,26 @@ router.get(
     res.send({ child: specificChild, mother });
   })
 );
+
+// TODO: Backup
+// router.get(
+//   "/children-page/:id",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     const specificChild = await ChildModel.findById(req.params.id).populate(
+//       "firstName lastName"
+//     );
+
+//     // Now fetch the mother associated with this child
+//     const mother = await MotherModel.findOne({
+//       children: req.params.id,
+//     }).select("firstName lastName");
+
+//     // Combine the child and mother data into the response
+//     res.send({ child: specificChild, mother });
+//   })
+// );
 
 // Get Vaccination Data Fully Partially Not Vaccinated
 router.get(

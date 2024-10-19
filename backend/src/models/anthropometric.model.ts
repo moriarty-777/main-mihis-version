@@ -51,6 +51,6 @@ const AnthropometricSchema = new Schema(
   }
 );
 export const AnthropometricModel = model<Anthropometric>(
-  "anthropometric",
+  "Anthropometric",
   AnthropometricSchema
 );

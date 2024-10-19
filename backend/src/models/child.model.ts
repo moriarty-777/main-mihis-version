@@ -128,6 +128,7 @@ const ChildSchema = new Schema<Child>(
 export const ChildModel = model<Child>("child", ChildSchema);
 */
 import { model, Schema } from "mongoose";
+import { AnthropometricModel } from "./anthropometric.model";
 
 export interface Child {
   firstName: string;
@@ -174,7 +175,7 @@ const ChildSchema = new Schema(
     },
     anthropometricStatus: {
       type: Schema.Types.ObjectId,
-      ref: "anthropometric",
+      ref: AnthropometricModel,
     },
     missedVaccines: [{ type: Schema.Types.ObjectId, ref: "missedVaccine" }],
   },

@@ -63,34 +63,34 @@ const router = Router();
 
 // Link Child to Mother
 // Link child to mother via child ID
-router.post(
-  "/link-child",
-  expressAsyncHandler(async (req, res) => {
-    const { motherId, childId } = req.body;
+// router.post(
+//   "/link-child",
+//   expressAsyncHandler(async (req, res) => {
+//     const { motherId, childId } = req.body;
 
-    // Check if the child exists
-    const childExists = await ChildModel.findById(childId);
-    if (!childExists) {
-      res.status(404).send({ message: "Child not found" });
-    }
+//     // Check if the child exists
+//     const childExists = await ChildModel.findById(childId);
+//     if (!childExists) {
+//       res.status(404).send({ message: "Child not found" });
+//     }
 
-    // Update the mother document by pushing the child's ID into the children array
-    const updatedMother = await MotherModel.findByIdAndUpdate(
-      motherId,
-      { $addToSet: { children: childId } }, // Ensure the child isn't already linked
-      { new: true } // Return the updated document
-    );
+//     // Update the mother document by pushing the child's ID into the children array
+//     const updatedMother = await MotherModel.findByIdAndUpdate(
+//       motherId,
+//       { $addToSet: { children: childId } }, // Ensure the child isn't already linked
+//       { new: true } // Return the updated document
+//     );
 
-    if (!updatedMother) {
-      res.status(404).send({ message: "Mother not found" });
-    }
+//     if (!updatedMother) {
+//       res.status(404).send({ message: "Mother not found" });
+//     }
 
-    res.status(200).send({
-      message: "Child linked to mother successfully",
-      mother: updatedMother,
-    });
-  })
-);
+//     res.status(200).send({
+//       message: "Child linked to mother successfully",
+//       mother: updatedMother,
+//     });
+//   })
+// );
 
 // router.get(
 //   "/",
