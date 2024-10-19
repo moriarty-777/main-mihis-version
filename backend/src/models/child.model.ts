@@ -129,6 +129,7 @@ export const ChildModel = model<Child>("child", ChildSchema);
 */
 import { model, Schema } from "mongoose";
 import { AnthropometricModel } from "./anthropometric.model";
+import { WeighingHistoryModel } from "./weighing-history.model";
 
 export interface Child {
   firstName: string;
@@ -166,7 +167,9 @@ const ChildSchema = new Schema(
     barangay: { type: String, required: true },
     photoPath: { type: String, required: false },
     placeOfBirth: { type: String, required: false, default: "Margarito" },
-    weighingHistory: [{ type: Schema.Types.ObjectId, ref: "weighingHistory" }],
+    weighingHistory: [
+      { type: Schema.Types.ObjectId, ref: WeighingHistoryModel },
+    ],
     vaccinations: [{ type: Schema.Types.ObjectId, ref: "vaccination" }],
     vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },
     nutritionalStatus: {

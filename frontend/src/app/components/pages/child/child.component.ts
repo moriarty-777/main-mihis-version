@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { PopupChildComponent } from '../../partials/popup-child/popup-child.component';
 import { MatDialog } from '@angular/material/dialog';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-child',
@@ -135,5 +138,50 @@ export class ChildComponent {
     this.dialogRef.open(PopupChildComponent, {
       data: { childId: childId }, // Ensure correct data is passed here
     });
+  }
+
+  // Export Excel
+  exportChildrenToExcel(): void {
+    // Map only the required fields (ID, First Name, Last Name)
+    const dataToExport = this.child.map((child) => ({
+      ID: child.id, // Assuming _id is the MongoDB ObjectId
+      FirstName: child.firstName,
+      LastName: child.lastName,
+    }));
+
+    // Create a new worksheet with the mapped data
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Create a new workbook and append the worksheet
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Children Data': worksheet },
+      SheetNames: ['Children Data'],
+    };
+
+    // Trigger the Excel file download
+    XLSX.writeFile(workbook, 'ChildrenData.xlsx');
+  }
+
+  exportChildrenToPDF(): void {
+    const doc = new jsPDF();
+
+    // Set the title of the document
+    doc.text('Children Data', 10, 10);
+
+    // Prepare the data for the table
+    const dataToExport = this.child.map((child) => [
+      child.id,
+      child.firstName,
+      child.lastName,
+    ]);
+
+    // Generate the table
+    (doc as any).autoTable({
+      head: [['ID', 'First Name', 'Last Name']], // Table headers
+      body: dataToExport, // Data to populate the table
+    });
+
+    // Save the PDF with a filename
+    doc.save('ChildrenData.pdf');
   }
 }

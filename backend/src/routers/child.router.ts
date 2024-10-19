@@ -155,9 +155,13 @@ router.get(
   // authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
-    const specificChild = await ChildModel.findById(req.params.id).populate(
-      "anthropometricStatus"
-    );
+    const specificChild = await ChildModel.findById(req.params.id)
+      .populate("anthropometricStatus")
+      .populate({
+        path: "weighingHistory",
+        options: { sort: { dateOfWeighing: -1 } }, // Sort by date in descending order
+      });
+    // .populate("weighingHistory");
 
     // Now fetch the mother associated with this child
     const mother = await MotherModel.findOne({

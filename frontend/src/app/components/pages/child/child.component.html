@@ -1,5 +1,8 @@
 <div class="children">
   <div class="children-container">
+    <div class="d-tag-container">
+      <h3 class="d-tag">All Children</h3>
+    </div>
     <div class="c-table-header">
       <div class="c-table-item">
         <!-- <button type="button">All Children</button> -->
@@ -96,9 +99,13 @@
               <td class="t-icon">
                 <img src="/assets/img/ph_flag.png" alt="PH Flag" />
 
-                <a routerLink="/children-page/{{ children.id }}">
-                  {{ children.firstName + " " + children.lastName }}</a
-                >
+                <!-- <a routerLink="/children-page/{{ children.id }}">
+                  {{ children.firstName + " " + children.lastName }} </a
+                > -->
+                <span>
+                  {{ children.firstName + " " + children.lastName }}
+                </span>
+                {{ children.id }}
               </td>
               <td>{{ children.gender }}</td>
               <td>{{ children.purok }}</td>
@@ -143,5 +150,12 @@
         </table>
       </div>
     </div>
+
+    <!-- <button class="vcard-popup global-btn" (click)="exportChildrenToExcel()">
+      <mat-icon>save_alt</mat-icon> Export Children to Excel
+    </button>
+    <button class="vcard-popup global-btn" (click)="exportChildrenToPDF()">
+      <mat-icon>save_alt </mat-icon> Export Children to PDF
+    </button> -->
   </div>
 </div>
