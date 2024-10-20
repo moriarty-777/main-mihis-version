@@ -7,6 +7,7 @@ import { map, tap } from 'rxjs/operators';
 import {
   CHILD_URL,
   CHILD_VAX_SUMMARY_URL,
+  CHILDREN_ANTHRO_PRINT,
   CHILDREN_PROFILE_URL,
 } from '../shared/constants/urls';
 import { AnthropometricStatus } from '../shared/models/anthropometric';
@@ -253,5 +254,10 @@ export class ChildService {
     const nextWednesday = this.getNextWednesday(date);
     nextWednesday.setDate(nextWednesday.getDate() + 7); // Add 7 days (1 week)
     return nextWednesday;
+  }
+
+  // Get children Anthro
+  getChildrenAnthro(): Observable<any> {
+    return this.http.get(CHILDREN_ANTHRO_PRINT);
   }
 }

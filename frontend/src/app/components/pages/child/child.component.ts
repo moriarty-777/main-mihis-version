@@ -21,6 +21,7 @@ import 'jspdf-autotable';
 })
 export class ChildComponent {
   child: Child[] = [];
+  cant: any[] = [];
   private dialogRef = inject(MatDialog);
   private toastrService = inject(ToastrService);
   private childService = inject(ChildService);
@@ -63,6 +64,11 @@ export class ChildComponent {
     this.childService.getAll(filters).subscribe((children) => {
       this.child = children;
       // console.log('Filtered children:', this.child);
+    });
+
+    // For AntroOnly FIXME:
+    this.childService.getChildrenAnthro().subscribe((children) => {
+      this.cant = children;
     });
   }
 
@@ -183,5 +189,31 @@ export class ChildComponent {
 
     // Save the PDF with a filename
     doc.save('ChildrenData.pdf');
+  }
+
+  // Export child details including anthropometricStatus to Excel
+  exportChildrenToExcelAnthro(): void {
+    const dataToExport = this.cant.map((child) => ({
+      ID: child.id,
+      FirstName: child.firstName,
+      LastName: child.lastName,
+      // Assuming anthropometricStatus is populated and has properties like weightForAge, heightForAge, etc.
+      WeightForAge: child.anthropometricStatus?.weightForAge || 'N/A',
+      HeightForAge: child.anthropometricStatus?.heightForAge || 'N/A',
+      WeightForHeight: child.anthropometricStatus?.weightForHeight || 'N/A',
+      DateOfWeighing: child.anthropometricStatus?.dateOfWeighing || 'N/A',
+    }));
+
+    // Convert the data into a worksheet
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Create a new workbook and append the worksheet
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Children Data': worksheet },
+      SheetNames: ['Children Data'],
+    };
+
+    // Export the workbook to Excel file
+    XLSX.writeFile(workbook, 'ChildrenDataAnthro.xlsx');
   }
 }

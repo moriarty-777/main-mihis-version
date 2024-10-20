@@ -1619,3 +1619,686 @@ export const anthropometricData: any[] = [
     dateOfWeighing: "2024-01-25",
   },
 ];
+
+export const weight5: any[] = [
+  {
+    child: "67102b780ccbc4bd40ee5c16", // Placeholder child ID for Velarde, Wenson
+    date: "2022-01-31", // Date of weighing
+    weight: 15.0, // Weight in kg
+    height: 98.0, // Height in cm
+    weightForAge: "Normal", // Weight-for-Age Status
+    heightForAge: "Normal", // Height-for-Age Status
+    weightForLengthHeight: "Normal", // Weight-for-Length/Height Status
+    notes: "", // Optional notes
+  },
+  {
+    child: "67103e67b3bf97ca89f10a74", //fiona
+    date: "2024-01-25",
+    weight: 5.0,
+    height: 60.0,
+    weightForAge: "Overweight",
+    heightForAge: "Tall",
+    weightForLengthHeight: "Obese",
+    notes: "Date Error",
+  },
+  {
+    child: "67111c48085cd9a07f539df8", // kai
+    date: "2024-01-25",
+    weight: 16.0,
+    height: 97.0,
+    weightForAge: "Normal",
+    heightForAge: "Normal",
+    weightForLengthHeight: "Normal",
+    notes: "",
+  },
+  {
+    child: "67111dad085cd9a07f539e12", //sarah
+    date: "2024-01-25",
+    weight: 8.2,
+    height: 73.0,
+    weightForAge: "Normal",
+    heightForAge: "Normal",
+    weightForLengthHeight: "Normal",
+    notes: "",
+  },
+  {
+    child: "67111d0d085cd9a07f539e04", //noellane
+    date: "2024-01-25",
+    weight: 12.2,
+    height: 85.0,
+    weightForAge: "Normal",
+    heightForAge: "Normal",
+    weightForLengthHeight: "Normal",
+    notes: "",
+  },
+];
+
+export const anthro5: any[] = [
+  {
+    childId: "67102b780ccbc4bd40ee5c16", // Placeholder child ID for Velarde, Wenson
+    weightForAge: "Normal", // Weight-for-Age Status
+    heightForAge: "Normal", // Height-for-Age Status
+    weightForHeight: "Normal", // Weight-for-Height Status
+    dateOfWeighing: "2022-01-31", // Date of weighing
+  },
+  {
+    childId: "67103e67b3bf97ca89f10a74", //fiona
+    weightForAge: "Overweight",
+    heightForAge: "Tall",
+    weightForHeight: "Obese",
+    dateOfWeighing: "2024-01-25",
+  },
+  {
+    childId: "67111c48085cd9a07f539df8", // kai
+    weightForAge: "Normal",
+    heightForAge: "Normal",
+    weightForHeight: "Normal",
+    dateOfWeighing: "2024-01-25",
+  },
+  {
+    childId: "67111dad085cd9a07f539e12", // sarah
+    weightForAge: "Normal",
+    heightForAge: "Normal",
+    weightForHeight: "Normal",
+    dateOfWeighing: "2024-01-25",
+  },
+  {
+    childId: "67111d0d085cd9a07f539e04", //noellane
+    weightForAge: "Normal",
+    heightForAge: "Normal",
+    weightForHeight: "Normal",
+    dateOfWeighing: "2024-01-25",
+  },
+];
+
+export const nutritionalStatus5: any[] = [
+  {
+    childId: "670a66dbe75f1ae86e3a527b",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.168342",
+  }, //Jhenzell Dela Cruz
+
+  {
+    childId: "670a66dbe75f1ae86e3a527c",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.168490",
+  }, //Raymar Jr. Celoza
+
+  {
+    childId: "670a66dbe75f1ae86e3a527d",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.168556",
+  }, //John David Bolante
+
+  {
+    childId: "670a66dbe75f1ae86e3a5280",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.168631",
+  }, //Lance Jake Mesa
+
+  {
+    childId: "670a66dbe75f1ae86e3a5282",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.168709",
+  }, //Zion Arguilles
+
+  {
+    childId: "670a66dbe75f1ae86e3a5281",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.168781",
+  }, //Jayreel Dylan Cate
+
+  {
+    childId: "670a66dbe75f1ae86e3a5283",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.168834",
+  }, //Kiesha Mae Ramirez
+
+  {
+    childId: "670a66dbe75f1ae86e3a5285",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.168905",
+  }, //Iverson Sison
+
+  {
+    childId: "670a66dbe75f1ae86e3a5284",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169092",
+  }, //Steven Ryan Jr. Cordovilla
+
+  {
+    childId: "670a66dbe75f1ae86e3a5286",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169181",
+  }, //Kervin Roy Mendoza
+  {
+    childId: "670a66dbe75f1ae86e3a5287",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169254",
+  }, //Ikishi Venice Antinero
+
+  {
+    childId: "670a66dbe75f1ae86e3a5288",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169313",
+  }, //Queen Roshelle Paralejas
+
+  {
+    childId: "670a66dbe75f1ae86e3a5289",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169394",
+  }, //Prince Kervy Flocencio
+
+  {
+    childId: "670a66dbe75f1ae86e3a528b",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169470",
+  }, //Carl Jasper Celestino
+
+  {
+    childId: "670a66dbe75f1ae86e3a528a",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.169545",
+  }, //Arnelyn Cadajas
+
+  {
+    childId: "670a66dbe75f1ae86e3a528c",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169598",
+  }, //Azrah Arabit
+
+  {
+    childId: "670a66dbe75f1ae86e3a527e",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.169649",
+  }, //Fedrick Dela Cruz
+
+  {
+    childId: "670a66dbe75f1ae86e3a527f",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169721",
+  }, //John Liam Potal
+
+  {
+    childId: "670a66dbe75f1ae86e3a5290",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169776",
+  }, //Harren Clyde Macalos
+
+  {
+    childId: "670a66dbe75f1ae86e3a528f",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169846",
+  }, //King Zian Baliwas
+  {
+    childId: "670a66dbe75f1ae86e3a5291",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169901",
+  }, //James Kyler Gondraneos
+
+  {
+    childId: "670a66dbe75f1ae86e3a5292",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.169974",
+  }, //Dwayne Archie Ramirez
+
+  {
+    childId: "670a66dbe75f1ae86e3a5293",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.170049",
+  }, //Cecille Gobres
+
+  {
+    childId: "670a66dbe75f1ae86e3a5294",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.170102",
+  }, //Jofree Mendiola
+
+  {
+    childId: "670a66dbe75f1ae86e3a5296",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.170179",
+  }, //Wendy Lyn Salinas
+
+  {
+    childId: "670a66dbe75f1ae86e3a5295",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.170257",
+  }, //Jass Andre Sidutan
+
+  {
+    childId: "670a66dbe75f1ae86e3a5297",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.170342",
+  }, //Jacob Nones
+
+  {
+    childId: "670a66dbe75f1ae86e3a529a",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.170406",
+  }, //Andrea Magsakay
+
+  {
+    childId: "670a66dbe75f1ae86e3a529b",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.170483",
+  }, //Franz Calleb Cerda
+
+  {
+    childId: "670a66dbe75f1ae86e3a5298",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.170562",
+  }, //Aeryen Goto
+
+  {
+    childId: "670a66dbe75f1ae86e3a528e",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.170630",
+  }, //Jamaica Rain Paralejas
+
+  {
+    childId: "670a66dbe75f1ae86e3a528d",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171088",
+  }, //Flyne Cydrisse Greese Hernandez
+
+  {
+    childId: "67102b760ccbc4bd40ee5bf1",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171221",
+  }, //Andrea Mae Ojascastro
+
+  {
+    childId: "67102b770ccbc4bd40ee5bf4",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.171303",
+  }, //Al Asher Cervantes
+
+  {
+    childId: "67102b770ccbc4bd40ee5bf7",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171362",
+  }, //Khyrine Drealan Clavero
+
+  {
+    childId: "67102b770ccbc4bd40ee5bfa",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.171411",
+  }, //Christian Cantos
+
+  {
+    childId: "67102b770ccbc4bd40ee5bfd",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.171460",
+  }, //Joshua Antinero
+
+  {
+    childId: "67102b770ccbc4bd40ee5c00",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171519",
+  }, //Klea Loreen Cruz
+
+  {
+    childId: "67102b770ccbc4bd40ee5c03",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171592",
+  }, //John Paul Velarde
+
+  {
+    childId: "67102b770ccbc4bd40ee5c06",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171666",
+  }, //Christine Love Antinero
+
+  {
+    childId: "67102b780ccbc4bd40ee5c0a",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171717",
+  }, //Christine Lyn Cantos
+
+  {
+    childId: "67102b780ccbc4bd40ee5c0d",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.171766",
+  }, //Elija Salinas
+
+  {
+    childId: "67102b780ccbc4bd40ee5c10",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171814",
+  }, //Mark Angelo Morente
+
+  {
+    childId: "67102b780ccbc4bd40ee5c13",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.171882",
+  }, //John Caleb Anain
+
+  {
+    childId: "67102b780ccbc4bd40ee5c16",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.171952",
+  }, //Wenson Velarde
+
+  {
+    childId: "67102b780ccbc4bd40ee5c19",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172009",
+  }, //Lucas Mattew Sabote
+
+  {
+    childId: "67102b780ccbc4bd40ee5c1c",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172058",
+  }, //Delaney Gracia Cequena
+
+  {
+    childId: "67102b780ccbc4bd40ee5c1f",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.172120",
+  }, //Jhannel Cruz
+
+  {
+    childId: "67102b790ccbc4bd40ee5c22",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172180",
+  }, //Zane Zean De Leon
+
+  {
+    childId: "67102b790ccbc4bd40ee5c25",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.172242",
+  }, //Khiefer Khicer Antinero
+
+  {
+    childId: "67102b790ccbc4bd40ee5c28",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172312",
+  }, //Marte Carlo Alao
+
+  {
+    childId: "67102b790ccbc4bd40ee5c2b",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172380",
+  }, //Lawrence Jake Mesa
+
+  {
+    childId: "67102b790ccbc4bd40ee5c2e",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172432",
+  }, //Armoniel Cadajas
+
+  {
+    childId: "67103e61b3bf97ca89f109f9",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172484",
+  }, //Prince Kurdie Cadajas
+
+  {
+    childId: "67103e61b3bf97ca89f109fc",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172546",
+  }, //Zion Azariel Villadiego
+
+  {
+    childId: "67103e62b3bf97ca89f109ff",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172595",
+  }, //Kyrie Drew Cenir
+
+  {
+    childId: "67103e62b3bf97ca89f10a02",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172653",
+  }, //Gerissh Gobres
+
+  {
+    childId: "67103e62b3bf97ca89f10a05",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172721",
+  }, //Rye Genard Matematico
+
+  {
+    childId: "67103e62b3bf97ca89f10a08",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172787",
+  }, //Friah Eliesha Aquino
+
+  {
+    childId: "67103e62b3bf97ca89f10a0b",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172835",
+  }, //Atarah Wei Gondraneos
+  {
+    childId: "67103e62b3bf97ca89f10a0e",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.172881",
+  }, //Alessandra Collin Cenir
+
+  {
+    childId: "67103e62b3bf97ca89f10a11",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173028",
+  }, //Andrea Joyce Cequena
+
+  {
+    childId: "67103e63b3bf97ca89f10a14",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173129",
+  }, //Brianne Joy Elomina
+
+  {
+    childId: "67103e63b3bf97ca89f10a17",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173224",
+  }, //Makeia Galleta
+
+  {
+    childId: "67103e63b3bf97ca89f10a1a",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173295",
+  }, //Elizia Bethina Tero
+
+  {
+    childId: "67103e63b3bf97ca89f10a1d",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173364",
+  }, //Elijah Kim Binaluyo
+
+  {
+    childId: "67103e63b3bf97ca89f10a20",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173435",
+  }, //Ashlani Gondraneos
+
+  {
+    childId: "67103e63b3bf97ca89f10a23",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173497",
+  }, //Dion Grae Cequena
+
+  {
+    childId: "67103e63b3bf97ca89f10a26",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173547",
+  }, //Ric Yuan Completado
+
+  {
+    childId: "67103e63b3bf97ca89f10a29",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173594",
+  }, //Von Kyler Antazo
+  {
+    childId: "67103e64b3bf97ca89f10a2c",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.173641",
+  }, //Kim John Biteranta
+
+  {
+    childId: "67103e64b3bf97ca89f10a2f",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.173688",
+  }, //Yaxer Von Cequena
+
+  {
+    childId: "67103e64b3bf97ca89f10a32",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173749",
+  }, //Georgina Tampol
+
+  {
+    childId: "67103e64b3bf97ca89f10a35",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173816",
+  }, //Mesiah Bolante
+
+  {
+    childId: "67103e64b3bf97ca89f10a38",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.173867",
+  }, //Mattheas Sison
+
+  {
+    childId: "67103e64b3bf97ca89f10a3b",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173913",
+  }, //Hyuan Vrix Alday
+
+  {
+    childId: "67103e64b3bf97ca89f10a3e",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.173964",
+  }, //Princess Nathalie Baliwas
+
+  {
+    childId: "67103e64b3bf97ca89f10a41",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174027",
+  }, //Neil Laurent Cequena
+
+  {
+    childId: "67103e65b3bf97ca89f10a44",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174076",
+  }, //Brixelle Ceremonia
+
+  {
+    childId: "67103e65b3bf97ca89f10a47",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174139",
+  }, //Ashlyn Cenir
+
+  {
+    childId: "67103e65b3bf97ca89f10a4a",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174200",
+  }, //Margotte Lacanilao
+
+  {
+    childId: "67103e65b3bf97ca89f10a4d",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174262",
+  }, //Russel Paralejas
+
+  {
+    childId: "67103e65b3bf97ca89f10a50",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.174323",
+  }, //Jioh Veroj Freix Caraan
+
+  {
+    childId: "67103e65b3bf97ca89f10a53",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174383",
+  }, //Michalee Tampol
+
+  {
+    childId: "67103e65b3bf97ca89f10a56",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174452",
+  }, //Jilliana Kaye Tablizo
+
+  {
+    childId: "67103e66b3bf97ca89f10a59",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174527",
+  }, //Jem Marielle Cequena
+
+  {
+    childId: "67103e66b3bf97ca89f10a5c",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174589",
+  }, //Charmie Cruz
+
+  {
+    childId: "67103e66b3bf97ca89f10a5f",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.174650",
+  }, //Elisha Arambulo
+
+  {
+    childId: "67103e66b3bf97ca89f10a62",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174731",
+  }, //John Patrick Ojascatro
+
+  {
+    childId: "67103e66b3bf97ca89f10a65",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.174789",
+  }, //Samantha Nicole Ojascatro
+
+  {
+    childId: "67103e66b3bf97ca89f10a68",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.174843",
+  }, //ArchaiShine Faith Borbe
+
+  {
+    childId: "67103e66b3bf97ca89f10a6b",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.174908",
+  }, //Shawn Caizer Aragones
+
+  {
+    childId: "67103e66b3bf97ca89f10a6e",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.174955",
+  }, //Caleb John Ramirez
+
+  {
+    childId: "67103e67b3bf97ca89f10a71",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.175002",
+  }, //Nathanile Gondraneos
+
+  {
+    childId: "67103e67b3bf97ca89f10a74",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.175060",
+  }, //Fiona Reese Celestino
+
+  {
+    childId: "6711100d085cd9a07f539a07",
+    status: "Malnourished",
+    dateOfStatus: "2024-10-20T22:38:32.175110",
+  }, //Rhianne Elomina
+
+  {
+    childId: "67111c48085cd9a07f539df8",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.175154",
+  }, //Liam Kai Matematico
+
+  {
+    childId: "67111d0d085cd9a07f539e04",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.175214",
+  }, //Noellane Acupan
+
+  {
+    childId: "67111dad085cd9a07f539e12",
+    status: "Normal",
+    dateOfStatus: "2024-10-20T22:38:32.175271",
+  }, //Sarah Mendoza
+];

@@ -130,6 +130,7 @@ export const ChildModel = model<Child>("child", ChildSchema);
 import { model, Schema } from "mongoose";
 import { AnthropometricModel } from "./anthropometric.model";
 import { WeighingHistoryModel } from "./weighing-history.model";
+import { NutritionalStatusModel } from "./nutritional-status.model";
 
 export interface Child {
   firstName: string;
@@ -174,7 +175,7 @@ const ChildSchema = new Schema(
     vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },
     nutritionalStatus: {
       type: Schema.Types.ObjectId,
-      ref: "nutritionalStatus",
+      ref: NutritionalStatusModel,
     },
     anthropometricStatus: {
       type: Schema.Types.ObjectId,

@@ -168,10 +168,10 @@
 
               <tbody>
                 <tr>
-                  <td>Normal</td>
-                  <td>{{ child.anthropometricStatus.weightForAge }}</td>
-                  <td>{{ child.anthropometricStatus.heightForAge }}</td>
-                  <td>{{ child.anthropometricStatus.weightForHeight }}</td>
+                  <td>{{ child.nutritionalStatus?.status || "N/A" }}</td>
+                  <td>{{ child.anthropometricStatus?.weightForAge }}</td>
+                  <td>{{ child.anthropometricStatus?.heightForAge }}</td>
+                  <td>{{ child.anthropometricStatus?.weightForHeight }}</td>
                 </tr>
               </tbody>
             </table>
@@ -248,11 +248,11 @@
           @for(weighingStat of child.weighingHistory; track $index){
           <tbody>
             <tr>
-              <td>{{ weighingStat.date | date : "yyyy-MM-dd" }}</td>
-              <td>{{ weighingStat.weight }}</td>
-              <td>{{ weighingStat.height }}</td>
+              <td>{{ weighingStat?.date | date : "yyyy-MM-dd" }}</td>
+              <td>{{ weighingStat?.weight }}</td>
+              <td>{{ weighingStat?.height }}</td>
               <td>Malnourished</td>
-              <td>{{ weighingStat.notes }}</td>
+              <td>{{ weighingStat?.notes }}</td>
             </tr>
           </tbody>
           }

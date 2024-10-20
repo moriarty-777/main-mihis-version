@@ -16,7 +16,7 @@ export interface Anthropometric {
     | "Overweight"
     | "Obese"; // Weight-for-Height category
   dateOfWeighing: Date; // Date of the anthropometric measurement
-  createdAt?: Date; // Timestamps will be automatically added by Mongoose
+  createdAt?: Date; // Timestamps wilasl be automatically added by Mongoose
   updatedAt?: Date;
 }
 

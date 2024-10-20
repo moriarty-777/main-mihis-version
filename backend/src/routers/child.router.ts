@@ -7,8 +7,16 @@ import { ChildModel } from "../models/child.model";
 import { MotherModel } from "../models/mother.model";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
 import { authMiddleware } from "../middlewares/auth.mid";
-import { weighingHistoryData, anthropometricData } from "../data2";
+import {
+  weighingHistoryData,
+  anthropometricData,
+  weight5,
+  anthro5,
+  nutritionalStatus5,
+} from "../data2";
 import { WeighingHistoryModel } from "../models/weighing-history.model";
+import { NutritionalStatusModel } from "../models/nutritional-status.model";
+import { Types } from "mongoose";
 
 const router = Router();
 
@@ -57,8 +65,8 @@ const router = Router();
 //   "/child/seed/weighing-anthro",
 //   expressAsyncHandler(async (req, res) => {
 //     try {
-//       // Step 1: Seed Weighing History Data
-//       for (const history of weighingHistoryData) {
+//       // Step 1: Seed Weighing History anthro5 weight5 Data
+//       for (const history of weight5) {
 //         const newWeighingHistory = await WeighingHistoryModel.create(history);
 //         console.log(
 //           `Weighing history created for child: ${newWeighingHistory.child}`
@@ -71,7 +79,7 @@ const router = Router();
 //       }
 
 //       // Step 3: Seed Anthropometric Data
-//       for (const anthro of anthropometricData) {
+//       for (const anthro of anthro5) {
 //         const newAnthropometric = await AnthropometricModel.create(anthro);
 //         console.log(
 //           `Anthropometric data created for child: ${newAnthropometric.childId}`
@@ -90,6 +98,69 @@ const router = Router();
 //       console.error("Error during seeding process:", error);
 //       res.status(500).send("Seeding failed");
 //     }
+//   })
+// );
+//  Seed Nutritional Status
+// Seed nutritional status
+// router.get(
+//   "/child/seed/nutritional-status",
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       // Step 1: Loop through the nutritionalStatus5 data and create a record for each entry
+//       for (const entry of nutritionalStatus5) {
+//         // Find the child by ID
+//         const child = await ChildModel.findById(entry.childId);
+
+//         // Check if the child exists
+//         if (child) {
+//           // Step 2: Check if the child already has a nutritionalStatus
+//           if (child.nutritionalStatus) {
+//             console.log(
+//               `Nutritional status already exists for child: ${child.firstName}`
+//             );
+//             continue; // Skip creating a new record if one already exists
+//           }
+
+//           // Step 3: Create a new nutritional status record
+//           const nutritionalStatus = new NutritionalStatusModel({
+//             childId: child._id, // Store the child ID reference
+//             status: entry.status, // Store the nutritional status (e.g., "Normal", "Malnourished")
+//             dateOfStatus: entry.dateOfStatus, // Store the date of status
+//           });
+
+//           // Save the new nutritional status record
+//           const savedNutritionalStatus = await nutritionalStatus.save();
+
+//           // Step 4: Update the child document with the nutritionalStatus reference
+//           child.nutritionalStatus = savedNutritionalStatus.id;
+//           await child.save(); // Save the updated child document
+
+//           // Log success
+//           console.log(
+//             `Nutritional status created and updated for child: ${child.firstName}`
+//           );
+//         } else {
+//           console.log(`Child not found with ID: ${entry.childId}`);
+//         }
+//       }
+
+//       // Send success response
+//       res.send(
+//         "Nutritional status seeding completed successfully and child records updated."
+//       );
+//     } catch (error) {
+//       console.error("Error seeding nutritional status:", error);
+//       res.status(500).send("Seeding failed");
+//     }
+//   })
+// );
+
+// router.delete(
+//   "/nutritional-status/delete-all",
+//   expressAsyncHandler(async (req, res) => {
+//     // Delete all nutritional status data
+//     const result = await NutritionalStatusModel.deleteMany({});
+//     res.send({ message: "All nutritional status records deleted", result });
 //   })
 // );
 
@@ -144,7 +215,9 @@ router.get(
     }
 
     // Fetch filtered children from the database
-    const children = await ChildModel.find(filter);
+    const children = await ChildModel.find(filter).populate(
+      "nutritionalStatus"
+    );
     res.send(children); // Send the filtered results
   })
 );
@@ -160,7 +233,8 @@ router.get(
       .populate({
         path: "weighingHistory",
         options: { sort: { dateOfWeighing: -1 } }, // Sort by date in descending order
-      });
+      })
+      .populate("nutritionalStatus");
     // .populate("weighingHistory");
 
     // Now fetch the mother associated with this child
@@ -281,6 +355,15 @@ router.post(
     });
 
     res.status(201).send(newChild);
+  })
+);
+
+// Retrieve Child + Anthropometric
+router.get(
+  "/children-aanthro",
+  expressAsyncHandler(async (req, res) => {
+    const children = await ChildModel.find().populate("anthropometricStatus");
+    res.send(children);
   })
 );
 

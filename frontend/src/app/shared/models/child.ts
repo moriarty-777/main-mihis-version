@@ -1,4 +1,5 @@
 import { AnthropometricStatus } from './anthropometric';
+import { NutritionalStatus } from './nutritional-status';
 import { Vaccination } from './vaccination';
 import { WeighingHistory } from './weighing-history';
 
@@ -21,7 +22,7 @@ export interface Child {
   dateFullyVaccinated: string;
   weighingHistory: WeighingHistory[]; // Add weighingHistory
   anthropometricStatus: AnthropometricStatus; // Add anthropometricStatus
-  nutritionalStatus?: string;
+  nutritionalStatus?: NutritionalStatus;
   vaccinationStatus?: any;
   mother?: any;
   child?: any;

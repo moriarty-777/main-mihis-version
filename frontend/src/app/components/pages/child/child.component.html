@@ -99,19 +99,19 @@
               <td class="t-icon">
                 <img src="/assets/img/ph_flag.png" alt="PH Flag" />
 
-                <!-- <a routerLink="/children-page/{{ children.id }}">
-                  {{ children.firstName + " " + children.lastName }} </a
-                > -->
-                <span>
+                <a routerLink="/children-page/{{ children.id }}">
+                  {{ children.firstName + " " + children.lastName }}
+                </a>
+                <!-- <span>
                   {{ children.firstName + " " + children.lastName }}
                 </span>
-                {{ children.id }}
+                {{ children.id }} -->
               </td>
               <td>{{ children.gender }}</td>
               <td>{{ children.purok }}</td>
               <td>
                 <!-- {{ children.weighingHistory[0].weightForAgeStatus }} -->
-                {{ children.nutritionalStatus }}
+                {{ children.nutritionalStatus?.status }}
               </td>
               <!-- <td>
                 {{ children.weighingHistory[0].heightForAgeStatus }}
@@ -157,5 +157,11 @@
     <button class="vcard-popup global-btn" (click)="exportChildrenToPDF()">
       <mat-icon>save_alt </mat-icon> Export Children to PDF
     </button> -->
+    <button
+      class="vcard-popup global-btn"
+      (click)="exportChildrenToExcelAnthro()"
+    >
+      <mat-icon>save_alt </mat-icon> Export Children Anthro to Excel
+    </button>
   </div>
 </div>
