@@ -167,4 +167,96 @@ export class AnalyticsComponent {
   //   this.getWatchTime().forEach((v) => (sum += v));
   //   return sum;
   // }
+
+  // TODO: Hardcoded Data
+  // Complete Immunization Coverage Hardcoded Data
+  // Complete Immunization Coverage Hardcoded Data
+  immunizationCoverageData: { label: string; value: number }[] = [
+    { label: 'Fully Vaccinated', value: 0 },
+    { label: 'Partially Vaccinated', value: 0 },
+    { label: 'Not Vaccinated', value: 99 },
+  ];
+
+  // Chart data for immunization, using monthly labels
+  immunizationChartData: ChartData<'bar'> = {
+    labels: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sept',
+      'Oct',
+      'Nov',
+      'Dec',
+    ],
+    datasets: [
+      {
+        data: this.getFullyVaccinated(), // Fully vaccinated data for each month
+        backgroundColor: ['#4CAF50'], // Green for Fully Vaccinated
+        label: 'Fully Vaccinated',
+      },
+      {
+        data: this.getPartiallyVaccinated(), // Partially vaccinated data for each month
+        backgroundColor: ['#FFC107'], // Yellow for Partially Vaccinated
+        label: 'Partially Vaccinated',
+      },
+      {
+        data: this.getNotVaccinated(), // Not vaccinated data for each month
+        backgroundColor: ['#FF5722'], // Red for Not Vaccinated
+        label: 'Not Vaccinated',
+      },
+    ],
+  };
+
+  // Load immunization coverage data
+  loadImmunizationCoverageData() {
+    console.log(
+      'Complete Immunization Coverage Data:',
+      this.immunizationCoverageData
+    ); // Debugging
+  }
+
+  // Helper methods for data (mock functions to simulate data retrieval per month)
+  getFullyVaccinated() {
+    return [23, 1, 55, 7, 43, 12, 17, 15, 18, 18, 43, 55]; // Replace with real data
+  }
+
+  getPartiallyVaccinated() {
+    return [23, 32, 12, 11, 21, 23, 0, 23, 23, 23, 23, 2]; // Replace with real data
+  }
+
+  getNotVaccinated() {
+    return [5, 4, 8, 7, 6, 5, 4, 2, 1, 2, 12, 0]; // Replace with real data
+  }
+
+  // Malnourishment Data (Hardcoded)
+  malnourishmentData: { label: string; value: number }[] = [
+    { label: 'Normal', value: 70 },
+    { label: 'Malnourished', value: 30 },
+  ];
+
+  // Chart data for malnourishment and normal status
+  malnourishmentChartData: ChartData<'bar'> = {
+    labels: ['Normal', 'Malnourished'],
+    datasets: [
+      {
+        data: this.getMalnourishmentData(), // Retrieve malnourishment data
+        backgroundColor: ['#4CAF50', '#FF5722'], // Green for Normal, Red for Malnourished
+        hoverBackgroundColor: ['#388E3C', '#E64A19'],
+        borderWidth: 1,
+        label: 'Nutritional Status',
+      },
+    ],
+  };
+
+  // Helper method to retrieve malnourishment data
+  getMalnourishmentData() {
+    return this.malnourishmentData.map((status) => status.value);
+  }
+
+  // TODO: EndHardcoded Data
 }

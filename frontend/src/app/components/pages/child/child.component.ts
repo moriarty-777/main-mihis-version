@@ -197,11 +197,14 @@ export class ChildComponent {
       ID: child.id,
       FirstName: child.firstName,
       LastName: child.lastName,
+      dateofBirth: child.dateOfBirth,
+      motherNumber: child.mother?.phone || 'N/A', // Add mother's phone here safely
+
       // Assuming anthropometricStatus is populated and has properties like weightForAge, heightForAge, etc.
-      WeightForAge: child.anthropometricStatus?.weightForAge || 'N/A',
-      HeightForAge: child.anthropometricStatus?.heightForAge || 'N/A',
-      WeightForHeight: child.anthropometricStatus?.weightForHeight || 'N/A',
-      DateOfWeighing: child.anthropometricStatus?.dateOfWeighing || 'N/A',
+      // WeightForAge: child.anthropometricStatus?.weightForAge || 'N/A',
+      // HeightForAge: child.anthropometricStatus?.heightForAge || 'N/A',
+      // WeightForHeight: child.anthropometricStatus?.weightForHeight || 'N/A',
+      // DateOfWeighing: child.anthropometricStatus?.dateOfWeighing || 'N/A',
     }));
 
     // Convert the data into a worksheet

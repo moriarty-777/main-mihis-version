@@ -53,20 +53,20 @@ export class MotherProfileComponent {
       data: { motherId: this.mother.id }, /// Ensure correct data is passed here
     });
   }
-  linkChild() {
-    const motherId = '67103e8dbd8e366d0c92b278'; // From form or selected data
-    const childId = '67103e66b3bf97ca89f10a5c'; // From form or selected data
+  // linkChild() {
+  //   const motherId = '67103e8dbd8e366d0c92b278'; // From form or selected data
+  //   const childId = '67103e66b3bf97ca89f10a5c'; // From form or selected data
 
-    this.motherService
-      .linkChildToMother(motherId, childId)
-      .subscribe((response) => {
-        console.log(response);
-        // Optionally reload or refresh the page
-      });
+  //   this.motherService
+  //     .linkChildToMother(motherId, childId)
+  //     .subscribe((response) => {
+  //       console.log(response);
+  //       // Optionally reload or refresh the page
+  //     });
 
-    // Link Id
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000);
-  }
+  //   // Link Id
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 3000);
+  // }
 }

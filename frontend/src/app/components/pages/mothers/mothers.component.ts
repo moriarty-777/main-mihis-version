@@ -9,6 +9,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { PopupMotherComponent } from '../../partials/popup-mother/popup-mother.component';
 import { PopupAddMotherComponent } from '../../partials/popup-add-mother/popup-add-mother.component';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-mothers',
@@ -121,5 +124,38 @@ export class MothersComponent {
         );
       }
     }, 500);
+  }
+
+  // Method to fetch mother and children data and export it
+  exportMotherChildrenToExcel(): void {
+    this.motherService.exportMotherChildren().subscribe((mothers) => {
+      const dataToExport = mothers.map((mother: any) => {
+        return mother.children.map((child: any) => ({
+          MotherId: mother.id,
+          MotherFirstName: mother.firstName,
+          MotherLastName: mother.lastName,
+          MotherPhone: mother.phone || 'N/A',
+          ChildFirstName: child.firstName,
+          ChildLastName: child.lastName,
+          ChildID: child.id,
+        }));
+      });
+
+      // Flatten the nested arrays into a single array
+      const flatDataToExport = dataToExport.flat();
+
+      // Convert the data into a worksheet
+      const worksheet: XLSX.WorkSheet =
+        XLSX.utils.json_to_sheet(flatDataToExport);
+
+      // Create a new workbook and append the worksheet
+      const workbook: XLSX.WorkBook = {
+        Sheets: { 'Mother and Children Data': worksheet },
+        SheetNames: ['Mother and Children Data'],
+      };
+
+      // Export the workbook to Excel file
+      XLSX.writeFile(workbook, 'MotherChildrenData.xlsx');
+    });
   }
 } //

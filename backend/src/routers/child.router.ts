@@ -363,6 +363,7 @@ router.get(
   "/children-aanthro",
   expressAsyncHandler(async (req, res) => {
     const children = await ChildModel.find().populate("anthropometricStatus");
+
     res.send(children);
   })
 );

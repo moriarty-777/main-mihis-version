@@ -10,6 +10,7 @@ import {
   GET_CHILDREN_BY_MOTHER_ID,
   CHILD_ADD_URL,
   MOTHER_LINK_CHILD_URL,
+  MOTHER_EXPORT_URL,
 } from '../shared/constants/urls';
 import { Child } from '../shared/models/child';
 
@@ -150,5 +151,14 @@ export class MotherService {
         },
       })
     );
+  }
+
+  // Method to get mothers and their children details for export
+  exportMotherChildren(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`, // Add Authorization token
+    });
+
+    return this.http.get(MOTHER_EXPORT_URL, { headers }); // Pass headers to the HTTP request
   }
 }

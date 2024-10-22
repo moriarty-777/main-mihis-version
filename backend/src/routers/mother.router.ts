@@ -8,7 +8,53 @@ import { authMiddleware } from "../middlewares/auth.mid";
 import { ChildModel } from "../models/child.model";
 
 const router = Router();
+// Retrieve child FIXME: tobe deleted
+router.get(
+  "/export-mother-children",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const mothers = await MotherModel.find()
+      .populate("children", "firstName lastName id") // Populate the child details
+      .select("firstName lastName phone children"); // Select the fields we need for export
 
+    if (!mothers) {
+      res.status(404).send({ message: "No mothers found" });
+    }
+
+    // Send the filtered data (mother and their children)
+    res.send(mothers);
+  })
+);
+
+// Remove +
+// router.get(
+//   "/propername", // The route to navigate to
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       // Update all mother phone numbers by removing the "+" sign
+//       const result = await MotherModel.updateMany(
+//         { phone: { $regex: /^\+/ } }, // Find mothers with + in phone
+//         [
+//           {
+//             $set: {
+//               phone: {
+//                 $replaceAll: { input: "$phone", find: "+", replacement: "" },
+//               },
+//             },
+//           },
+//         ] // Remove + from phone
+//       );
+
+//       res.send(
+//         `Successfully updated ${result.modifiedCount} mothers' phone numbers`
+//       );
+//     } catch (error) {
+//       console.error("Error updating phone numbers:", error);
+//       res.status(500).send({ message: "Failed to update phone numbers" });
+//     }
+//   })
+// );
 // seed
 // router.get(
 //   "/seed",

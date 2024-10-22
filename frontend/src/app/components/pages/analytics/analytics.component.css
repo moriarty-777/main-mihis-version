@@ -25,6 +25,17 @@
   grid-row: 2/3;
 }
 
+/* TODO: FIXME: */
+.ai-immunization-coverage {
+  grid-column: 1/4;
+  grid-row: 3/4;
+}
+
+.ai-malnourishment-status {
+  grid-column: 1/3;
+  grid-row: 4/5;
+}
+
 /* .analytics-container > * {
   flex: 1;
 } */

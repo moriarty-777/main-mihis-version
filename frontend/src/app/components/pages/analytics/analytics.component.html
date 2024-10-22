@@ -25,6 +25,39 @@
     ></charts-missed-vaccine-reason>
   </div>
 
+  <!-- TODO: FIXME: HARD CODED -->
+  <div class="analytics-item ai-immunization-coverage">
+    <h2>Complete Infant Immunization Reports</h2>
+    <div class="chart-data">
+      <table>
+        <tr *ngFor="let status of immunizationCoverageData; let i = index">
+          <td>{{ status.label }}:</td>
+          <td>
+            <span>{{ status.value }}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <canvas baseChart [type]="'bar'" [data]="immunizationChartData"></canvas>
+  </div>
+
+  <div class="analytics-item ai-malnourishment-status">
+    <h2>Malnutrition and Normal Status</h2>
+    <div class="chart-data">
+      <table>
+        <tr *ngFor="let status of malnourishmentData; let i = index">
+          <td>{{ status.label }}:</td>
+          <td>
+            <span>{{ status.value }}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <canvas baseChart [type]="'bar'" [data]="malnourishmentChartData"></canvas>
+  </div>
+
+  <!-- TODO: FIXME: Hard Data -->
+
   <!-- <div class="analytics-item ai-coverage-heatmap-purok">
     <charts-coverage-heatmap-purok
       [purokCoverageData]="purokCoverageData"

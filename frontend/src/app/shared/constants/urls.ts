@@ -20,6 +20,8 @@ export const MOTHER_URL = BASE_URL + '/api/mother';
 export const MOTHER_PROFILE_URL = BASE_URL + '/api/mother/';
 export const MOTHER_ADD_CHILD_URL = BASE_URL + '/api/';
 export const MOTHER_LINK_CHILD_URL = BASE_URL + '/api/mother/link-child';
+export const MOTHER_EXPORT_URL =
+  BASE_URL + '/api/mother/export-mother-children';
 export const GET_CHILDREN_BY_MOTHER_ID = (motherId: string) =>
   `/api/mother/${motherId}/children`;
 
