@@ -252,3 +252,16 @@ button.global-btn.hey {
 }
 
 /* #endregion User Profile */
+p.wewsa {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  font-size: 20px;
+  text-transform: uppercase;
+  top: 42px;
+  opacity: 0.5;
+}
+
+.table-group.top {
+  position: relative;
+}

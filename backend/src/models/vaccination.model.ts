@@ -8,6 +8,7 @@ export interface Vaccination extends Document {
   dateOfVaccination: Date;
   midwifeId: Schema.Types.ObjectId; // Reference to the Midwife
   bhwId: Schema.Types.ObjectId; // Reference to the BHW
+  aefi: Schema.Types.ObjectId; // Reference to the BHW
 }
 
 // Vaccination Schema
@@ -19,6 +20,7 @@ const VaccinationSchema = new Schema<Vaccination>(
     dateOfVaccination: { type: Date, required: true },
     midwifeId: { type: Schema.Types.ObjectId, ref: "user", required: true },
     bhwId: { type: Schema.Types.ObjectId, ref: "user", required: true },
+    aefi: { type: Schema.Types.ObjectId, ref: "aefi" }, // Link to AEFI schema
   },
   {
     toJSON: {

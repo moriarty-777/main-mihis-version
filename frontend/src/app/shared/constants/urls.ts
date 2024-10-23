@@ -14,6 +14,7 @@ export const USER_LOGOUT_URL = BASE_URL + '/api/users/logout';
 export const USER_SIGNUP_URL = BASE_URL + '/api/users/signup';
 export const USER_URL = BASE_URL + '/api/users';
 export const USER_PROFILE_URL = BASE_URL + '/api/users/';
+export const USER_EXPORT_URL = BASE_URL + '/api/users/export-users';
 
 // export const MIDWIVES_URL = BASE_URL + '/api/users/midwsives';
 export const MOTHER_URL = BASE_URL + '/api/mother';

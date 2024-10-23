@@ -11,7 +11,7 @@ export interface Vaccination {
   // dateOfVaccination: Date;
   dateOfVaccination: string;
   midwifeId: any; // Union type
-  bhwId: string; // Reference to User (BHW)
+  bhwId: any; // Reference to User (BHW)
   aefi?: {
     occurred: boolean;
     description?: string;

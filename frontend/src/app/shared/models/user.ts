@@ -1,5 +1,5 @@
 export class User {
-  id!: string;
+  id!: any;
   role!: string; // BHW, Midwife, Admin
   firstName!: string;
   lastName!: string;

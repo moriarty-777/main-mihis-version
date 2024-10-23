@@ -29,10 +29,10 @@
                     <td>Name</td>
                     <td>{{ child.firstName + " " + child.lastName }}</td>
                   </tr>
-                  <!-- <tr>
+                  <tr>
                     <td>Age</td>
                     <td>{{ getAgeInMonths(child.dateOfBirth) }} months</td>
-                  </tr> -->
+                  </tr>
                   <tr>
                     <td>Gender</td>
                     <td>{{ child.gender }}</td>
@@ -82,7 +82,7 @@
                   </tr>
                   <tr>
                     <td>Vaccine</td>
-                    <!-- <td class="u_icon">
+                    <td class="u_icon">
                       {{ countVaccinations(child) }} /
                       <span class="gray">15</span>
                       <span class="question"
@@ -93,7 +93,7 @@
                           >help</mat-icon
                         ></span
                       >
-                    </td> -->
+                    </td>
                   </tr>
                   <tr>
                     <td>Mother</td>
@@ -109,9 +109,9 @@
           </div>
         </div>
         <div class="user-statistics">
-          <!--     <button class="vcard-popup global-btn" (click)="openDialog()">
+          <button class="vcard-popup global-btn" (click)="openDialog()">
             Vaccination Card
-          </button> -->
+          </button>
           <div class="usr-stat-graph">
             <div class="title-wrap">
               <h2 class="stat-title">Child Statistics</h2>
@@ -125,7 +125,7 @@
             </div> -->
           </div>
           <div class="table-group">
-            <!--          <table class="stat-table">
+            <table class="stat-table">
               <thead>
                 <tr>
                   <th>Vaccine Status</th>
@@ -142,10 +142,11 @@
                   </td>
 
                   <td>{{ calculateMissedVaccines(child) }}</td>
+
                   <td>{{ countAEFIOccurrences(child) }}</td>
                 </tr>
               </tbody>
-            </table> -->
+            </table>
             <table class="stat-table">
               <thead>
                 <tr>
@@ -179,14 +180,14 @@
         </div>
       </div>
 
-      <!-- <div class="child-schedule-log">
+      <div class="child-schedule-log">
         <div class="title-wrap">
           <h2 class="stat-title">
             Recent {{ child.firstName + " " + child.lastName }} Vaccinations and
             Weight Logs
           </h2>
         </div>
-        <div class="title-wrap">
+        <!-- <div class="title-wrap">
           <h3 class="stat-sub-title">Recent Child Vaccinations</h3>
         </div>
         <div class="table-group top">
@@ -197,7 +198,7 @@
                 <th>Vaccine Type</th>
                 <th>Dose Number</th>
                 <th>Administered By</th>
-                <th>BHW</th>
+                <th>Recorded by BHW</th>
                 <th>Location</th>
               </tr>
             </thead>
@@ -212,12 +213,18 @@
                 <td>{{ vaccination.doseNumber }}</td>
                 <td>
                   {{
-                    vaccination.midwifeId.firstName +
+                    vaccination.midwifeId?.firstName +
                       " " +
-                      vaccination.midwifeId.lastName
+                      vaccination.midwifeId?.lastName
                   }}
                 </td>
-                <td></td>
+                <td>
+                  {{
+                    vaccination.bhwId?.firstName +
+                      " " +
+                      vaccination.bhwId?.lastName
+                  }}
+                </td>
                 <td>{{ vaccination.placeOfVaccination }}</td>
               </tr>
             </tbody>
@@ -229,85 +236,130 @@
               (onClick)="changePage($event)"
             ></pagination>
           </table>
+        </div> -->
+        <div class="title-wrap">
+          <h3 class="stat-sub-title">Recent Child Vaccinations</h3>
         </div>
-      -->
-      <div class="title-wrap">
-        <h3 class="stat-sub-title">Child Growth</h3>
-      </div>
-      <div class="table-group">
-        <table class="stat-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Weight (kg)</th>
-              <th>Height (cm)</th>
-              <th>Growth Category</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          @for(weighingStat of child.weighingHistory; track $index){
-          <tbody>
-            <tr>
-              <td>{{ weighingStat?.date | date : "yyyy-MM-dd" }}</td>
-              <td>{{ weighingStat?.weight }}</td>
-              <td>{{ weighingStat?.height }}</td>
-              <td>Malnourished</td>
-              <td>{{ weighingStat?.notes }}</td>
-            </tr>
-          </tbody>
-          }
-          <!-- @for(weighingStat of child.weighingHistory; track child.id){
+        <div class="table-group top">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Vaccine Type</th>
+                <th>Dose Number</th>
+                <th>Administered By</th>
+                <th>Recorded by BHW</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+
+            <tbody *ngIf="child.vaccinations.length > 0; else noRecords">
+              @for(vaccination of paginatedChildren; track $index){
+              <tr>
+                <td>
+                  {{ vaccination.dateOfVaccination | date : "yyyy-MM-dd" }}
+                </td>
+                <td>{{ vaccination.vaccineType }}</td>
+                <td>{{ vaccination.doseNumber }}</td>
+                <td>
+                  {{
+                    vaccination.midwifeId?.firstName +
+                      " " +
+                      vaccination.midwifeId?.lastName
+                  }}
+                </td>
+                <td>
+                  {{
+                    vaccination.bhwId?.firstName +
+                      " " +
+                      vaccination.bhwId?.lastName
+                  }}
+                </td>
+                <td>{{ vaccination.placeOfVaccination }}</td>
+              </tr>
+              }
+            </tbody>
+
+            <pagination
+              [totalItems]="child.vaccinations.length"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="currentPage"
+              (onClick)="changePage($event)"
+            ></pagination>
+
+            <ng-template #noRecords>
+              <p class="wewsa">No records yet.</p>
+            </ng-template>
+          </table>
+        </div>
+
+        <div class="title-wrap">
+          <h3 class="stat-sub-title">Child Growth</h3>
+        </div>
+        <div class="table-group">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Weight (kg)</th>
+                <th>Height (cm)</th>
+                <th>Growth Category</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            @for(weighingStat of child.weighingHistory; track $index){
             <tbody>
               <tr>
-                <td>{{ weighingStat.date | date : "yyyy-MM-dd" }}</td>
-                <td>{{ weighingStat.weight }}</td>
-                <td>{{ weighingStat.height }}</td>
-                <td>{{ child.nutritionalStatus }}</td>
-                <td>{{ weighingStat.notes }}</td>
+                <td>{{ weighingStat?.date | date : "yyyy-MM-dd" }}</td>
+                <td>{{ weighingStat?.weight }}</td>
+                <td>{{ weighingStat?.height }}</td>
+                <td>Malnourished</td>
+                <td>{{ weighingStat?.notes }}</td>
               </tr>
             </tbody>
-            } -->
-        </table>
-      </div>
+            }
+          </table>
+        </div>
 
-      <div class="title-wrap bosst">
-        <h3 class="stat-sub-title">Child Schedule</h3>
-      </div>
+        <div class="title-wrap bosst">
+          <h3 class="stat-sub-title">Child Schedule</h3>
+        </div>
 
-      <button class="global-btn hey" (click)="toggleSchedule()">
-        {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
-      </button>
+        <button class="global-btn hey" (click)="toggleSchedule()">
+          {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
+        </button>
 
-      <div class="table-group" *ngIf="showSchedule">
-        <table class="stat-table">
-          <thead>
-            <tr>
-              <th>Schedule Date</th>
-              <th>Reschedule Date</th>
-              <th>Type (Vaccine/Weighing)</th>
-              <th>Dose Number (if applicable)</th>
-              <th>Schedule Type</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let schedule of child.schedules">
-              <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
-              <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
-              <td>
-                <!-- Display either the vaccine or weighing description -->
-                {{
-                  schedule.scheduleType === "weighing"
-                    ? "OPT"
-                    : schedule.vaccineName || "N/A"
-                }}
-              </td>
-              <td>{{ schedule.doseNumber || "-" }}</td>
-              <td>{{ schedule.scheduleType | titlecase }}</td>
-              <td>{{ schedule.location }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-group" *ngIf="showSchedule">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Schedule Date</th>
+                <th>Reschedule Date</th>
+                <th>Type (Vaccine/Weighing)</th>
+                <th>Dose Number (if applicable)</th>
+                <th>Schedule Type</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let schedule of child.schedules">
+                <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>
+                  <!-- Display either the vaccine or weighing description -->
+                  {{
+                    schedule.scheduleType === "weighing"
+                      ? "OPT"
+                      : schedule.vaccineName || "N/A"
+                  }}
+                </td>
+                <td>{{ schedule.doseNumber || "-" }}</td>
+                <td>{{ schedule.scheduleType | titlecase }}</td>
+                <td>{{ schedule.location }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

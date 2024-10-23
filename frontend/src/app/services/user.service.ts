@@ -10,6 +10,7 @@ import {
   AUDIT_LOGS_URL,
   USER_PROFILE_URL,
   USER_LOGOUT_URL,
+  USER_EXPORT_URL,
 } from '../shared/constants/urls';
 import { tap, map } from 'rxjs/operators';
 import { IUserLogin } from '../shared/models/iuserLogin';
@@ -120,6 +121,15 @@ export class UserService {
       })
     );
   }
+
+  // Excel user
+  // exportUsers(): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`, // Add Authorization token
+  //   });
+
+  //   return this.http.get(USER_EXPORT_URL, { headers }); // Pass headers to the HTTP request
+  // }
 
   // logout() {
   //   this.userSubject.next(new User());

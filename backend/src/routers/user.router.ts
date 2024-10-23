@@ -49,6 +49,24 @@ router.get(
     res.send(specificUser);
   })
 );
+
+// Download User Excel
+router.get(
+  "/export-users",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const users = await UserModel.find(); // Select the fields we need for export
+
+    if (!users || users.length === 0) {
+      res.status(404).send({ message: "No users found" });
+    }
+
+    // Send the filtered user data
+    res.send(users);
+  })
+);
+
 // router.get(
 //   "/midwives",
 //   expressAsyncHandler(async (req, res) => {

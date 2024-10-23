@@ -22,10 +22,18 @@
       </p>
       <p><em>Father's name:</em> <span></span></p>
       <p>
-        <em>Birth height:</em> <span>{{ child.height }}</span>
+        <em>Birth height:</em>
+        <span>
+          {{ child.weighingHistory[0]?.height }}
+          kg</span
+        >
       </p>
       <p>
-        <em>Birth weight:</em> <span>{{ child.weight }}</span>
+        <em>Birth weight:</em>
+        <span>
+          {{ child.weighingHistory[0]?.weight }}
+          cm</span
+        >
       </p>
       <p>
         <em>Sex:</em> <span>{{ child.gender }}</span>
@@ -40,6 +48,8 @@
     </div>
   </div>
   <div class="vaccination-body"></div>
+
+  <!-- TODO: -->
   <div class="table-group">
     <table class="stat-table">
       <thead>
@@ -72,6 +82,9 @@
               Measles, Mumps, Rubella <br />
               Vaccine (MMR)
             </p>
+            <p>MCV Vaccine (Grade 1 & 7)</p>
+            <p>TD Vaccine (Grade 1 & 7)</p>
+            <p *ngIf="child.gender === 'Female'">HPV Vaccine (Grade 4 & 5)</p>
           </td>
           <td class="doses w12">
             <p><span class="num-dose">1</span> At birth</p>
@@ -111,6 +124,28 @@
                 & 1 year</span
               >
             </p>
+            <p>
+              <span class="num-dose ttt">2</span>
+              <span class="dose-group"
+                >6 years <br />
+                12 years</span
+              >
+            </p>
+            <p>
+              <span class="num-dose ttt">2</span>
+              <span class="dose-group"
+                >6 years <br />
+                12 years</span
+              >
+            </p>
+
+            <p *ngIf="child.gender === 'Female'">
+              <span class="num-dose ttt">2</span>
+              <span class="dose-group"
+                >9 years<br />
+                10 years</span
+              >
+            </p>
           </td>
           <td class="dates w13">
             <p>
@@ -120,38 +155,22 @@
                   : "N/A"
               }}
             </p>
-            <!-- <p *ngIf="getVaccineDates(child, 'BCG')">
-              {{ getVaccineDates(child, "BCG") | date : "MM/dd/yy" : "N/A" }}
-            </p> -->
-            <!-- <p>
-              <span *ngIf="getVaccineDates(child, 'Hepatitis B Vaccine')">
-                {{
-                  getVaccineDates(child, "Hepatitis B Vaccine")
-                    | date : "MM/dd/yy"
-                }}
-              </span>
-            </p> -->
             <p>
               {{
-                getVaccineDates(child, "Hepatitis B Vaccine")
-                  ? (getVaccineDates(child, "Hepatitis B Vaccine")
-                    | date : "MM/dd/yy")
+                getVaccineDates(child, "Hepatitis B")
+                  ? (getVaccineDates(child, "Hepatitis B") | date : "MM/dd/yy")
                   : "N/A"
               }}
             </p>
             <p>
               <ng-container
-                *ngIf="
-                  getVaccineDates(child, 'Pentavalent Vaccine');
-                  else placeholder
-                "
+                *ngIf="getVaccineDates(child, 'Pentavalent'); else placeholder"
               >
                 <span
                   *ngFor="
-                    let date of getVaccineDates(
-                      child,
-                      'Pentavalent Vaccine'
-                    )?.split(', ')
+                    let date of getVaccineDates(child, 'Pentavalent')?.split(
+                      ', '
+                    )
                   "
                   >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
                 ></ng-container
@@ -161,17 +180,11 @@
             </p>
             <p>
               <ng-container
-                *ngIf="
-                  getVaccineDates(child, 'Oral Polio Vaccine (OPV)');
-                  else placeholder
-                "
+                *ngIf="getVaccineDates(child, 'OPV'); else placeholder"
               >
                 <span
                   *ngFor="
-                    let date of getVaccineDates(
-                      child,
-                      'Oral Polio Vaccine (OPV)'
-                    )?.split(', ')
+                    let date of getVaccineDates(child, 'OPV')?.split(', ')
                   "
                   >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
                 >
@@ -180,17 +193,11 @@
             </p>
             <p>
               <ng-container
-                *ngIf="
-                  getVaccineDates(child, 'Inactivated Polio Vaccine (IPV)');
-                  else placeholder
-                "
+                *ngIf="getVaccineDates(child, 'IPV'); else placeholder"
               >
                 <span
                   *ngFor="
-                    let date of getVaccineDates(
-                      child,
-                      'Inactivated Polio Vaccine (IPV)'
-                    )?.split(', ')
+                    let date of getVaccineDates(child, 'IPV')?.split(', ')
                   "
                   >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
                 >
@@ -199,20 +206,11 @@
             </p>
             <p>
               <ng-container
-                *ngIf="
-                  getVaccineDates(
-                    child,
-                    'Pneumococcal Conjugate Vaccine (PCV)'
-                  );
-                  else placeholder
-                "
+                *ngIf="getVaccineDates(child, 'PCV'); else placeholder"
               >
                 <span
                   *ngFor="
-                    let date of getVaccineDates(
-                      child,
-                      'Pneumococcal Conjugate Vaccine (PCV)'
-                    )?.split(', ')
+                    let date of getVaccineDates(child, 'PCV')?.split(', ')
                   "
                   >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
                 >
@@ -221,25 +219,42 @@
             </p>
             <p>
               <ng-container
-                *ngIf="
-                  getVaccineDates(
-                    child,
-                    'Measles, Mumps, Rubella Vaccine (MMR)'
-                  );
-                  else placeholder
-                "
+                *ngIf="getVaccineDates(child, 'MMR'); else placeholder"
               >
                 <span
                   *ngFor="
-                    let date of getVaccineDates(
-                      child,
-                      'Measles, Mumps, Rubella Vaccine (MMR)'
-                    )?.split(', ')
+                    let date of getVaccineDates(child, 'MMR')?.split(', ')
                   "
-                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;
-                </span>
+                  >{{ date | date : "MM/dd/yy" }} &nbsp; &nbsp;</span
+                >
               </ng-container>
               <ng-template #placeholder>N/A</ng-template>
+            </p>
+            <p>
+              {{
+                getVaccineDates(child, "MCV")
+                  ? (getVaccineDates(child, "MCV") | date : "MM/dd/yy")
+                  : "N/A"
+              }}
+            </p>
+
+            <p>
+              {{
+                getVaccineDates(child, "TD")
+                  ? (getVaccineDates(child, "TD") | date : "MM/dd/yy")
+                  : "N/A"
+              }}
+            </p>
+
+            <p *ngIf="child.gender === 'Female'">
+              {{
+                getVaccineDates(child, "Human Papillomavirus Vaccine (HPV)	")
+                  ? (getVaccineDates(
+                      child,
+                      "Human Papillomavirus Vaccine (HPV)	"
+                    ) | date : "MM/dd/yy")
+                  : "N/A"
+              }}
             </p>
           </td>
           <td class="remarks w14">
@@ -250,11 +265,118 @@
             <p><span>Fully Vaccinated</span></p>
             <p><span>Fully Vaccinated</span></p>
             <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p><span>Fully Vaccinated</span></p>
+            <p *ngIf="child.gender === 'Female'">
+              <span>Fully Vaccinated</span>
+            </p>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- TODO: -->
+  <!-- Vaccine Table -->
+  <!-- <div class="table-group">
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>Bakuna</th>
+          <th>Doses</th>
+          <th>Petsa ng Bakuna<br />MM/DD/YY</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BCG Vaccine</td>
+          <td>1 At birth</td>
+          <td>{{ getVaccineDates(child, "BCG") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+        <tr>
+          <td>Hepatitis B Vaccine</td>
+          <td>1 At birth</td>
+          <td>{{ getVaccineDates(child, "Hepatitis B") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+
+        <tr>
+          <td>Pentavalent Vaccine (DPT-Hep B-HIB)</td>
+          <td>3 Doses: 1 ½, 2 ½, 3 ½ months</td>
+          <td>{{ getVaccineDates(child, "Pentavalent") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+
+        <tr>
+          <td>Oral Polio Vaccine (OPV)</td>
+          <td>3 Doses: 1 ½, 2 ½, 3 ½ months</td>
+          <td>{{ getVaccineDates(child, "OPV") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+
+        <tr>
+          <td>Inactivated Polio Vaccine (IPV)</td>
+          <td>2 Doses: 3 ½ & 9 months</td>
+          <td>{{ getVaccineDates(child, "IPV") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+
+        <tr>
+          <td>Pneumococcal Conjugate Vaccine (PCV)</td>
+          <td>3 Doses: 1 ½, 2 ½, 3 ½ months</td>
+          <td>{{ getVaccineDates(child, "PCV") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+
+        <tr>
+          <td>Measles, Mumps, Rubella Vaccine (MMR)</td>
+          <td>2 Doses: 9 months & 1 year</td>
+          <td>{{ getVaccineDates(child, "MMR") || "N/A" }}</td>
+          <td>Fully Vaccinated</td>
+        </tr>
+
+        <tr>
+          <td>MCV Vaccine (Grade 1)</td>
+          <td>1 Dose</td>
+          <td>{{ getVaccineDates(child, "MCV Grade 1") || "N/A" }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>MCV Vaccine (Grade 7)</td>
+          <td>1 Dose</td>
+          <td>{{ getVaccineDates(child, "MCV Grade 7") || "N/A" }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>TD Vaccine (Grade 1)</td>
+          <td>1 Dose</td>
+          <td>{{ getVaccineDates(child, "TD Grade 1") || "N/A" }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>TD Vaccine (Grade 7)</td>
+          <td>1 Dose</td>
+          <td>{{ getVaccineDates(child, "TD Grade 7") || "N/A" }}</td>
+          <td></td>
+        </tr>
+
+        <tr *ngIf="child.gender === 'Female'">
+          <td>HPV Vaccine (Dose 1)</td>
+          <td>1 Dose</td>
+          <td>{{ getVaccineDates(child, "HPV Dose 1") || "N/A" }}</td>
+          <td></td>
+        </tr>
+        <tr *ngIf="child.gender === 'Female'">
+          <td>HPV Vaccine (Dose 2)</td>
+          <td>1 Dose</td>
+          <td>{{ getVaccineDates(child, "HPV Dose 2") || "N/A" }}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div> -->
 
   <!-- <h2>
     {{ child.barangay }}{{ child.barangay }}{{ child.barangay

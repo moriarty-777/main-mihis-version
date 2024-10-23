@@ -133,6 +133,7 @@ import { WeighingHistoryModel } from "./weighing-history.model";
 import { NutritionalStatusModel } from "./nutritional-status.model";
 import { MotherModel } from "./mother.model";
 import { SchedulingModel } from "./scheduling.model";
+import { VaccinationModel } from "./vaccination.model";
 
 export interface Child {
   firstName: string;
@@ -176,7 +177,7 @@ const ChildSchema: any = new Schema(
     weighingHistory: [
       { type: Schema.Types.ObjectId, ref: WeighingHistoryModel },
     ],
-    vaccinations: [{ type: Schema.Types.ObjectId, ref: "vaccination" }],
+    vaccinations: [{ type: Schema.Types.ObjectId, ref: VaccinationModel }],
     vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },
     nutritionalStatus: {
       type: Schema.Types.ObjectId,
@@ -187,7 +188,7 @@ const ChildSchema: any = new Schema(
       ref: AnthropometricModel,
     },
     missedVaccines: [{ type: Schema.Types.ObjectId, ref: "missedVaccine" }],
-    schedules: [{ type: Schema.Types.ObjectId, ref: "scheduling" }],
+    schedules: [{ type: Schema.Types.ObjectId, ref: SchedulingModel }],
   },
   {
     toJSON: {

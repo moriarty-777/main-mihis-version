@@ -9,6 +9,9 @@ import { UserService } from '../../../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupUserComponent } from '../../partials/popup-user/popup-user.component';
 import { ToastrService } from 'ngx-toastr';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-user',
@@ -192,5 +195,26 @@ export class UserComponent {
           return b.totalMonthsOfService - a.totalMonthsOfService;
         });
     });
+  }
+
+  exportUserDataToExcel(): void {
+    const dataToExport = this.user.map((user: any) => ({
+      UserId: user.id,
+      FirstName: user.firstName,
+      LastName: user.lastName,
+      Role: user.role || 'N/A',
+    }));
+
+    // Convert the data into a worksheet
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Create a new workbook and append the worksheet
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'User Data': worksheet },
+      SheetNames: ['User Data'],
+    };
+
+    // Export the workbook to Excel file
+    XLSX.writeFile(workbook, 'UserData.xlsx');
   }
 }

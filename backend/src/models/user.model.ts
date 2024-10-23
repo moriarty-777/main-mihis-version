@@ -2,7 +2,7 @@
 import { model, Schema } from "mongoose";
 
 export interface User {
-  id: string;
+  id: any;
   firstName: string;
   lastName: string;
   gender?: string;
