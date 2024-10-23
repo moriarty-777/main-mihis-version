@@ -135,8 +135,10 @@ export class MothersComponent {
           MotherFirstName: mother.firstName,
           MotherLastName: mother.lastName,
           MotherPhone: mother.phone || 'N/A',
+          ChildGender: child.gender,
           ChildFirstName: child.firstName,
           ChildLastName: child.lastName,
+          ChildDateOfBirth: child.dateOfBirth,
           ChildID: child.id,
         }));
       });

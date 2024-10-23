@@ -131,6 +131,8 @@ import { model, Schema } from "mongoose";
 import { AnthropometricModel } from "./anthropometric.model";
 import { WeighingHistoryModel } from "./weighing-history.model";
 import { NutritionalStatusModel } from "./nutritional-status.model";
+import { MotherModel } from "./mother.model";
+import { SchedulingModel } from "./scheduling.model";
 
 export interface Child {
   firstName: string;
@@ -151,11 +153,14 @@ export interface Child {
   nutritionalStatus?: Schema.Types.ObjectId;
   anthropometricStatus?: Schema.Types.ObjectId;
   missedVaccines?: Schema.Types.ObjectId[];
+  schedules?: Schema.Types.ObjectId[];
+  motherId: any;
 }
 
 // Define the Child schema
-const ChildSchema = new Schema(
+const ChildSchema: any = new Schema(
   {
+    motherId: { type: Schema.Types.ObjectId, ref: MotherModel, required: true }, // Reference to the mother
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     // height: { type: Number, required: true },
@@ -182,6 +187,7 @@ const ChildSchema = new Schema(
       ref: AnthropometricModel,
     },
     missedVaccines: [{ type: Schema.Types.ObjectId, ref: "missedVaccine" }],
+    schedules: [{ type: Schema.Types.ObjectId, ref: "scheduling" }],
   },
   {
     toJSON: {

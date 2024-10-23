@@ -98,9 +98,9 @@
                   <tr>
                     <td>Mother</td>
                     <td class="mother-link">
-                      <a [routerLink]="'/mother/' + motherId">{{
-                        motherName
-                      }}</a>
+                      <a [routerLink]="'/mother/' + motherId"
+                        >{{ motherName }}
+                      </a>
                     </td>
                   </tr>
                 </tbody>
@@ -270,53 +270,45 @@
         </table>
       </div>
 
-      <!--
-        <div class="title-wrap bosst">
-          <h3 class="stat-sub-title">Child Schedule</h3>
-        </div>
-        <button class="global-btn hey" (click)="toggleSchedule()">
-          {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
-        </button>
-        <div class="table-group" *ngIf="showSchedule">
-          <table class="stat-table">
-            <thead>
-              <tr>
-                <th>Scheduled</th>
-                <th>Rescheduled</th>
-                <th>Vaccine Type</th>
-                <th>Dose Number</th>
-              </tr>
-            </thead>
-            @for(vaccine of vaccinationSchedule; track $index){
-            <tbody>
-              <tr>
-                <td>
-                  {{ vaccine.dateOfVaccination | date : "EEE, MM/dd/yyyy" }}
-                </td>
-                <td>{{ vaccine.rescheduleDate | date : "EEE, MM/dd/yyyy" }}</td>
-                <td>{{ vaccine.vaccineType }}</td>
-                <td>{{ vaccine.doseNumber }}</td>
-              </tr>
-            </tbody>
-            }
-          </table>
-        </div>
-      </div> -->
+      <div class="title-wrap bosst">
+        <h3 class="stat-sub-title">Child Schedule</h3>
+      </div>
+
+      <button class="global-btn hey" (click)="toggleSchedule()">
+        {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
+      </button>
+
+      <div class="table-group" *ngIf="showSchedule">
+        <table class="stat-table">
+          <thead>
+            <tr>
+              <th>Schedule Date</th>
+              <th>Reschedule Date</th>
+              <th>Type (Vaccine/Weighing)</th>
+              <th>Dose Number (if applicable)</th>
+              <th>Schedule Type</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let schedule of child.schedules">
+              <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+              <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
+              <td>
+                <!-- Display either the vaccine or weighing description -->
+                {{
+                  schedule.scheduleType === "weighing"
+                    ? "OPT"
+                    : schedule.vaccineName || "N/A"
+                }}
+              </td>
+              <td>{{ schedule.doseNumber || "-" }}</td>
+              <td>{{ schedule.scheduleType | titlecase }}</td>
+              <td>{{ schedule.location }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
-
-<!-- FIXME: WAIT LANG -->
-<!--      @for(weighingHis of child.weighingHistory; track $index){
-              <tbody>
-                <tr>
-                  <td> -->
-<!-- {{ child.nutritionalStatus }} -->
-<!--       wait lang
-                  </td>
-                  <td>{{ weighingHis.weightForAgeStatus }}</td>
-                  <td>{{ weighingHis.heightForAgeStatus }}</td>
-                  <td>{{ weighingHis.weightForLengthHeightStatus }}</td>
-                </tr>
-              </tbody>
-              }-->

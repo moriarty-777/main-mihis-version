@@ -15,7 +15,7 @@ router.get(
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const mothers = await MotherModel.find()
-      .populate("children", "firstName lastName id") // Populate the child details
+      .populate("children", "firstName lastName id dateOfBirth gender") // Populate the child details
       .select("firstName lastName phone children"); // Select the fields we need for export
 
     if (!mothers) {
@@ -107,6 +107,35 @@ router.get(
 //   })
 // );
 
+// Link Mother to Child Seeding
+// Route to link all children to their mother based on existing data
+router.get(
+  "/link-children-to-mother",
+  expressAsyncHandler(async (req, res) => {
+    try {
+      // Fetch all mothers
+      const mothers = await MotherModel.find().populate("children");
+
+      // Iterate through each mother and link their children
+      for (const mother of mothers) {
+        // Iterate through the children array in each mother
+        for (const childId of mother.children) {
+          // Update the child record to link it to the mother
+          await ChildModel.findByIdAndUpdate(childId, {
+            motherId: mother._id, // Link the child to the mother
+          });
+        }
+      }
+
+      res.send("All children linked to their mothers successfully!");
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Error linking children to mothers", error });
+    }
+  })
+);
+
 // Link Child to Mother
 // Link child to mother via child ID
 // router.post(
@@ -148,6 +177,48 @@ router.get(
 //     res.send(mothers);
 //   })
 // );
+
+router.post(
+  "/add",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const {
+      firstName,
+      lastName,
+      gender,
+      phone,
+      email,
+      barangay,
+      purok,
+      photoPath,
+      isTransient,
+    } = req.body;
+
+    // Create the new mother
+    const newMother = new MotherModel({
+      firstName,
+      lastName,
+      gender,
+      phone,
+      email,
+      barangay,
+      purok,
+      photoPath: photoPath || "assets/img/default-user-profile.jpg", // default image if none provided
+      isTransient: isTransient || false,
+      children: [], // Initialize with empty children
+    });
+
+    const savedMother = await newMother.save();
+
+    if (!savedMother) {
+      res.status(500).send({ message: "Error adding mother" });
+    } else {
+      res.status(201).send(savedMother); // Send the created mother
+    }
+  })
+);
+
 router.get(
   "/",
   authMiddleware,
@@ -259,47 +330,6 @@ router.get(
     }
 
     res.send(children); // Send back the list of children
-  })
-);
-
-router.post(
-  "/add",
-  authMiddleware,
-  loggerMiddleware,
-  expressAsyncHandler(async (req, res) => {
-    const {
-      firstName,
-      lastName,
-      gender,
-      phone,
-      email,
-      barangay,
-      purok,
-      photoPath,
-      isTransient,
-    } = req.body;
-
-    // Create the new mother
-    const newMother = new MotherModel({
-      firstName,
-      lastName,
-      gender,
-      phone,
-      email,
-      barangay,
-      purok,
-      photoPath: photoPath || "assets/img/default-user-profile.jpg", // default image if none provided
-      isTransient: isTransient || false,
-      children: [], // Initialize with empty children
-    });
-
-    const savedMother = await newMother.save();
-
-    if (!savedMother) {
-      res.status(500).send({ message: "Error adding mother" });
-    } else {
-      res.status(201).send(savedMother); // Send the created mother
-    }
   })
 );
 

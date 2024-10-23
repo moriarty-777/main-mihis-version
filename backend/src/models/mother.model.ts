@@ -10,7 +10,7 @@ export interface Mother {
   phone?: string;
   email?: string;
   photoPath?: string;
-  children?: Schema.Types.ObjectId[];
+  children?: Schema.Types.ObjectId[] | any;
   isTransient?: boolean;
 }
 
@@ -25,7 +25,14 @@ const MotherSchema = new Schema(
     phone: { type: String, required: false },
     email: { type: String, required: false },
     photoPath: { type: String, required: false },
-    children: [{ type: Schema.Types.ObjectId, ref: "child", required: false }],
+    children: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "child",
+        default: [],
+        required: false,
+      },
+    ],
     isTransient: { type: Boolean, required: false },
   },
   {

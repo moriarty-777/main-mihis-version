@@ -5,7 +5,8 @@ import { WeighingHistory } from './weighing-history';
 
 export interface Child {
   id: string;
-  motherId: string;
+  motherId: any;
+  schedules: any;
   firstName: string;
   lastName: string;
   purok: string;
