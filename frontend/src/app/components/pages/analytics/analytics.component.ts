@@ -8,11 +8,13 @@ import { ChartsPurokComponent } from '../../charts/charts-purok/charts-purok.com
 import { ChartsCompleteImmunizationComponent } from '../../charts/charts-complete-immunization/charts-complete-immunization.component';
 import { ChartsMissedVaccineReasonComponent } from '../../charts/charts-missed-vaccine-reason/charts-missed-vaccine-reason.component';
 import { ChartsCoverageHeatmapPurokComponent } from '../../charts/charts-coverage-heatmap-purok/charts-coverage-heatmap-purok.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-analytics',
   standalone: true,
   imports: [
+    CommonModule,
     BaseChartDirective,
     ChartsGenderComponent,
     ChartsPurokComponent,

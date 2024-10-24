@@ -7,7 +7,7 @@
       </div>
       <ul class="panel-links">
         <li>
-          <a routerLink="nut-calculator">
+          <a routerLink="/dashboard">
             <span>
               <mat-icon
                 fontIcon="dashboard"
@@ -81,6 +81,70 @@
         </div>
       </div>
       <div class="panel-body">
+        <div *ngIf="showDashboardBody" class="dashboard-body">
+          <div class="dashboard-container">
+            <div class="dashboard-top">
+              <h2 class="d-head">Dashboard</h2>
+              <div class="d-head-info">
+                <div class="dh-item">
+                  <h3 class="dh-title">Barangay</h3>
+                  <p class="dh-sub-title">Bangad</p>
+                </div>
+                <div class="dh-item">
+                  <h3 class="dh-title">Location</h3>
+                  <p class="dh-sub-title">Bangad Health Center</p>
+                </div>
+                <div class="dh-item">
+                  <h3 class="dh-title">Schedule</h3>
+                  <p class="dh-sub-title">
+                    Monday - Sunday <br />
+                    8:00 am - 5:00 pm
+                  </p>
+                </div>
+                <div class="dh-item">
+                  <h3 class="dh-title">Health Workers</h3>
+                  <p class="dh-sub-title">1 Midwife, 14 BHW</p>
+                </div>
+              </div>
+              <div class="d-head-info wesa">
+                <div class="dh-item">
+                  <h3 class="dh-title">Monitoring</h3>
+                </div>
+                <div class="dh-item">
+                  <select id="history">
+                    <option value="">Last 24 Hours</option>
+                    <option value="1">Last Week</option>
+                    <option value="2">Last Month</option>
+                    <option value="3">Last Year</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="dashboard-bottom">
+              <div class="analytics-container">
+                <div class="analytics-item ai-gender">
+                  <charts-gender
+                    [maleCount]="maleCount"
+                    [femaleCount]="femaleCount"
+                  ></charts-gender>
+                </div>
+                <div class="analytics-item ai-purok">
+                  <charts-purok
+                    [purokLabels]="purokLabels"
+                    [purokData]="purokData"
+                  ></charts-purok>
+                </div>
+                <div class="analytics-item ai-complete-immunization">
+                  <charts-complete-immunization
+                    [fullyVaccinatedCount]="fullyVaccinatedCount"
+                    [partiallyVaccinatedCount]="partiallyVaccinatedCount"
+                    [notVaccinatedCount]="notVaccinatedCount"
+                  ></charts-complete-immunization>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <router-outlet></router-outlet>
       </div>
     </div>
