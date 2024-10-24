@@ -96,6 +96,38 @@ export class ChildComponent {
     this.vaxStatusFilter = selectElement.value;
     this.loadChildren();
   }
+
+  // TODO:
+  calculateVaccinationStatus(child: any): string {
+    const requiredVaccines = 15; // Example number of vaccines required
+
+    // Calculate the number of vaccinations
+    const vaccinationsWithinTimeFrame = (child.vaccinations || []).filter(
+      (vaccine: any) => {
+        const vaccineDate = new Date(vaccine.dateOfVaccination);
+        const oneYearAndSixWeeksAfterBirth = new Date(child.dateOfBirth);
+        oneYearAndSixWeeksAfterBirth.setFullYear(
+          oneYearAndSixWeeksAfterBirth.getFullYear() + 1
+        );
+        oneYearAndSixWeeksAfterBirth.setDate(
+          oneYearAndSixWeeksAfterBirth.getDate() + 42 // 6 weeks = 42 days
+        );
+        return (
+          vaccineDate >= new Date(child.dateOfBirth) &&
+          vaccineDate <= oneYearAndSixWeeksAfterBirth
+        );
+      }
+    ).length;
+
+    // Determine the vaccination status based on the number of vaccinations
+    if (vaccinationsWithinTimeFrame >= requiredVaccines) {
+      return 'Fully Vaccinated';
+    } else if (vaccinationsWithinTimeFrame > 0) {
+      return 'Partially Vaccinated';
+    } else {
+      return 'Not Vaccinated';
+    }
+  }
   //   // FIXME: New Data
 
   search(searchTerm: string) {

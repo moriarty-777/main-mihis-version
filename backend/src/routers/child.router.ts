@@ -495,85 +495,85 @@ const router = Router();
 //     }
 //   })
 // );
-router.get(
-  "/populate-vaccinations",
-  expressAsyncHandler(async (req, res) => {
-    try {
-      // Interface definition for schedule structure
-      interface SchedulingDocument {
-        scheduleType: string;
-        scheduleDate: Date;
-        vaccineName: string;
-        doseNumber: number;
-        location: string;
-      }
+// router.get(
+//   "/populate-vaccinations",
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       // Interface definition for schedule structure
+//       interface SchedulingDocument {
+//         scheduleType: string;
+//         scheduleDate: Date;
+//         vaccineName: string;
+//         doseNumber: number;
+//         location: string;
+//       }
 
-      // Fetch all children from the database
-      const children = await ChildModel.find().populate("schedules").exec();
+//       // Fetch all children from the database
+//       const children = await ChildModel.find().populate("schedules").exec();
 
-      // Handle case where no children are found
-      if (!children || children.length === 0) {
-        res.status(404).send({ message: "No children found." });
-      }
+//       // Handle case where no children are found
+//       if (!children || children.length === 0) {
+//         res.status(404).send({ message: "No children found." });
+//       }
 
-      const today = new Date();
-      const midwifeId = "66dfe2205309a42e3710c6af"; // Replace with the actual midwife ID
+//       const today = new Date();
+//       const midwifeId = "66dfe2205309a42e3710c6af"; // Replace with the actual midwife ID
 
-      // Fetch all BHW users from the database
-      const bhws = await UserModel.find({ role: "bhw" }).select("id").exec();
-      if (!bhws || bhws.length === 0) {
-        res.status(404).send({ message: "No BHWs found." });
-      }
+//       // Fetch all BHW users from the database
+//       const bhws = await UserModel.find({ role: "bhw" }).select("id").exec();
+//       if (!bhws || bhws.length === 0) {
+//         res.status(404).send({ message: "No BHWs found." });
+//       }
 
-      // Loop through each child to populate their vaccinations
-      for (const child of children) {
-        let pastVaccinationSchedules: SchedulingDocument[] = [];
+//       // Loop through each child to populate their vaccinations
+//       for (const child of children) {
+//         let pastVaccinationSchedules: SchedulingDocument[] = [];
 
-        // Type assertion to ensure schedules are treated as an array of Scheduling documents
-        if (Array.isArray(child.schedules)) {
-          pastVaccinationSchedules =
-            (child.schedules as unknown as SchedulingDocument[]).filter(
-              (schedule) =>
-                schedule.scheduleType === "vaccination" &&
-                schedule.scheduleDate <= today
-            ) ?? [];
+//         // Type assertion to ensure schedules are treated as an array of Scheduling documents
+//         if (Array.isArray(child.schedules)) {
+//           pastVaccinationSchedules =
+//             (child.schedules as unknown as SchedulingDocument[]).filter(
+//               (schedule) =>
+//                 schedule.scheduleType === "vaccination" &&
+//                 schedule.scheduleDate <= today
+//             ) ?? [];
 
-          // Proceed with your logic for pastVaccinationSchedules
-        }
+//           // Proceed with your logic for pastVaccinationSchedules
+//         }
 
-        // Loop through past vaccination schedules and create vaccination records
-        for (const schedule of pastVaccinationSchedules) {
-          // Randomly select a BHW ID from the list
-          const randomBhwId = bhws[Math.floor(Math.random() * bhws.length)].id;
+//         // Loop through past vaccination schedules and create vaccination records
+//         for (const schedule of pastVaccinationSchedules) {
+//           // Randomly select a BHW ID from the list
+//           const randomBhwId = bhws[Math.floor(Math.random() * bhws.length)].id;
 
-          // Create a vaccination record based on the schedule
-          const newVaccination = await VaccinationModel.create({
-            vaccineType: schedule.vaccineName,
-            doseNumber: schedule.doseNumber,
-            placeOfVaccination: schedule.location,
-            dateOfVaccination: schedule.scheduleDate,
-            midwifeId: midwifeId, // Set the fixed midwife ID
-            bhwId: randomBhwId, // Set the random BHW ID
-          });
+//           // Create a vaccination record based on the schedule
+//           const newVaccination = await VaccinationModel.create({
+//             vaccineType: schedule.vaccineName,
+//             doseNumber: schedule.doseNumber,
+//             placeOfVaccination: schedule.location,
+//             dateOfVaccination: schedule.scheduleDate,
+//             midwifeId: midwifeId, // Set the fixed midwife ID
+//             bhwId: randomBhwId, // Set the random BHW ID
+//           });
 
-          // Append the new vaccination _id to the child's vaccination array
-          await ChildModel.findByIdAndUpdate(
-            child.id, // Keep the original _id unchanged
-            { $push: { vaccinations: newVaccination.id } } // Append new vaccination
-          );
-        }
-      }
+//           // Append the new vaccination _id to the child's vaccination array
+//           await ChildModel.findByIdAndUpdate(
+//             child.id, // Keep the original _id unchanged
+//             { $push: { vaccinations: newVaccination.id } } // Append new vaccination
+//           );
+//         }
+//       }
 
-      // Send success response
-      res.send({
-        message: "Vaccination records created successfully for all children.",
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({ message: "Error populating vaccinations", error });
-    }
-  })
-);
+//       // Send success response
+//       res.send({
+//         message: "Vaccination records created successfully for all children.",
+//       });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).send({ message: "Error populating vaccinations", error });
+//     }
+//   })
+// );
 
 // function addDays(date: Date, days: number): Date {
 //   const result = new Date(date);
@@ -1003,6 +1003,79 @@ router.get(
 
 // FIXME:
 // child.router.ts
+// FIXME:
+// router.get(
+//   "/child",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     const {
+//       gender,
+//       purok,
+//       nutritionalStatus,
+//       vaxStatus,
+//       heightForAge,
+//       weightForAge,
+//       weightForLength,
+//     } = req.query; // Capture filters from query parameters
+
+//     // Build filter object dynamically based on query parameters
+//     const filter: any = {};
+
+//     if (gender) filter.gender = gender; // Filter by gender if provided
+//     if (purok) filter.purok = purok; // Filter by purok if provided
+
+//     // if (nutritionalStatus) filter.nutritionalStatus = nutritionalStatus; // Filter by nutritional status
+//     // if (heightForAge)
+//     //   filter["weighingHistory.heightForAgeStatus"] = heightForAge; // Filter by height for age if provided
+//     // if (weightForAge)
+//     //   filter["weighingHistory.weightForAgeStatus"] = weightForAge; // Filter by weight for age if provided
+//     // if (weightForLength)
+//     //   filter["weighingHistory.weightForLengthHeightStatus"] = weightForLength; // Filter by weight for length if provided
+//     // // Apply vaccination status filter only if vaxStatus is not empty
+
+//     // Apply nutritional status filter using the Anthropometric model
+//     if (heightForAge || weightForAge || weightForLength) {
+//       filter["anthropometric"] = {};
+//       if (heightForAge) filter["anthropometric.heightForAge"] = heightForAge;
+//       if (weightForAge) filter["anthropometric.weightForAge"] = weightForAge;
+//       if (weightForLength)
+//         filter["anthropometric.weightForHeight"] = weightForLength;
+//     }
+
+//     // Apply vaccination status filter
+//     if (vaxStatus) {
+//       if (vaxStatus === "Fully Vaccinated") {
+//         filter.isFullyVaccinated = true;
+//       } else if (vaxStatus === "Partially Vaccinated") {
+//         filter.isFullyVaccinated = false;
+//         filter["vaccinations.0"] = { $exists: true }; // At least one vaccination
+//       } else if (vaxStatus === "Not Vaccinated") {
+//         filter.vaccinations = { $size: 0 }; // No vaccinations
+//       }
+//     }
+
+//     // if (vaxStatus) {
+//     //   if (vaxStatus === "Fully Vaccinated") {
+//     //     filter.isFullyVaccinated = true;
+//     //   } else if (vaxStatus === "Partially Vaccinated") {
+//     //     filter.isFullyVaccinated = false;
+//     //     filter["vaccinations.0"] = { $exists: true }; // At least one vaccination
+//     //   } else if (vaxStatus === "Not Vaccinated") {
+//     //     filter.vaccinations = { $size: 0 }; // No vaccinations
+//     //   }
+//     // }
+
+//     // Fetch filtered children from the database
+//     const children = await ChildModel.find(filter)
+//       .populate("vaccinations")
+//       .populate("anthropometricStatus")
+//       .populate("weighingHistory");
+//     res.send(children); // Send the filtered results
+//   })
+// );
+// FIXME:
+
 router.get(
   "/child",
   authMiddleware,
@@ -1012,41 +1085,116 @@ router.get(
       gender,
       purok,
       nutritionalStatus,
-      vaxStatus,
       heightForAge,
       weightForAge,
       weightForLength,
+      vaxStatus,
     } = req.query; // Capture filters from query parameters
 
     // Build filter object dynamically based on query parameters
     const filter: any = {};
 
+    // 1. Gender filter
     if (gender) filter.gender = gender; // Filter by gender if provided
+
+    // 2. Purok filter
     if (purok) filter.purok = purok; // Filter by purok if provided
-    if (nutritionalStatus) filter.nutritionalStatus = nutritionalStatus; // Filter by nutritional status
-    if (heightForAge)
-      filter["weighingHistory.heightForAgeStatus"] = heightForAge; // Filter by height for age if provided
-    if (weightForAge)
-      filter["weighingHistory.weightForAgeStatus"] = weightForAge; // Filter by weight for age if provided
-    if (weightForLength)
-      filter["weighingHistory.weightForLengthHeightStatus"] = weightForLength; // Filter by weight for length if provided
-    // Apply vaccination status filter only if vaxStatus is not empty
-    if (vaxStatus) {
-      if (vaxStatus === "Fully Vaccinated") {
-        filter.isFullyVaccinated = true;
-      } else if (vaxStatus === "Partially Vaccinated") {
-        filter.isFullyVaccinated = false;
-        filter["vaccinations.0"] = { $exists: true }; // At least one vaccination
-      } else if (vaxStatus === "Not Vaccinated") {
-        filter.vaccinations = { $size: 0 }; // No vaccinations
-      }
+
+    // 3. Anthropometric filter (for nutritional status)
+    if (heightForAge || weightForAge || weightForLength) {
+      filter["anthropometric"] = {};
+      if (heightForAge) filter["anthropometric.heightForAge"] = heightForAge;
+      if (weightForAge) filter["anthropometric.weightForAge"] = weightForAge;
+      if (weightForLength)
+        filter["anthropometric.weightForHeight"] = weightForLength;
     }
 
-    // Fetch filtered children from the database
-    const children = await ChildModel.find(filter).populate(
-      "nutritionalStatus"
-    );
-    res.send(children); // Send the filtered results
+    // Fetch all children initially
+    const children = await ChildModel.find(filter)
+      // .populate("vaccinations") // Populate vaccination data
+      .populate("vaccinations")
+      .populate("anthropometricStatus") // Populate anthropometric data
+      .populate("weighingHistory") // Populate weighing history
+      .populate("nutritionalStatus"); // Populate weighing history
+
+    // 4. Apply vaccination status filter based on vaccination count
+    // if (nutritionalStatus) {
+    //   filter["nutritionalStatus.status"] = nutritionalStatus;
+    //   console.log(filter["nutritionalStatus.status"]);
+    // }
+    // In-memory filter for nutritionalStatus after populating
+
+    let filteredChildren = children;
+
+    interface Nuts {
+      nutritionalStatus?: any;
+    }
+
+    if (nutritionalStatus) {
+      filteredChildren = children.filter(
+        (child: Nuts) => child.nutritionalStatus?.status === nutritionalStatus
+      );
+    }
+
+    if (vaxStatus) {
+      filteredChildren = children.filter((child) => {
+        const requiredVaccines = 15; // Number of vaccines required
+
+        // Calculate the one year and six weeks after birth
+        const oneYearAndSixWeeksAfterBirth = new Date(child.dateOfBirth);
+        oneYearAndSixWeeksAfterBirth.setFullYear(
+          oneYearAndSixWeeksAfterBirth.getFullYear() + 1
+        );
+        oneYearAndSixWeeksAfterBirth.setDate(
+          oneYearAndSixWeeksAfterBirth.getDate() + 42
+        ); // Add 6 weeks (42 days)
+        interface Vaccination {
+          dateOfVaccination: Date;
+        }
+        // Count vaccinations within the time frame
+        const vaccinationsWithinTimeFrame = (
+          (child.vaccinations as unknown as Vaccination[]) || []
+        ).filter((vaccine: Vaccination) => {
+          const vaccineDate = new Date(vaccine.dateOfVaccination);
+          return (
+            vaccineDate >= new Date(child.dateOfBirth) &&
+            vaccineDate <= oneYearAndSixWeeksAfterBirth
+          );
+        }).length;
+
+        // Determine vaccination status
+        let vaccinationStatus;
+        if (vaccinationsWithinTimeFrame >= requiredVaccines) {
+          vaccinationStatus = "Fully Vaccinated";
+        } else if (vaccinationsWithinTimeFrame > 0) {
+          vaccinationStatus = "Partially Vaccinated";
+        } else {
+          vaccinationStatus = "Not Vaccinated";
+        }
+
+        // Apply the vaxStatus filter
+        if (
+          vaxStatus === "Fully Vaccinated" &&
+          vaccinationStatus === "Fully Vaccinated"
+        ) {
+          return true;
+        } else if (
+          vaxStatus === "Partially Vaccinated" &&
+          vaccinationStatus === "Partially Vaccinated"
+        ) {
+          return true;
+        } else if (
+          vaxStatus === "Not Vaccinated" &&
+          vaccinationStatus === "Not Vaccinated"
+        ) {
+          return true;
+        }
+
+        return false; // Child doesn't match the vaxStatus filter
+      });
+    }
+
+    res.send(filteredChildren); // Send the filtered results
   })
 );
 

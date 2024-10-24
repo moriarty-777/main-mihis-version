@@ -36,7 +36,7 @@
         >
           <option value="">Nutritional Status</option>
           <option value="Normal">Normal</option>
-          <option value="At Risk">At Risk</option>
+          <!-- <option value="At Risk">At Risk</option> -->
           <option value="Malnourished">Malnourished</option>
           <!-- <option disabled selected>Nutritional Status</option>
           <option value="Normal">Normal</option>
@@ -119,7 +119,7 @@
               <td>
                 {{ children.weighingHistory[0].weightForLengthHeightStatus }}
               </td> -->
-              <td>
+              <!-- <td>
                 {{
                   children.isFullyVaccinated
                     ? "Fully Vaccinated"
@@ -127,6 +127,9 @@
                     ? "Partially Vaccinated"
                     : "Not Vaccinated"
                 }}
+              </td> -->
+              <td>
+                {{ calculateVaccinationStatus(children) }}
               </td>
               <td class="action">
                 <button
@@ -157,11 +160,11 @@
     <button class="vcard-popup global-btn" (click)="exportChildrenToPDF()">
       <mat-icon>save_alt </mat-icon> Export Children to PDF
     </button> -->
-    <button
+    <!-- <button
       class="vcard-popup global-btn"
       (click)="exportChildrenToExcelAnthro()"
     >
       <mat-icon>save_alt </mat-icon> Export Children Anthro to Excel
-    </button>
+    </button> -->
   </div>
 </div>
