@@ -17,12 +17,12 @@ export class ChartsRadarVaccineTypeComponent implements OnChanges {
   // Complete list of all vaccine types that should always appear on the chart
   radarChartLabels: string[] = [
     'BCG',
-    'Hepatitis B Vaccine',
-    'Pentavalent Vaccine',
-    'Oral Polio Vaccine (OPV)',
-    'Inactivated Polio Vaccine (IPV)',
-    'Pneumococcal Conjugate Vaccine (PCV)',
-    'Measles, Mumps, Rubella Vaccine (MMR)',
+    'Hepatitis B',
+    'Pentavalent',
+    'OPV',
+    'IPV',
+    'PCV',
+    'MMR',
   ];
 
   radarChartData: ChartData<'radar'> = {
@@ -113,87 +113,4 @@ export class ChartsRadarVaccineTypeComponent implements OnChanges {
       },
     },
   };
-
-  /*  // FIXME:
-  @Input() child!: Child;
-  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-
-  radarChartLabels: string[] = [
-    'BCG',
-    'Hepatitis B Vaccine',
-    'Pentavalent Vaccine',
-    'Oral Polio Vaccine (OPV)',
-    'Pneumococcal Conjugate Vaccine (PCV)',
-    'Inactivated Polio Vaccine (IPV)',
-    'Measles, Mumps, Rubella Vaccine (MMR)',
-  ];
-
-  radarChartData: ChartData<'radar'> = {
-    labels: this.radarChartLabels,
-    datasets: [
-      {
-        label: 'Vaccine Doses',
-        data: [1, 1, 3, 3, 3, 2, 2], // Number of doses for each vaccine type
-        backgroundColor: 'rgba(92, 194, 184, 0.5)', // Light teal background (adjust as needed)
-        borderColor: 'rgba(92, 194, 184, 1)', // Teal border
-        pointBackgroundColor: 'rgba(92, 194, 184, 1)', // Teal points
-        // pointRadius: 0, // Removes the dots
-        // pointHoverRadius: 0,
-      },
-    ],
-  };
-
-  radarChartOptions: ChartOptions<'radar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    devicePixelRatio: 2,
-    scales: {
-      r: {
-        min: 0,
-        max: 3,
-        ticks: {
-          stepSize: 1,
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        display: false, // This will remove the legend
-      },
-    },
-  };
-
-  ngOnChanges() {
-    if (this.chart) {
-      this.chart.update(); // Ensure the chart updates when child data changes
-    }
-  }
-// FIXME: */
-  // radarChartOptions: ChartOptions<'radar'> = {
-  //   responsive: true,
-  //   scales: {
-  //     r: {
-  //       min: 0, // Starts from 0
-  //       max: 3, // Max number of doses is 3 for OPV, Pentavalent, and PCV
-  //       ticks: {
-  //         stepSize: 1, // Step size of 1
-  //       },
-  //     },
-  //   },
-  // };
-
-  // radarChartOptions: ChartOptions<'radar'> = {
-  //   responsive: true,
-  //   maintainAspectRatio: false, // Ensures the chart adapts to its container's size
-  //   devicePixelRatio: 2, // Set a higher pixel ratio for crisper rendering
-  //   scales: {
-  //     r: {
-  //       min: 0,
-  //       max: 3,
-  //       ticks: {
-  //         stepSize: 1,
-  //       },
-  //     },
-  //   },
-  // };
 }

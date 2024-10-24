@@ -76,18 +76,18 @@ export class ChildrenProfileComponent {
       //     data.child.dateOfBirth
       //   );
 
-      // // Sort the vaccinations after loading the child data
-      // this.child.vaccinations.sort((a, b) => {
-      //   return (
-      //     new Date(b.dateOfVaccination).getTime() -
-      //     new Date(a.dateOfVaccination).getTime()
-      //   );
-      // });
+      // Sort the vaccinations after loading the child data
+      this.child.vaccinations.sort((a, b) => {
+        return (
+          new Date(b.dateOfVaccination).getTime() -
+          new Date(a.dateOfVaccination).getTime()
+        );
+      });
 
-      // // Sort weighingHistory by date
-      // this.child.weighingHistory.sort((a, b) => {
-      //   return new Date(b.date).getTime() - new Date(a.date).getTime();
-      // });
+      // Sort weighingHistory by date
+      this.child.weighingHistory.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
 
       this.cdr.detectChanges(); // Detect changes if necessary
     });
