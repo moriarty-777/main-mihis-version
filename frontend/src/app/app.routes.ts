@@ -20,6 +20,7 @@ import { RolePendingComponent } from './components/partials/role-pending/role-pe
 import { NutritionalStatusCalcComponent } from './components/pages/nutritional-status-calc/nutritional-status-calc.component';
 import { authenticatedGuard } from './auth/guards/authenticated.guard';
 import { ReportsComponent } from './components/pages/reports/reports.component';
+import { CalendarComponent } from './components/pages/calendar/calendar.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -114,6 +115,10 @@ export const routes: Routes = [
       {
         path: 'reports',
         component: ReportsComponent,
+      },
+      {
+        path: 'calendar',
+        component: CalendarComponent,
       },
     ],
     canActivate: [authGuard, roleGuard],

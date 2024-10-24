@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { map, tap } from 'rxjs/operators';
 import {
+  CHILD_ALL_SCHEDULES_URL,
   CHILD_URL,
   CHILD_VAX_SUMMARY_URL,
   CHILDREN_ANTHRO_PRINT,
@@ -52,6 +53,13 @@ export class ChildService {
       Authorization: `Bearer ${this.getToken()}`,
     });
     return this.http.get<Child>(CHILDREN_PROFILE_URL + id, { headers });
+  }
+
+  getAllSchedules(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<any>(CHILD_ALL_SCHEDULES_URL, { headers });
   }
 
   updateChild(id: string, childData: Partial<Child>): Observable<Child> {

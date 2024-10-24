@@ -7,6 +7,8 @@ export const CHILD_VAX_SUMMARY_URL =
   BASE_URL + '/api/child/vaccination-summary';
 export const CHILDREN_PROFILE_URL = BASE_URL + '/api/children-page/';
 export const CHILDREN_ANTHRO_PRINT = BASE_URL + '/api/children-aanthro';
+export const CHILD_ALL_SCHEDULES_URL = BASE_URL + '/api/all-schedules';
+
 // export const ANTHROPOMETRIC_STATUS_URL = BASE_URL + '/api/child/anthropometrics/';
 
 export const USER_LOGIN_URL = BASE_URL + '/api/users/login';
