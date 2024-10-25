@@ -20,6 +20,7 @@ import { Types } from "mongoose";
 import { SchedulingModel } from "../models/scheduling.model";
 import { VaccinationModel } from "../models/vaccination.model";
 import { UserModel } from "../models/user.model";
+import { MissedVaccineModel } from "../models/missedVaccine.model";
 
 const router = Router();
 
@@ -1058,21 +1059,57 @@ router.get(
 );
 
 // Delete
+// router.delete(
+//   "/child/:id",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     const childId = req.params.id;
+//     const deletedChild = await ChildModel.findByIdAndDelete(childId);
+
+//     if (!deletedChild) {
+//       res.status(HTTP_NOT_FOUND).send({ message: "Child not found" });
+//     } else {
+//       res.send({ message: "Child deleted successfully" });
+//     }
+//   })
+// );
+
 router.delete(
   "/child/:id",
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const childId = req.params.id;
+
+    // Find and delete the child
     const deletedChild = await ChildModel.findByIdAndDelete(childId);
 
     if (!deletedChild) {
       res.status(HTTP_NOT_FOUND).send({ message: "Child not found" });
-    } else {
-      res.send({ message: "Child deleted successfully" });
     }
+
+    // Delete related schedules
+    await SchedulingModel.deleteMany({ childId: childId });
+
+    // Delete related weighing history
+    await WeighingHistoryModel.deleteMany({ childId: childId });
+
+    // Delete related vaccinations
+    await VaccinationModel.deleteMany({ childId: childId });
+
+    // Delete missed vaccines (if applicable)
+    await MissedVaccineModel.deleteMany({ childId: childId });
+
+    await AnthropometricModel.deleteMany({ childId: childId });
+    await NutritionalStatusModel.deleteMany({ childId: childId });
+
+    // You can add more deletions if needed for other related models like anthropometricStatus, etc.
+
+    res.send({ message: "Child and related data deleted successfully" });
   })
 );
+
 // Update
 
 router.patch(
@@ -1094,23 +1131,408 @@ router.patch(
   })
 );
 
+// async function populateChildSchedules(child: any) {
+//   const childId = child._id;
+//   const dateOfBirth = new Date(child.dateOfBirth);
+
+//   // Fetch the mother's phone number for notifications
+//   const mother = await MotherModel.findOne({ children: childId }).select(
+//     "phone"
+//   );
+//   if (!mother)
+//     throw new Error(`Mother not found for child with ID: ${childId}`);
+
+//   const motherPhoneNumber = mother.phone;
+//   const schedules = [];
+
+//   // 1. Generate Weighing Schedules (Annually until 5 years old)
+//   for (let year = 0; year < 5; year++) {
+//     const weighingDate = new Date(dateOfBirth.getFullYear() + year, 0, 14); // Weighing on January 14th
+//     const newWeighingSchedule = await SchedulingModel.create({
+//       childId,
+//       scheduleType: "weighing",
+//       scheduleDate: weighingDate,
+//       rescheduleDate: addDays(weighingDate, 7),
+//       location: "Barangay Health Center",
+//       notificationSent: false,
+//       notificationDate: addDays(weighingDate, -2), // Notification 2 days before
+//       motherPhoneNumber,
+//       remarks: `Weighing scheduled for year ${year}`,
+//     });
+//     console.log("Weighing schedule created:", newWeighingSchedule);
+//     schedules.push(newWeighingSchedule);
+//   }
+
+//   // 2. Generate Vaccination Schedules
+//   const vaccineSchedules = [
+//     { vaccineName: "BCG", schedule: dateOfBirth }, // BCG at birth
+//     { vaccineName: "Hepatitis B", schedule: dateOfBirth }, // Hepatitis B at birth
+//     {
+//       vaccineName: "Pentavalent",
+//       doseNumber: 1,
+//       schedule: addDays(dateOfBirth, 45),
+//     }, // 1.5 months
+//     {
+//       vaccineName: "Pentavalent",
+//       doseNumber: 2,
+//       schedule: addDays(dateOfBirth, 75),
+//     }, // 2.5 months
+//     {
+//       vaccineName: "Pentavalent",
+//       doseNumber: 3,
+//       schedule: addDays(dateOfBirth, 105),
+//     }, // 3.5 months
+//     { vaccineName: "OPV", doseNumber: 1, schedule: addDays(dateOfBirth, 45) }, // 1.5 months
+//     { vaccineName: "OPV", doseNumber: 2, schedule: addDays(dateOfBirth, 75) }, // 2.5 months
+//     { vaccineName: "OPV", doseNumber: 3, schedule: addDays(dateOfBirth, 105) }, // 3.5 months
+//     { vaccineName: "IPV", doseNumber: 1, schedule: addDays(dateOfBirth, 105) }, // IPV at 3.5 months
+//     { vaccineName: "IPV", doseNumber: 2, schedule: addDays(dateOfBirth, 270) }, // IPV at 9 months
+//     { vaccineName: "PCV", doseNumber: 1, schedule: addDays(dateOfBirth, 45) }, // PCV at 1.5 months
+//     { vaccineName: "PCV", doseNumber: 2, schedule: addDays(dateOfBirth, 75) }, // PCV at 2.5 months
+//     { vaccineName: "PCV", doseNumber: 3, schedule: addDays(dateOfBirth, 105) }, // PCV at 3.5 months
+//     { vaccineName: "MMR", doseNumber: 1, schedule: addDays(dateOfBirth, 270) }, // MMR at 9 months
+//     { vaccineName: "MMR", doseNumber: 2, schedule: addDays(dateOfBirth, 365) }, // MMR at 12 months
+//   ];
+
+//   for (const vaccine of vaccineSchedules) {
+//     const isBCGOrHepB =
+//       vaccine.vaccineName === "BCG" || vaccine.vaccineName === "Hepatitis B";
+//     const scheduledDate = isBCGOrHepB
+//       ? vaccine.schedule
+//       : getNextWednesday(vaccine.schedule);
+
+//     const newVaccineSchedule = await SchedulingModel.create({
+//       childId,
+//       scheduleType: "vaccination",
+//       scheduleDate: scheduledDate,
+//       rescheduleDate: addDays(scheduledDate, 7),
+//       location: "Barangay Health Center",
+//       notificationSent: false,
+//       notificationDate: addDays(scheduledDate, -2),
+//       motherPhoneNumber,
+//       vaccineName: vaccine.vaccineName,
+//       doseNumber: vaccine.doseNumber || 1,
+//       remarks: `${vaccine.vaccineName} dose ${
+//         vaccine.doseNumber || 1
+//       } scheduled.`,
+//     });
+
+//     schedules.push(newVaccineSchedule);
+//   }
+
+//   return schedules;
+// }
+
+// Automatically populates the child schedule
+// helper to add days to a date
+function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+// Helper function to get the next Wednesday
+function getNextWednesday(date: Date): Date {
+  const dayOfWeek = date.getDay(); // Get the current day of the week (0 = Sunday, ..., 6 = Saturday)
+  const daysUntilWednesday = (3 - dayOfWeek + 7) % 7; // 3 is the index for Wednesday
+  return addDays(date, daysUntilWednesday);
+}
+
+// async function populateChildSchedules(child: any) {
+//   const childId = child._id;
+//   const dateOfBirth = new Date(child.dateOfBirth);
+
+//   // Fetch the mother's phone number for notifications
+//   const mother = await MotherModel.findOne({ children: childId }).select(
+//     "phone"
+//   );
+//   if (!mother)
+//     throw new Error(`Mother not found for child with ID: ${childId}`);
+
+//   const motherPhoneNumber = mother.phone;
+//   const scheduleIds = []; // Array to store all schedule ObjectIds
+
+//   // 1. Generate Weighing Schedules (Annually until 5 years old)
+//   for (let year = 0; year < 5; year++) {
+//     const weighingDate = new Date(dateOfBirth.getFullYear() + year, 0, 14); // Weighing on January 14th
+//     const newWeighingSchedule = await SchedulingModel.create({
+//       childId,
+//       scheduleType: "weighing",
+//       scheduleDate: weighingDate,
+//       rescheduleDate: addDays(weighingDate, 7),
+//       location: "Barangay Health Center",
+//       notificationSent: false,
+//       notificationDate: addDays(weighingDate, -2), // Notification 2 days before
+//       motherPhoneNumber,
+//       remarks: `Weighing scheduled for year ${year}`,
+//     });
+//     console.log("Weighing schedule created:", newWeighingSchedule);
+//     scheduleIds.push(newWeighingSchedule._id); // Collect ObjectId of created schedule
+//   }
+
+//   // 2. Generate Vaccination Schedules
+//   const vaccineSchedules = [
+//     { vaccineName: "BCG", schedule: dateOfBirth }, // BCG at birth
+//     { vaccineName: "Hepatitis B", schedule: dateOfBirth }, // Hepatitis B at birth
+//     {
+//       vaccineName: "Pentavalent",
+//       doseNumber: 1,
+//       schedule: addDays(dateOfBirth, 45),
+//     }, // 1.5 months
+//     {
+//       vaccineName: "Pentavalent",
+//       doseNumber: 2,
+//       schedule: addDays(dateOfBirth, 75),
+//     }, // 2.5 months
+//     {
+//       vaccineName: "Pentavalent",
+//       doseNumber: 3,
+//       schedule: addDays(dateOfBirth, 105),
+//     }, // 3.5 months
+//     { vaccineName: "OPV", doseNumber: 1, schedule: addDays(dateOfBirth, 45) }, // 1.5 months
+//     { vaccineName: "OPV", doseNumber: 2, schedule: addDays(dateOfBirth, 75) }, // 2.5 months
+//     { vaccineName: "OPV", doseNumber: 3, schedule: addDays(dateOfBirth, 105) }, // 3.5 months
+//     { vaccineName: "IPV", doseNumber: 1, schedule: addDays(dateOfBirth, 105) }, // IPV at 3.5 months
+//     { vaccineName: "IPV", doseNumber: 2, schedule: addDays(dateOfBirth, 270) }, // IPV at 9 months
+//     { vaccineName: "PCV", doseNumber: 1, schedule: addDays(dateOfBirth, 45) }, // PCV at 1.5 months
+//     { vaccineName: "PCV", doseNumber: 2, schedule: addDays(dateOfBirth, 75) }, // PCV at 2.5 months
+//     { vaccineName: "PCV", doseNumber: 3, schedule: addDays(dateOfBirth, 105) }, // PCV at 3.5 months
+//     { vaccineName: "MMR", doseNumber: 1, schedule: addDays(dateOfBirth, 270) }, // MMR at 9 months
+//     { vaccineName: "MMR", doseNumber: 2, schedule: addDays(dateOfBirth, 365) }, // MMR at 12 months
+//   ];
+
+//   for (const vaccine of vaccineSchedules) {
+//     const isBCGOrHepB =
+//       vaccine.vaccineName === "BCG" || vaccine.vaccineName === "Hepatitis B";
+//     const scheduledDate = isBCGOrHepB
+//       ? vaccine.schedule
+//       : getNextWednesday(vaccine.schedule);
+
+//     const newVaccineSchedule = await SchedulingModel.create({
+//       childId,
+//       scheduleType: "vaccination",
+//       scheduleDate: scheduledDate,
+//       rescheduleDate: addDays(scheduledDate, 7),
+//       location: "Barangay Health Center",
+//       notificationSent: false,
+//       notificationDate: addDays(scheduledDate, -2),
+//       motherPhoneNumber,
+//       vaccineName: vaccine.vaccineName,
+//       doseNumber: vaccine.doseNumber || 1,
+//       remarks: `${vaccine.vaccineName} dose ${
+//         vaccine.doseNumber || 1
+//       } scheduled.`,
+//     });
+
+//     scheduleIds.push(newVaccineSchedule._id); // Collect ObjectId of created schedule
+//   }
+
+//   // Update the child with all the schedule ObjectIds in one go
+//   await ChildModel.findByIdAndUpdate(childId, {
+//     $push: { schedules: { $each: scheduleIds } }, // Add all schedule ObjectIds at once
+//   });
+
+//   return scheduleIds;
+// }
+
+// hjk
+
+async function populateChildSchedules(child: any) {
+  const childId = child._id;
+  const dateOfBirth = new Date(child.dateOfBirth);
+
+  // Fetch the mother's phone number for notifications
+  const mother = await MotherModel.findOne({ children: childId }).select(
+    "phone"
+  );
+  if (!mother)
+    throw new Error(`Mother not found for child with ID: ${childId}`);
+
+  const motherPhoneNumber = mother.phone;
+  const scheduleIds = []; // Array to store all schedule ObjectIds
+
+  // 1. Generate Weighing Schedules (Annually until 5 years old)
+  for (let year = 0; year < 5; year++) {
+    const weighingDate = new Date(dateOfBirth.getFullYear() + year, 0, 14); // Weighing on January 14th
+    const newWeighingSchedule = await SchedulingModel.create({
+      childId,
+      scheduleType: "weighing",
+      scheduleDate: weighingDate,
+      rescheduleDate: addDays(weighingDate, 7),
+      location: "Barangay Health Center",
+      notificationSent: false,
+      notificationDate: addDays(weighingDate, -2), // Notification 2 days before
+      motherPhoneNumber,
+      remarks: `Weighing scheduled for year ${year}`,
+    });
+    scheduleIds.push(newWeighingSchedule._id); // Collect ObjectId of created schedule
+  }
+
+  // 2. Generate Vaccination Schedules (Birth - 12 months)
+  const vaccineSchedules = [
+    { vaccineName: "BCG", schedule: dateOfBirth }, // BCG at birth
+    { vaccineName: "Hepatitis B", schedule: dateOfBirth }, // Hepatitis B at birth
+    {
+      vaccineName: "Pentavalent",
+      doseNumber: 1,
+      schedule: addDays(dateOfBirth, 45),
+    }, // 1.5 months
+    {
+      vaccineName: "Pentavalent",
+      doseNumber: 2,
+      schedule: addDays(dateOfBirth, 75),
+    }, // 2.5 months
+    {
+      vaccineName: "Pentavalent",
+      doseNumber: 3,
+      schedule: addDays(dateOfBirth, 105),
+    }, // 3.5 months
+    { vaccineName: "OPV", doseNumber: 1, schedule: addDays(dateOfBirth, 45) }, // 1.5 months
+    { vaccineName: "OPV", doseNumber: 2, schedule: addDays(dateOfBirth, 75) }, // 2.5 months
+    { vaccineName: "OPV", doseNumber: 3, schedule: addDays(dateOfBirth, 105) }, // 3.5 months
+    { vaccineName: "IPV", doseNumber: 1, schedule: addDays(dateOfBirth, 105) }, // IPV at 3.5 months
+    { vaccineName: "IPV", doseNumber: 2, schedule: addDays(dateOfBirth, 270) }, // IPV at 9 months
+    { vaccineName: "PCV", doseNumber: 1, schedule: addDays(dateOfBirth, 45) }, // PCV at 1.5 months
+    { vaccineName: "PCV", doseNumber: 2, schedule: addDays(dateOfBirth, 75) }, // PCV at 2.5 months
+    { vaccineName: "PCV", doseNumber: 3, schedule: addDays(dateOfBirth, 105) }, // PCV at 3.5 months
+    { vaccineName: "MMR", doseNumber: 1, schedule: addDays(dateOfBirth, 270) }, // MMR at 9 months
+    { vaccineName: "MMR", doseNumber: 2, schedule: addDays(dateOfBirth, 365) }, // MMR at 12 months
+  ];
+
+  for (const vaccine of vaccineSchedules) {
+    const isBCGOrHepB =
+      vaccine.vaccineName === "BCG" || vaccine.vaccineName === "Hepatitis B";
+    const scheduledDate = isBCGOrHepB
+      ? vaccine.schedule
+      : getNextWednesday(vaccine.schedule);
+
+    const newVaccineSchedule = await SchedulingModel.create({
+      childId,
+      scheduleType: "vaccination",
+      scheduleDate: scheduledDate,
+      rescheduleDate: addDays(scheduledDate, 7),
+      location: "Barangay Health Center",
+      notificationSent: false,
+      notificationDate: addDays(scheduledDate, -2),
+      motherPhoneNumber,
+      vaccineName: vaccine.vaccineName,
+      doseNumber: vaccine.doseNumber || 1,
+      remarks: `${vaccine.vaccineName} dose ${
+        vaccine.doseNumber || 1
+      } scheduled.`,
+    });
+
+    scheduleIds.push(newVaccineSchedule._id); // Collect ObjectId of created schedule
+  }
+
+  // 3. Generate Vaccination Schedules for Grade 1 and Grade 7
+  const gradeVaccines = [
+    {
+      vaccineName: "MCV",
+      doseNumber: 1,
+      schedule: addDays(dateOfBirth, 6 * 365), // MCV Grade 1
+    },
+    {
+      vaccineName: "MCV",
+      doseNumber: 2,
+      schedule: addDays(dateOfBirth, 12 * 365), // MCV Grade 7
+    },
+    {
+      vaccineName: "TD",
+      doseNumber: 1,
+      schedule: addDays(dateOfBirth, 6 * 365), // TD Grade 1
+    },
+    {
+      vaccineName: "TD",
+      doseNumber: 2,
+      schedule: addDays(dateOfBirth, 12 * 365), // TD Grade 7
+    },
+  ];
+
+  for (const vaccine of gradeVaccines) {
+    const newGradeVaccineSchedule = await SchedulingModel.create({
+      childId,
+      scheduleType: "vaccination",
+      scheduleDate: getNextWednesday(vaccine.schedule),
+      rescheduleDate: addDays(getNextWednesday(vaccine.schedule), 7),
+      location: "Barangay Health Center",
+      notificationSent: false,
+      notificationDate: addDays(getNextWednesday(vaccine.schedule), -2),
+      motherPhoneNumber,
+      vaccineName: vaccine.vaccineName,
+      doseNumber: vaccine.doseNumber || 1,
+      remarks: `${vaccine.vaccineName} dose ${
+        vaccine.doseNumber || 1
+      } scheduled for Grade ${vaccine.doseNumber === 1 ? "1" : "7"}`,
+    });
+
+    scheduleIds.push(newGradeVaccineSchedule._id); // Collect ObjectId of created schedule
+  }
+
+  // 4. Additional Vaccines for Female Children (HPV)
+  if (child.gender === "Female") {
+    const hpvVaccineSchedules = [
+      {
+        vaccineName: "Human Papillomavirus Vaccine (HPV)",
+        doseNumber: 1,
+        schedule: addDays(dateOfBirth, 9 * 365), // HPV Grade 4
+      },
+      {
+        vaccineName: "Human Papillomavirus Vaccine (HPV)",
+        doseNumber: 2,
+        schedule: addDays(dateOfBirth, 10 * 365), // HPV 2nd dose - 1 year later
+      },
+    ];
+
+    for (const hpv of hpvVaccineSchedules) {
+      const newHPVSchedule = await SchedulingModel.create({
+        childId,
+        scheduleType: "vaccination",
+        scheduleDate: getNextWednesday(hpv.schedule),
+        rescheduleDate: addDays(getNextWednesday(hpv.schedule), 7),
+        location: "Barangay Health Center",
+        notificationSent: false,
+        notificationDate: addDays(getNextWednesday(hpv.schedule), -2),
+        motherPhoneNumber,
+        vaccineName: hpv.vaccineName,
+        doseNumber: hpv.doseNumber,
+        remarks: `${hpv.vaccineName} dose ${hpv.doseNumber} scheduled for Grade 4 (female only)`,
+      });
+
+      scheduleIds.push(newHPVSchedule._id); // Collect ObjectId of created schedule
+    }
+  }
+
+  // Update the child with all the schedule ObjectIds in one go
+  await ChildModel.findByIdAndUpdate(childId, {
+    $push: { schedules: { $each: scheduleIds } }, // Add all schedule ObjectIds at once
+  });
+
+  return scheduleIds;
+}
+
+// TODO:
 // Add child
 router.post(
   "/child/add",
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
+    console.log(req.body); // Check if motherId is present here
     const { motherId, ...childData } = req.body;
 
     // Add the child to the database
-    const newChild = await ChildModel.create(childData);
+    const newChild = await ChildModel.create({ ...childData, motherId });
 
     // Link the child to the mother
     await MotherModel.findByIdAndUpdate(motherId, {
       $push: { children: newChild._id },
     });
 
-    res.status(201).send(newChild);
+    // Populate schedules for this specific child
+    const schedules = await populateChildSchedules(newChild);
+
+    res.status(201).send({ newChild, schedules });
   })
 );
 
@@ -1121,6 +1543,41 @@ router.get(
     const children = await ChildModel.find().populate("anthropometricStatus");
 
     res.send(children);
+  })
+);
+
+// Add Vaccination
+router.post(
+  "/child/:id/vaccination",
+  authMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const childId = req.params.id; // Get the child ID from the route params
+
+    const {
+      vaccineType,
+      doseNumber,
+      placeOfVaccination,
+      dateOfVaccination,
+      midwifeId,
+      bhwId,
+    } = req.body; // Get vaccination details from the request body
+
+    // Create a new vaccination record
+    const vaccination = await VaccinationModel.create({
+      vaccineType,
+      doseNumber,
+      placeOfVaccination,
+      dateOfVaccination,
+      midwifeId,
+      bhwId,
+    });
+
+    // Link the vaccination to the child
+    await ChildModel.findByIdAndUpdate(childId, {
+      $push: { vaccinations: vaccination._id },
+    });
+
+    res.status(201).send({ vaccination });
   })
 );
 

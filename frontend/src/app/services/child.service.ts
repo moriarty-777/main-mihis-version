@@ -5,13 +5,16 @@ import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { map, tap } from 'rxjs/operators';
 import {
+  CHILD_ADD_URL,
   CHILD_ALL_SCHEDULES_URL,
   CHILD_URL,
+  CHILD_VACCINATION_URL,
   CHILD_VAX_SUMMARY_URL,
   CHILDREN_ANTHRO_PRINT,
   CHILDREN_PROFILE_URL,
 } from '../shared/constants/urls';
 import { AnthropometricStatus } from '../shared/models/anthropometric';
+import { Vaccination } from '../shared/models/vaccination';
 
 @Injectable({
   providedIn: 'root',
@@ -276,5 +279,40 @@ export class ChildService {
   // Get children Anthro
   getChildrenAnthro(): Observable<any> {
     return this.http.get(CHILDREN_ANTHRO_PRINT);
+  }
+
+  // Add Vaccination
+  addVaccination(
+    childId: string,
+    vaccinationData: any
+  ): Observable<Vaccination> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    return this.http
+      .post<Vaccination>(
+        `${CHILD_VACCINATION_URL}${childId}/vaccination`,
+        vaccinationData,
+        { headers }
+      )
+      .pipe(
+        tap({
+          next: (newVaccination) => {
+            this.toastrService.success('Vaccination added successfully!', '', {
+              timeOut: 2000,
+              closeButton: true,
+              progressBar: true,
+              positionClass: 'toast-bottom-right',
+            });
+            setTimeout(() => {
+              window.location.reload(); // Refresh the page to show new vaccination
+            }, 2000);
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to add vaccination');
+          },
+        })
+      );
   }
 }

@@ -265,3 +265,28 @@ p.wewsa {
 .table-group.top {
   position: relative;
 }
+.action {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.action .delete {
+  background: #dc143c;
+  border-color: #dc143c;
+}
+
+.action .delete:hover {
+  background: #b51233;
+}
+
+.table-group.top .vcard-popup.global-btn {
+  position: absolute;
+  top: -49px;
+  right: 0;
+  max-width: 100%;
+  width: auto;
+  padding: 10px;
+  border-radius: 3px;
+  z-index: 3;
+}

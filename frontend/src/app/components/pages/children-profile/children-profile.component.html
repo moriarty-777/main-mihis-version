@@ -241,6 +241,12 @@
           <h3 class="stat-sub-title">Recent Child Vaccinations</h3>
         </div>
         <div class="table-group top">
+          <button
+            class="vcard-popup global-btn"
+            (click)="openVaccinationDialog()"
+          >
+            <mat-icon>add</mat-icon> Add Vaccination
+          </button>
           <table class="stat-table">
             <thead>
               <tr>
@@ -248,7 +254,7 @@
                 <th>Vaccine Type</th>
                 <th>Dose Number</th>
                 <th>Administered By</th>
-                <th>Recorded by BHW</th>
+                <th>Recorded by</th>
                 <th>Location</th>
               </tr>
             </thead>
@@ -305,6 +311,7 @@
                 <th>Height (cm)</th>
                 <th>Growth Category</th>
                 <th>Notes</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
             @for(weighingStat of child.weighingHistory; track $index){
@@ -313,8 +320,18 @@
                 <td>{{ weighingStat?.date | date : "yyyy-MM-dd" }}</td>
                 <td>{{ weighingStat?.weight }}</td>
                 <td>{{ weighingStat?.height }}</td>
-                <td>Malnourished</td>
+                <!-- <td>{{ child.nutritionalStatus?.status || "N/A" }}</td> -->
+                <td>{{ child.nutritionalStatus?.status || "N/A" }}</td>
                 <td>{{ weighingStat?.notes }}</td>
+                <!-- <td class="action"> -->
+                <!-- Action Buttons -->
+                <!-- <button (click)="openEditDialog(weighingStat)">Edit</button> -->
+                <!-- <button type="button" class="global-btn update">Edit</button> -->
+                <!-- <button (click)="deleteWeighingHistory(weighingStat._id)">Delete</button> -->
+                <!-- <button type="button" class="global-btn delete">
+                    Delete
+                  </button> -->
+                <!-- </td> -->
               </tr>
             </tbody>
             }

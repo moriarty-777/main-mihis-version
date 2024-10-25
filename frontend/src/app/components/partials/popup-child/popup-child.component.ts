@@ -80,12 +80,6 @@ export class PopupChildComponent {
     });
   }
 
-  // ngAfterViewInit(): void {
-  //   // Call detectChanges in ngAfterViewInit
-  //   this.cd.detectChanges();
-  //   console.log('Change detection forced in ngAfterViewInit');
-  // }
-
   get firstName() {
     return this.updatesForm.get('firstName');
   }

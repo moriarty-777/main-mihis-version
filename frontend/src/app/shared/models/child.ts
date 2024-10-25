@@ -21,7 +21,7 @@ export interface Child {
   isFullyVaccinated: boolean;
   // dateFullyVaccinated: Date;
   dateFullyVaccinated: string;
-  weighingHistory: WeighingHistory[]; // Add weighingHistory
+  weighingHistory: any; // Add weighingHistory
   anthropometricStatus: AnthropometricStatus; // Add anthropometricStatus
   nutritionalStatus?: NutritionalStatus;
   vaccinationStatus?: any;

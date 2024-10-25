@@ -116,8 +116,10 @@ export class AnalyticsComponent {
 
   loadVaccinationSummary() {
     this.childService.getVaccinationSummary().subscribe((summary) => {
-      this.fullyVaccinatedCount = summary.fullyVaccinatedCount;
-      this.partiallyVaccinatedCount = summary.partiallyVaccinatedCount;
+      // this.fullyVaccinatedCount = summary.fullyVaccinatedCount;
+      this.fullyVaccinatedCount = 45;
+      // this.partiallyVaccinatedCount = summary.partiallyVaccinatedCount;
+      this.partiallyVaccinatedCount = 7;
       this.notVaccinatedCount = summary.notVaccinatedCount;
     });
   }
@@ -259,6 +261,34 @@ export class AnalyticsComponent {
   getMalnourishmentData() {
     return this.malnourishmentData.map((status) => status.value);
   }
+
+  // HHEHEHE
+  vaccineAdministeredData: { label: string; count: number }[] = [
+    { label: 'BCG', count: 45 },
+    { label: 'Pentavalent', count: 32 },
+    { label: 'OPV', count: 50 },
+    { label: 'IPV', count: 40 },
+    { label: 'PCV', count: 35 },
+    { label: 'MMR', count: 38 },
+  ];
+
+  vaccineChartData: ChartData<'bar'> = {
+    labels: this.vaccineAdministeredData.map((vaccine) => vaccine.label), // Labels: BCG, Pentavalent, etc.
+    datasets: [
+      {
+        data: this.vaccineAdministeredData.map((vaccine) => vaccine.count), // Counts: 45, 32, etc.
+        backgroundColor: [
+          '#4CAF50',
+          '#FFC107',
+          '#FF5722',
+          '#03A9F4',
+          '#9C27B0',
+          '#FFEB3B',
+        ], // Different colors for each bar
+        label: 'Vaccines Administered',
+      },
+    ],
+  };
 
   // TODO: EndHardcoded Data
 }

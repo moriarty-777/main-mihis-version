@@ -13,6 +13,7 @@ import { VaccinePopupComponent } from '../../partials/vaccine-popup/vaccine-popu
 import { Vaccination } from '../../../shared/models/vaccination';
 import { ChangeDetectorRef } from '@angular/core';
 import { ChartsRadarVaccineTypeComponent } from '../../charts/charts-radar-vaccine-type/charts-radar-vaccine-type.component';
+import { PopupAddVaccinationComponent } from '../../partials/popup-add-vaccination/popup-add-vaccination.component';
 
 @Component({
   selector: 'app-children-profile',
@@ -71,6 +72,13 @@ export class ChildrenProfileComponent {
       this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
       this.motherId = `${data.mother.id}`;
 
+      // Assign the schedules if they exist
+      if (this.child.schedules) {
+        console.log('Schedules found:', this.child.schedules);
+      } else {
+        console.log('No schedules found for this child.');
+      }
+
       // this.vaccinationSchedule =
       //   this.childrenService.getExpectedVaccinationSchedule(
       //     data.child.dateOfBirth
@@ -85,7 +93,7 @@ export class ChildrenProfileComponent {
       });
 
       // Sort weighingHistory by date
-      this.child.weighingHistory.sort((a, b) => {
+      this.child.weighingHistory.sort((a: any, b: any) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
 
@@ -127,7 +135,7 @@ export class ChildrenProfileComponent {
       (now.getMonth() - dob.getMonth());
     return ageInMonths;
   }
-
+  // Backup
   countVaccinations(child: Child): number {
     const oneYearAndSixWeeksAfterBirth = new Date(child.dateOfBirth);
     oneYearAndSixWeeksAfterBirth.setFullYear(
@@ -196,4 +204,81 @@ export class ChildrenProfileComponent {
       (vaccination) => vaccination.aefi && vaccination.aefi.occurred
     ).length;
   }
+
+  // Add Child Vaccination
+  openVaccinationDialog() {
+    this.dialogRef.open(PopupAddVaccinationComponent, {
+      data: { childId: this.child.id },
+    });
+  }
+
+  // weighing history
+  // Method to delete weighing history
+  // deleteWeighingHistory(weighingHistoryId: string): void {
+  //   const confirmed = confirm('Are you sure you want to delete this record?');
+  //   if (confirmed) {
+  //     this.childrenService.deleteWeighingHistory(weighingHistoryId).subscribe(
+  //       () => {
+  //         this.toastrService.success('Weighing history deleted successfully!');
+  //         this.loadChildProfile(this.child._id); // Reload the child profile to refresh the table
+  //       },
+  //       (error) => {
+  //         this.toastrService.error('Failed to delete weighing history.');
+  //         console.error('Error deleting weighing history:', error);
+  //       }
+  //     );
+  //   }
+  // }
+
+  // // Method to open the edit dialog
+  // openEditDialog(weighingStat: any): void {
+  //   const dialogRef = this.dialogRef.open(PopupWeighingComponent, {
+  //     data: { weighingStat },
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(() => {
+  //     this.loadChildProfile(this.child._id); // Reload the child profile after the dialog is closed
+  //   });
+  // }
+
+  //   getNutritionalStatus(child: Child): string {
+  //   // If no weighing history exists, return 'N/A' or some default status
+  //   if (!child.weighingHistory || child.weighingHistory.length === 0) {
+  //     return 'N/A';
+  //   }
+
+  //   // Loop through the weighing history
+  //   for (const weighingStat of child.weighingHistory) {
+  //     const {
+  //       weightForAgeStatus,
+  //       heightForAgeStatus,
+  //       weightForLengthHeightStatus,
+  //     } = weighingStat;
+
+  //     // If any status is not 'Normal' or 'Tall', return 'Malnourished'
+  //     if (
+  //       weightForAgeStatus !== 'Normal' &&
+  //       weightForAgeStatus !== 'Tall'
+  //     ) {
+  //       return 'Malnourished';
+  //     }
+
+  //     if (
+  //       heightForAgeStatus !== 'Normal' &&
+  //       heightForAgeStatus !== 'Tall'
+  //     ) {
+  //       return 'Malnourished';
+  //     }
+
+  //     if (
+  //       weightForLengthHeightStatus !== 'Normal' &&
+  //       weightForLengthHeightStatus !== 'Tall'
+  //     ) {
+  //       return 'Malnourished';
+  //     }
+  //   }
+
+  //   // If all statuses in the history are 'Normal' or 'Tall', return 'Normal'
+  //   return 'Normal';
+  // }
 }

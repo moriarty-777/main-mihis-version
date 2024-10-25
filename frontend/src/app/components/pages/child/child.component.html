@@ -5,13 +5,11 @@
     </div>
     <div class="c-table-header">
       <div class="c-table-item">
-        <!-- <button type="button">All Children</button> -->
         <button type="button" class="all-btn" (click)="resetFilters()">
           All Children
         </button>
       </div>
       <div class="c-table-item">
-        <!-- <select id="gender"> -->
         <select id="gender" (change)="onGenderChange($event)">
           <option value="">Gender</option>
           <option value="Male">Male</option>
@@ -19,7 +17,6 @@
         </select>
       </div>
       <div class="c-table-item">
-        <!-- <select id="purok"> -->
         <select id="purok" (change)="onPurokChange($event)">
           <option value="">Purok</option>
           <option value="1">1</option>
@@ -29,14 +26,12 @@
         </select>
       </div>
       <div class="c-table-item">
-        <!-- <select id="nutritionalStatus"> -->
         <select
           id="nutritionalStatus"
           (change)="onNutritionalStatusChange($event)"
         >
           <option value="">Nutritional Status</option>
           <option value="Normal">Normal</option>
-          <!-- <option value="At Risk">At Risk</option> -->
           <option value="Malnourished">Malnourished</option>
           <!-- <option disabled selected>Nutritional Status</option>
           <option value="Normal">Normal</option>
@@ -53,7 +48,6 @@
       </div>
       <div class="c-table-item">
         <select id="vaxStatus" (change)="onVaxStatusChange($event)">
-          <!-- <select id="vaxStatus"> -->
           <option value="">Vaccine Status</option>
           <option value="Fully Vaccinated">Fully Vaccinated</option>
           <option value="Partially Vaccinated">Partially Vaccinated</option>
@@ -61,7 +55,6 @@
         </select>
       </div>
       <div class="c-table-item">
-        <!-- <search></search> -->
         <p class="ssearch">
           <input
             #query
@@ -86,9 +79,6 @@
               <th>Gender</th>
               <th>Purok</th>
               <th>Nutritional Status</th>
-              <!-- <th>Weight for Age Status</th>
-              <th>Height for Age Status</th>
-              <th>Weight for Length/Height Status</th> -->
               <th>Vaccine Status</th>
               <th>Action</th>
             </tr>
@@ -102,32 +92,13 @@
                 <a routerLink="/children-page/{{ children.id }}">
                   {{ children.firstName + " " + children.lastName }}
                 </a>
-                <!-- <span>
-                  {{ children.firstName + " " + children.lastName }}
-                </span>
-                {{ children.id }} -->
               </td>
               <td>{{ children.gender }}</td>
               <td>{{ children.purok }}</td>
               <td>
-                <!-- {{ children.weighingHistory[0].weightForAgeStatus }} -->
                 {{ children.nutritionalStatus?.status }}
               </td>
-              <!-- <td>
-                {{ children.weighingHistory[0].heightForAgeStatus }}
-              </td>
-              <td>
-                {{ children.weighingHistory[0].weightForLengthHeightStatus }}
-              </td> -->
-              <!-- <td>
-                {{
-                  children.isFullyVaccinated
-                    ? "Fully Vaccinated"
-                    : children.vaccinations.length > 0
-                    ? "Partially Vaccinated"
-                    : "Not Vaccinated"
-                }}
-              </td> -->
+
               <td>
                 {{ calculateVaccinationStatus(children) }}
               </td>

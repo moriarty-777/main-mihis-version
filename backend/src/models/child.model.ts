@@ -178,7 +178,7 @@ const ChildSchema: any = new Schema(
       { type: Schema.Types.ObjectId, ref: WeighingHistoryModel },
     ],
     vaccinations: [{ type: Schema.Types.ObjectId, ref: VaccinationModel }],
-    vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },
+    // vaccineStatus: { type: Schema.Types.ObjectId, ref: "vaccineStatus" },
     nutritionalStatus: {
       type: Schema.Types.ObjectId,
       ref: NutritionalStatusModel,
