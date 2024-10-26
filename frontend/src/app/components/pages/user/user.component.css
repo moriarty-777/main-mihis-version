@@ -116,3 +116,15 @@ a:hover {
 .action .delete:hover {
   background: #b51233;
 }
+
+/* btn */
+.global-btn.activate {
+  background-color: green;
+  color: white;
+}
+
+.global-btn.deactivate {
+  background-color: red;
+  color: white;
+  border-color: red;
+}

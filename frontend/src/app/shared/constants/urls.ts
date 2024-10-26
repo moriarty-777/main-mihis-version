@@ -1,5 +1,5 @@
-// const BASE_URL = 'http://localhost:3000';
-const BASE_URL = 'https://mihis.tech';
+const BASE_URL = 'http://localhost:3000';
+// const BASE_URL = 'https://mihis.tech';
 // http://localhost:5000/api/child/vaccination-summary
 export const CHILD_URL = BASE_URL + '/api/child';
 export const CHILD_ADD_URL = BASE_URL + '/api/child/add';
@@ -17,6 +17,7 @@ export const USER_LOGOUT_URL = BASE_URL + '/api/users/logout';
 export const USER_SIGNUP_URL = BASE_URL + '/api/users/signup';
 export const USER_URL = BASE_URL + '/api/users';
 export const USER_PROFILE_URL = BASE_URL + '/api/users/';
+export const USER_ACTIVATE_DEACTIVATE = BASE_URL + '/api/users/';
 export const USER_EXPORT_URL = BASE_URL + '/api/users/export-users';
 
 // export const MIDWIVES_URL = BASE_URL + '/api/users/midwsives';

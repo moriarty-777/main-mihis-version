@@ -1,7 +1,11 @@
 .nut-container {
   padding: 0 20px 20px 20px;
 }
-
+.nut-calc-container {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px 15px;
+}
 .nut-container h2 {
   text-align: center;
   max-width: 700px;

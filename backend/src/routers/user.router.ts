@@ -28,6 +28,24 @@ const router = Router();
 //     res.send("Seed is Done");
 //   })
 // );
+// Seed route to set isActive to true for all users FIXME:
+// Route to set isActive to true for all users who are not currently active
+// router.get(
+//   "/seed-is-active",
+//   expressAsyncHandler(async (req, res) => {
+//     // Update all users to set isActive to true where it's not already true
+//     const result = await UserModel.updateMany(
+//       { isActive: { $ne: true } }, // Condition: users where isActive is not true
+//       { $set: { isActive: true } } // Action: set isActive to true
+//     );
+
+//     res.send({
+//       message: "All users updated to active status",
+//       modifiedCount: result.modifiedCount, // Number of documents modified
+//     });
+//   })
+// );
+
 router.get("/logs", getLogHistory);
 router.get(
   "/",
@@ -86,6 +104,14 @@ router.post(
 
     if (user && (await bcrypt.compare(password, user.password))) {
       //
+
+      // Check if the account is active
+      if (!user.isActive) {
+        res
+          .status(403)
+          .send("Account is inactive. Please contact the administrator.");
+      }
+
       const log = new LogModel({
         userId: user.id,
         username: user.username,
@@ -99,13 +125,27 @@ router.post(
     } else {
       res.status(HTTP_BAD_REQUEST).send("Username or password is invalid!");
     }
-    // if (user) {
-    //   res.send(generateTokenResponse(user));
-    // } else {
-    //   res.status(HTTP_BAD_REQUEST).send("Username or Password is not valid");
-    // }
   })
 );
+
+// Toggler activate / deactivate
+// Toggle User Activation
+router.patch("/:id/toggle-activation", authMiddleware, async (req, res) => {
+  const user = await UserModel.findById(req.params.id);
+
+  if (!user) {
+    return res.status(404).send({ message: "User not found" });
+  }
+
+  user.isActive = !user.isActive;
+  await user.save();
+
+  res.status(200).send({
+    message: `User ${user.isActive ? "activated" : "deactivated"} successfully`,
+    user,
+  });
+});
+
 // logout
 router.post(
   "/logout",

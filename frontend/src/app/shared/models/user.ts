@@ -12,6 +12,7 @@ export class User {
   yearsOfService?: any;
   gender?: any;
   formattedDate?: any;
+  isActive?: any;
   _id?: any;
 
   // New Fields

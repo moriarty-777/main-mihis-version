@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,12 +11,24 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './nutritional-status-calc.component.css',
 })
 export class NutritionalStatusCalcComponent {
-  ageInMonths: number = 0;
-  weight: number = 0;
-  height: number = 0;
-  gender: 'male' | 'female' | '' = '';
+  // ageInMonths: number = 0;
+  // weight: number = 0;
+  // height: number = 0;
+  // gender: 'male' | 'female' | '' = '';
+  // classification: string = '';
+  // TODO:
+  @Input() ageInMonths: number = 0;
+  @Input() weight: number = 0;
+  @Input() height: number = 0;
+  @Input() gender: 'male' | 'female' | '' = '';
   classification: string = '';
 
+  ngOnInit() {
+    if (this.ageInMonths && this.weight && this.height && this.gender) {
+      this.calculateNutritionalStatus(); // Calculate if data is pre-filled
+    }
+  }
+  // TODO:
   // Weight for Length Z-score thresholds
   private weightForLengthThresholds: any = {
     female: {

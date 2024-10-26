@@ -11,6 +11,7 @@ import {
   USER_PROFILE_URL,
   USER_LOGOUT_URL,
   USER_EXPORT_URL,
+  USER_ACTIVATE_DEACTIVATE,
 } from '../shared/constants/urls';
 import { tap, map } from 'rxjs/operators';
 import { IUserLogin } from '../shared/models/iuserLogin';
@@ -171,6 +172,17 @@ export class UserService {
     const userJson = localStorage.getItem(USER_KEY);
     if (userJson) return JSON.parse(userJson) as User;
     return new User();
+  }
+  // Activate deactivate
+  toggleUserActivation(userId: string): Observable<User> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.patch<User>(
+      `${USER_ACTIVATE_DEACTIVATE}${userId}/toggle-activation`, // Add a '/' before userId
+      {},
+      { headers }
+    );
   }
 
   updateUser(id: string, userData: Partial<User>): Observable<User> {

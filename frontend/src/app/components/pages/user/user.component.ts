@@ -217,4 +217,93 @@ export class UserComponent {
     // Export the workbook to Excel file
     XLSX.writeFile(workbook, 'UserData.xlsx');
   }
+
+  // // Toggle activate deactivate
+  // toggleUserActivation(userId: string): void {
+  //   this.userService.toggleUserActivation(userId).subscribe(
+  //     (updatedUser) => {
+  //       const user = this.user.find((u) => u.id === userId);
+  //       if (user) {
+  //         user.isActive = updatedUser.isActive;
+  //       }
+  //       this.toastrService.success(
+  //         `User ${
+  //           updatedUser.isActive ? 'activated' : 'deactivated'
+  //         } successfully!`
+  //       );
+  //     },
+  //     (error) => {
+  //       this.toastrService.error('Error toggling user activation status');
+  //     }
+  //   );
+  // }
+
+  // toggleUserActivation(userId: string): void {
+  //   console.log('Toggling activation for user ID:', userId); // Log the user ID
+
+  //   this.userService.toggleUserActivation(userId).subscribe(
+  //     (updatedUser) => {
+  //       console.log('Updated User Response:', updatedUser); // Log the response from the server
+  //       const user = this.user.find((u) => u.id === userId);
+
+  //       if (user) {
+  //         user.isActive = updatedUser.isActive;
+  //         console.log(
+  //           `User ${userId} is now ${user.isActive ? 'active' : 'inactive'}`
+  //         ); // Log the new status
+  //       }
+
+  //       this.toastrService.success(
+  //         `User ${
+  //           updatedUser.isActive ? 'activated' : 'deactivated'
+  //         } successfully!`
+  //       );
+  //     },
+  //     (error) => {
+  //       console.error('Error toggling user activation status:', error); // Log the error
+  //       this.toastrService.error('Error toggling user activation status');
+  //     }
+  //   );
+  // }
+  // toggleUserActivation(userId: string): void {
+  //   this.userService.toggleUserActivation(userId).subscribe(
+  //     (updatedUser) => {
+  //       console.log('Updated user status:', updatedUser); // Check status
+  //       const user = this.user.find((u) => u.id === userId);
+  //       if (user) {
+  //         user.isActive = updatedUser.isActive;
+  //       }
+  //       this.toastrService.success(
+  //         `User ${
+  //           updatedUser.isActive ? 'activated' : 'deactivated'
+  //         } successfully!`
+  //       );
+  //     },
+  //     (error) => {
+  //       this.toastrService.error('Error toggling user activation status');
+  //     }
+  //   );
+  // }
+  // FIXME:
+  toggleUserActivation(userId: string): void {
+    this.userService.toggleUserActivation(userId).subscribe(
+      (updatedUser) => {
+        const user = this.user.find((u) => u.id === userId);
+        if (user) {
+          user.isActive = updatedUser.isActive;
+        }
+
+        // Display a generic toast message
+        this.toastrService.success('User status updated successfully!');
+
+        // Optionally refresh the page
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      },
+      (error) => {
+        this.toastrService.error('Error updating user status');
+      }
+    );
+  }
 }

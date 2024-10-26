@@ -11,6 +11,7 @@ export interface User {
   dateOfService?: string;
   username: string; // Either Gmail or phone number
   password: string;
+  isActive?: boolean;
   shift?: string[]; // e.g., 'Morning', 'Afternoon'
   daySchedule?: string[]; // e.g., ['Monday', 'Tuesday']
 }
@@ -32,6 +33,7 @@ const UserSchema = new Schema(
       default: "morning",
     },
     daySchedule: { type: [String], required: false, default: [] },
+    isActive: { type: Boolean, required: false, default: true }, // New field to manage active status
   },
   {
     toJSON: {
