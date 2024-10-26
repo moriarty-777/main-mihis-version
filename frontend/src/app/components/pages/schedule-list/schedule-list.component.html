@@ -1,0 +1,45 @@
+<div class="sched-list">
+  <div class="table-group">
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <!-- Count Variable -->
+          <th>Number</th>
+          <!-- childId need to populate -->
+          <th>Name</th>
+          <!-- scheduleDate -->
+          <th>Schedule</th>
+          <!-- location -->
+          <th>Location</th>
+          <!-- notificationContent -->
+          <th>SMS Content</th>
+          <!-- notificationSent -->
+          <th>Vax Name</th>
+          <th>Type</th>
+          <!-- Scheduletype -->
+          <th>Status</th>
+          <!-- scheduleType -->
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let schedule of schedules; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ schedule.name }}</td>
+          <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+          <td>{{ schedule.location }}</td>
+          <td>{{ schedule.smsContent || "N/A" }}</td>
+          <td>{{ schedule.vaccineName || "N/A" }}</td>
+          <td>{{ schedule.scheduleType || "N/A" }}</td>
+          <td>{{ schedule.status }}</td>
+          <td>
+            <button class="s global-btn" (click)="performAction(schedule)">
+              Action
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

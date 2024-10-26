@@ -1,5 +1,5 @@
-const BASE_URL = 'http://localhost:3000';
-// const BASE_URL = 'https://mihis.tech';
+// const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://mihis.tech';
 // http://localhost:5000/api/child/vaccination-summary
 export const CHILD_URL = BASE_URL + '/api/child';
 export const CHILD_ADD_URL = BASE_URL + '/api/child/add';

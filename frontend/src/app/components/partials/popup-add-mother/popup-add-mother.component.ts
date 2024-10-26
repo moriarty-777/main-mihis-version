@@ -33,10 +33,10 @@ export class PopupAddMotherComponent {
       gender: ['', [Validators.required]],
       phone: ['', [Validators.required, UsernameValidators.isValidPhone]], // Phone validator
       email: ['', [UsernameValidators.isValidEmail]], // Email validator
-      barangay: ['', [Validators.required]],
+      barangay: ['Bangad', [Validators.required]],
       purok: ['', [Validators.required]],
       photoPath: ['assets/img/default-user-profile.jpg', [Validators.required]], // default image
-      isTransient: ['false', [Validators.required]],
+      isTransient: ['', [Validators.required]],
     });
   }
   get firstName() {

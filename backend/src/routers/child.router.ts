@@ -1225,18 +1225,6 @@ router.patch(
 
 // Automatically populates the child schedule
 // helper to add days to a date
-function addDays(date: Date, days: number): Date {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
-// Helper function to get the next Wednesday
-function getNextWednesday(date: Date): Date {
-  const dayOfWeek = date.getDay(); // Get the current day of the week (0 = Sunday, ..., 6 = Saturday)
-  const daysUntilWednesday = (3 - dayOfWeek + 7) % 7; // 3 is the index for Wednesday
-  return addDays(date, daysUntilWednesday);
-}
 
 // async function populateChildSchedules(child: any) {
 //   const childId = child._id;
@@ -1337,6 +1325,18 @@ function getNextWednesday(date: Date): Date {
 
 // hjk
 
+function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+// Helper function to get the next Wednesday
+function getNextWednesday(date: Date): Date {
+  const dayOfWeek = date.getDay(); // Get the current day of the week (0 = Sunday, ..., 6 = Saturday)
+  const daysUntilWednesday = (3 - dayOfWeek + 7) % 7; // 3 is the index for Wednesday
+  return addDays(date, daysUntilWednesday);
+}
 async function populateChildSchedules(child: any) {
   const childId = child._id;
   const dateOfBirth = new Date(child.dateOfBirth);
@@ -1354,6 +1354,7 @@ async function populateChildSchedules(child: any) {
   // 1. Generate Weighing Schedules (Annually until 5 years old)
   for (let year = 0; year < 5; year++) {
     const weighingDate = new Date(dateOfBirth.getFullYear() + year, 0, 14); // Weighing on January 14th
+    console.log(weighingDate);
     const newWeighingSchedule = await SchedulingModel.create({
       childId,
       scheduleType: "weighing",

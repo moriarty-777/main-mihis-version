@@ -359,7 +359,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let schedule of child.schedules">
+              <tr *ngFor="let schedule of child.schedules | slice : 1">
                 <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
                 <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
                 <td>

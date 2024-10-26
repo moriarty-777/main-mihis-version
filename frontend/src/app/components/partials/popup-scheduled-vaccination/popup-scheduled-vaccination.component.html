@@ -1,0 +1,39 @@
+<div class="vpopup-container s">
+  <div class="vvld-box-inner">
+    <h2>Confirm Scheduled Vaccination</h2>
+    <form
+      [formGroup]="scheduledVaccinationForm"
+      (ngSubmit)="confirmVaccination()"
+    >
+      <div class="vvld-form-group">
+        <label>Vaccine Type</label>
+        <input formControlName="vaccineType" type="text" class="form-ctrl" />
+      </div>
+
+      <div class="vvld-form-group">
+        <label>Dose Number</label>
+        <input formControlName="doseNumber" type="text" class="form-ctrl" />
+      </div>
+
+      <div class="vvld-form-group">
+        <label>Place of Vaccination</label>
+        <input
+          formControlName="placeOfVaccination"
+          type="text"
+          class="form-ctrl"
+        />
+      </div>
+
+      <div class="vvld-form-group">
+        <label>Date of Vaccination</label>
+        <input
+          formControlName="dateOfVaccination"
+          type="date"
+          class="form-ctrl"
+        />
+      </div>
+
+      <button type="submit" class="global-btn">Confirm Vaccination</button>
+    </form>
+  </div>
+</div>

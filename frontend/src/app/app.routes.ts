@@ -21,6 +21,7 @@ import { NutritionalStatusCalcComponent } from './components/pages/nutritional-s
 import { authenticatedGuard } from './auth/guards/authenticated.guard';
 import { ReportsComponent } from './components/pages/reports/reports.component';
 import { CalendarComponent } from './components/pages/calendar/calendar.component';
+import { ScheduleListComponent } from './components/pages/schedule-list/schedule-list.component';
 
 export const routes: Routes = [
   // Routes for Anonymous User
@@ -119,6 +120,10 @@ export const routes: Routes = [
       {
         path: 'calendar',
         component: CalendarComponent,
+      },
+      {
+        path: 'schedule-list',
+        component: ScheduleListComponent,
       },
     ],
     canActivate: [authGuard, roleGuard],

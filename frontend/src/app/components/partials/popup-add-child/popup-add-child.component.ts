@@ -32,7 +32,7 @@ export class PopupAddChildComponent {
       gender: ['', [Validators.required]],
       photoPath: ['assets/img/child-default.jpg', [Validators.required]],
       purok: ['', [Validators.required]], // Add purok
-      barangay: ['', [Validators.required]], // Add barangay
+      barangay: ['Bangad', [Validators.required]], // Add barangay
     });
   }
 
