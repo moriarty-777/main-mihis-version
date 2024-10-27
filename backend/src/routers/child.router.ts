@@ -1041,11 +1041,8 @@ router.get(
     try {
       // Fetch all children and populate their schedules
       const children = await ChildModel.find()
-        .populate({
-          path: "schedules",
-          model: SchedulingModel, // Populate the schedule data
-        })
-        .select("firstName lastName schedules"); // Select only relevant fields
+        .populate("schedules")
+        .populate("weighingHistory");
 
       if (!children.length) {
         res.status(404).send({ message: "No schedules found." });
@@ -1057,6 +1054,92 @@ router.get(
     }
   })
 );
+
+// Schedules
+// router.get(
+//   "/all-schedules",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       // Fetch all children and populate their schedules and latest weighing history
+//       const children = await ChildModel.find()
+//         .populate({
+//           path: "schedules",
+//           model: SchedulingModel, // Populate the schedule data
+//         })
+//         .populate({
+//           path: "weighingHistory",
+//           model: WeighingHistoryModel, // Populate the weighing history data
+//           options: { sort: { date: -1 }, limit: 1 }, // Get the latest entry
+//         })
+//         .select(
+//           "firstName lastName gender dateOfBirth schedules weighingHistory"
+//         ); // Select relevant fields
+//       console.log("Fetched children:", children); // Check populated data
+//       // Process data to add additional fields
+//       const processedChildren = children.map((child) => {
+//         // Calculate age in months
+//         const ageInMonths = Math.floor(
+//           (new Date().getTime() - new Date(child.dateOfBirth).getTime()) /
+//             (1000 * 60 * 60 * 24 * 30.44) // Approximate month length
+//         );
+
+//         interface LatestWeigh {
+//           childId: any; // Link to the child
+//           scheduleType: "weighing" | "vaccination"; // Type of event
+//           scheduleDate: Date; // Date for weighing or vaccination
+//           rescheduleDate?: Date; // Reschedule date if missed
+//           location: string; // Location of the event
+//           notificationSent?: boolean; // If notification was sent
+//           notificationDate?: Date; // Date when the SMS was sent
+//           notificationContent?: string; // Content of the SMS
+//           motherPhoneNumber: string; // Mother's phone number
+//           vaccineName?: string; // Name of the vaccine (for vaccination schedules)
+//           doseNumber?: number; // Dose number (for vaccines that require multiple doses)
+//           weighingDescription?: string; // Weighing description for events
+//           remarks?: string; // Additional notes if needed
+//         }
+//         interface LatestWeighing {
+//           height: number;
+//           weight: number;
+//           date: Date;
+//           weightForAge: string;
+//           heightForAge: string;
+//           weightForLengthHeight: string;
+//           notes?: string;
+//         }
+//         // Get latest weight and height from weighingHistory if available
+//         const latestWeighing = child.weighingHistory[0] as unknown as
+//           | LatestWeighing
+//           | undefined; // Access the latest record
+
+//         const enrichedSchedules = child.schedules.map((schedule) => ({
+//           ...(schedule as unknown as LatestWeigh),
+//           ageInMonths: ageInMonths,
+//           gender: child.gender,
+//           height: latestWeighing?.height || null, // Use latest height if available
+//           weight: latestWeighing?.weight || null, // Use latest weight if available
+//         }));
+
+//         return {
+//           _id: child._id,
+//           firstName: child.firstName,
+//           lastName: child.lastName,
+//           schedules: enrichedSchedules,
+//         };
+//       });
+
+//       if (!processedChildren.length) {
+//         res.status(404).send({ message: "No schedules found." });
+//       }
+
+//       res.send({ children: processedChildren });
+//     } catch (error) {
+//       res.status(500).send({ message: "Error fetching schedules", error });
+//     }
+//   })
+// );
 
 // Delete
 // router.delete(
@@ -1351,21 +1434,47 @@ async function populateChildSchedules(child: any) {
   const motherPhoneNumber = mother.phone;
   const scheduleIds = []; // Array to store all schedule ObjectIds
 
-  // 1. Generate Weighing Schedules (Annually until 5 years old)
-  for (let year = 0; year < 5; year++) {
-    const weighingDate = new Date(dateOfBirth.getFullYear() + year, 0, 14); // Weighing on January 14th
+  // // 1. Generate Weighing Schedules (Annually until 5 years old)
+  // for (let year = 0; year < 5; year++) {
+  //   const weighingDate = new Date(dateOfBirth.getFullYear() + year, 0, 14); // Weighing on January 14th
+  //   console.log(weighingDate);
+  //   const newWeighingSchedule = await SchedulingModel.create({
+  //     childId,
+  //     scheduleType: "weighing",
+  //     scheduleDate: weighingDate,
+  //     rescheduleDate: addDays(weighingDate, 7),
+  //     location: "Barangay Health Center",
+  //     notificationSent: false,
+  //     notificationDate: addDays(weighingDate, -2), // Notification 2 days before
+  //     motherPhoneNumber,
+  //     remarks: `Weighing scheduled for year ${year}`,
+  //   });
+  //   scheduleIds.push(newWeighingSchedule._id); // Collect ObjectId of created schedule
+  // }
+
+  // Generate Weighing Schedules (Monthly until 5 years old)
+  for (let month = 0; month < 60; month++) {
+    // Calculate the weighing date by adding the month offset to the date of birth
+    const weighingDate = new Date(
+      dateOfBirth.getFullYear(),
+      dateOfBirth.getMonth() + month,
+      14
+    ); // Weighing on the 14th of each month
+
     console.log(weighingDate);
+
     const newWeighingSchedule = await SchedulingModel.create({
       childId,
       scheduleType: "weighing",
       scheduleDate: weighingDate,
-      rescheduleDate: addDays(weighingDate, 7),
+      rescheduleDate: addDays(weighingDate, 7), // Reschedule 7 days later
       location: "Barangay Health Center",
       notificationSent: false,
       notificationDate: addDays(weighingDate, -2), // Notification 2 days before
       motherPhoneNumber,
-      remarks: `Weighing scheduled for year ${year}`,
+      remarks: `Weighing scheduled for month ${month + 1}`,
     });
+
     scheduleIds.push(newWeighingSchedule._id); // Collect ObjectId of created schedule
   }
 

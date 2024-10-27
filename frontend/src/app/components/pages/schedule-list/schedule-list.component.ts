@@ -26,22 +26,58 @@ export class ScheduleListComponent {
     this.loadSchedules();
   }
 
+  // loadSchedules(): void {
+  //   this.childService.getAllSchedules().subscribe(
+  //     (response: any) => {
+  //       this.schedules = response.children.flatMap((child: any) =>
+  //         child.schedules.map((schedule: any) => ({
+
+  //           number: child._id,
+  //           name: `${child.firstName} ${child.lastName}`,
+  //           scheduleDate: new Date(schedule.scheduleDate),
+  //           scheduleType: schedule.scheduleType,
+  //           vaccineName: schedule.vaccineName,
+  //           doseNumber: schedule.doseNumber,
+  //           location: schedule.location,
+  //           smsContent: schedule.notificationContent,
+  //           status: schedule.notificationSent ? 'Sent' : 'Pending',
+  //           type: schedule.scheduleType,
+  //         }))
+  //       );
+  //       this.filterSchedules(); // Apply the initial filter
+  //     },
+  //     (error: any) => {
+  //       console.error('Error fetching schedules:', error);
+  //     }
+  //   );
+  // }
+
   loadSchedules(): void {
     this.childService.getAllSchedules().subscribe(
       (response: any) => {
         this.schedules = response.children.flatMap((child: any) =>
-          child.schedules.map((schedule: any) => ({
-            number: child._id,
-            name: `${child.firstName} ${child.lastName}`,
-            scheduleDate: new Date(schedule.scheduleDate),
-            scheduleType: schedule.scheduleType,
-            vaccineName: schedule.vaccineName,
-            doseNumber: schedule.doseNumber,
-            location: schedule.location,
-            smsContent: schedule.notificationContent,
-            status: schedule.notificationSent ? 'Sent' : 'Pending',
-            type: schedule.scheduleType,
-          }))
+          child.schedules.map((schedule: any) => {
+            // Access the latest weighing data, if available
+            // const latestWeighing = child.weighingHistory[0]; // Assuming this is the latest entry
+            // console.log('Child Data:', child); // Log each child's data for debugging
+            return {
+              number: child._id,
+              name: `${child.firstName} ${child.lastName}`,
+              scheduleDate: new Date(schedule.scheduleDate),
+              scheduleType: schedule.scheduleType,
+              vaccineName: schedule.vaccineName,
+              doseNumber: schedule.doseNumber,
+              location: schedule.location,
+              smsContent: schedule.notificationContent,
+              status: schedule.notificationSent ? 'Sent' : 'Pending',
+              type: schedule.scheduleType,
+              // Include latest weight and height if available
+              // weight: latestWeighing ? latestWeighing.weight : null,
+              // height: latestWeighing ? latestWeighing.height : null,
+              ageInMonths: this.calculateAgeInMonths(child.dateOfBirth),
+              gender: child.gender,
+            };
+          })
         );
         this.filterSchedules(); // Apply the initial filter
       },
@@ -50,6 +86,16 @@ export class ScheduleListComponent {
       }
     );
   }
+
+  calculateAgeInMonths(dateOfBirth: string): number {
+    const dob = new Date(dateOfBirth);
+    const now = new Date();
+    const ageInMonths =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    return ageInMonths;
+  }
+
   // TODO: Schedule List start
   formatDateToYyyyMmDd(date: Date): string {
     const year = date.getFullYear();
@@ -58,48 +104,88 @@ export class ScheduleListComponent {
     return `${year}-${month}-${day}`;
   }
 
+  // filterSchedules(): void {
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0); // Set time to midnight for accurate past comparison
+
+  //   this.filteredSchedules = this.schedules
+  //     .filter((schedule) => {
+  //       const scheduleDate = new Date(schedule.scheduleDate);
+  //       scheduleDate.setHours(0, 0, 0, 0); // Set time to midnight to compare dates only
+
+  //       const differenceInMs = today.getTime() - scheduleDate.getTime(); // Positive if scheduleDate is in the past
+  //       const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
+
+  //       if (differenceInMs < 0) {
+  //         // Exclude future dates
+  //         return false;
+  //       }
+
+  //       switch (this.selectedFilter) {
+  //         case '24h':
+  //           return differenceInDays <= 1;
+  //         case '1w':
+  //           return differenceInDays <= 7;
+  //         case '2w':
+  //           return differenceInDays <= 14;
+  //         case '1m':
+  //           return differenceInDays <= 30;
+  //         case '6m':
+  //           return differenceInDays <= 182;
+  //         case '1y':
+  //           return differenceInDays <= 365;
+  //         default:
+  //           return true;
+  //       }
+  //     })
+  //     .sort(
+  //       (a, b) =>
+  //         new Date(b.scheduleDate).getTime() -
+  //         new Date(a.scheduleDate).getTime()
+  //     ); // Sort in descending order
+
+  //   console.log('Filtered Schedules:', this.filteredSchedules);
+  // }
+
   filterSchedules(): void {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate past comparison
+    today.setHours(0, 0, 0, 0); // Reset time for accurate comparisons
 
     this.filteredSchedules = this.schedules
       .filter((schedule) => {
         const scheduleDate = new Date(schedule.scheduleDate);
-        scheduleDate.setHours(0, 0, 0, 0); // Set time to midnight to compare dates only
+        scheduleDate.setHours(0, 0, 0, 0); // Ensure we're comparing only dates (no time)
 
-        const differenceInMs = today.getTime() - scheduleDate.getTime(); // Positive if scheduleDate is in the past
-        const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
+        const differenceInMs = today.getTime() - scheduleDate.getTime(); // Difference in milliseconds
+        const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24); // Convert to days
 
-        if (differenceInMs < 0) {
-          // Exclude future dates
-          return false;
-        }
-
+        // Ensure we're looking only at schedules within the selected filter period
         switch (this.selectedFilter) {
           case '24h':
-            return differenceInDays <= 1;
+            return differenceInDays <= 1 && differenceInMs >= 0; // Last 24 hours
           case '1w':
-            return differenceInDays <= 7;
+            return differenceInDays <= 7 && differenceInMs >= 0; // Last 1 week
           case '2w':
-            return differenceInDays <= 14;
+            return differenceInDays <= 14 && differenceInMs >= 0; // Last 2 weeks
           case '1m':
-            return differenceInDays <= 30;
+            return differenceInDays <= 30 && differenceInMs >= 0; // Last 1 month
           case '6m':
-            return differenceInDays <= 182;
+            return differenceInDays <= 182 && differenceInMs >= 0; // Last 6 months
           case '1y':
-            return differenceInDays <= 365;
+            return differenceInDays <= 365 && differenceInMs >= 0; // Last 1 year
           default:
-            return true;
+            return false; // Default to no filtering if no valid filter is selected
         }
       })
       .sort(
         (a, b) =>
           new Date(b.scheduleDate).getTime() -
           new Date(a.scheduleDate).getTime()
-      ); // Sort in descending order
+      ); // Sort in descending order by date
 
     console.log('Filtered Schedules:', this.filteredSchedules);
   }
+
   // TODO: Schedule List end
 
   performAction(schedule: any): void {
@@ -116,8 +202,8 @@ export class ScheduleListComponent {
     const dialogRef = this.dialog.open(PopupNutriCalcComponent, {
       data: {
         ageInMonths: schedule.ageInMonths,
-        weight: schedule.weight,
-        height: schedule.height,
+        // weight: schedule.weight,
+        // height: schedule.height,
         gender: schedule.gender,
       },
     });

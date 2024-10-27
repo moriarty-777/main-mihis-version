@@ -25,7 +25,7 @@ export class PopupNutriCalcComponent {
       ageInMonths: number;
       weight: number;
       height: number;
-      gender: 'male' | 'female';
+      gender: 'Male' | 'Female';
     }
   ) {}
 }

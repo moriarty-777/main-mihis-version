@@ -89,7 +89,10 @@
         </div>
       </div>
       <div class="panel-body">
-        <div *ngIf="showDashboardBody" class="dashboard-body">
+        <div
+          *ngIf="showDashboardBody; else showRouterOutlet"
+          class="dashboard-body"
+        >
           <div class="dashboard-container">
             <div class="dashboard-top">
               <h2 class="d-head">Dashboard</h2>
@@ -153,7 +156,9 @@
             </div>
           </div>
         </div>
-        <router-outlet></router-outlet>
+        <ng-template #showRouterOutlet>
+          <router-outlet></router-outlet>
+        </ng-template>
       </div>
     </div>
   </div>

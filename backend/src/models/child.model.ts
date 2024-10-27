@@ -148,13 +148,13 @@ export interface Child {
   barangay: string;
   photoPath?: string;
   placeOfBirth?: string;
-  weighingHistory?: Schema.Types.ObjectId[];
+  weighingHistory: Schema.Types.ObjectId[];
   vaccinations?: Schema.Types.ObjectId[];
   vaccineStatus?: Schema.Types.ObjectId;
   nutritionalStatus?: Schema.Types.ObjectId;
   anthropometricStatus?: Schema.Types.ObjectId;
   missedVaccines?: Schema.Types.ObjectId[];
-  schedules?: Schema.Types.ObjectId[];
+  schedules: Schema.Types.ObjectId[];
   motherId: any;
 }
 

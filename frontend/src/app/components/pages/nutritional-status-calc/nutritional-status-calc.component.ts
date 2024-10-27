@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -20,18 +25,32 @@ export class NutritionalStatusCalcComponent {
   @Input() ageInMonths: number = 0;
   @Input() weight: number = 0;
   @Input() height: number = 0;
-  @Input() gender: 'male' | 'female' | '' = '';
+  @Input() gender: 'Male' | 'Female' | '' = '';
   classification: string = '';
 
   ngOnInit() {
+    console.log('Initial Values:', {
+      ageInMonths: this.ageInMonths,
+      weight: this.weight,
+      height: this.height,
+      gender: this.gender,
+    });
+    // this.checkAndCalculate();
     if (this.ageInMonths && this.weight && this.height && this.gender) {
       this.calculateNutritionalStatus(); // Calculate if data is pre-filled
     }
   }
+
+  // checkAndCalculate() {
+  //   if (this.ageInMonths && this.weight && this.height && this.gender) {
+  //     this.calculateNutritionalStatus();
+  //   }
+  // }
+
   // TODO:
   // Weight for Length Z-score thresholds
   private weightForLengthThresholds: any = {
-    female: {
+    Female: {
       '0-24': {
         '-3SD': [
           1.9, 2.0, 2.0, 2.1, 2.2, 2.2, 2.3, 2.4, 2.4, 2.5, 2.6, 2.7, 2.8, 2.8,
@@ -162,7 +181,7 @@ export class NutritionalStatusCalcComponent {
         ],
       },
     },
-    male: {
+    Male: {
       '0-24': {
         '-3SD': [
           1.9, 1.9, 2.0, 2.1, 2.1, 2.2, 2.3, 2.3, 2.4, 2.5, 2.6, 2.7, 2.7, 2.8,
@@ -297,14 +316,14 @@ export class NutritionalStatusCalcComponent {
 
   // Length for Age thresholds
   private lengthForAgeMedian: any = {
-    female: [
+    Female: [
       49.1, 53.7, 57.1, 59.8, 62.1, 64.0, 65.7, 67.3, 68.7, 70.1, 71.5, 72.8,
       74.0, 75.2, 76.4, 77.5, 78.6, 79.7, 80.7, 81.7, 82.7, 83.7, 84.7, 85.7,
       86.6, 87.4, 88.3, 89.1, 89.9, 90.7, 91.5, 92.2, 92.9, 93.6, 94.3, 94.9,
       95.6, 96.2, 96.7, 97.3, 97.7, 98.2, 98.7, 99.1, 99.5, 99.9, 100.3, 100.6,
       101.0, 101.4, 101.7, 102.0, 102.4, 102.7, 103.0, 103.3, 103.6, 103.9,
     ],
-    male: [
+    Male: [
       49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6, 69.2, 70.6, 72.0, 73.3, 74.6,
       75.8, 77.0, 78.1, 79.1, 80.1, 81.1, 82.1, 83.0, 84.0, 84.9, 85.8, 86.6,
       87.4, 88.3, 89.1, 89.9, 90.7, 91.5, 92.2, 92.9, 93.6, 94.3, 94.9, 95.6,
@@ -314,14 +333,14 @@ export class NutritionalStatusCalcComponent {
     ],
   };
   private lengthForAgeSD: any = {
-    female: [
+    Female: [
       49.1, 53.7, 57.1, 59.8, 62.1, 64.0, 65.7, 67.3, 68.7, 70.1, 71.5, 72.8,
       74.0, 75.2, 76.4, 77.5, 78.6, 79.7, 80.7, 81.7, 82.7, 83.7, 84.7, 85.7,
       86.6, 87.4, 88.3, 89.1, 89.9, 90.7, 91.5, 92.2, 92.9, 93.6, 94.3, 94.9,
       95.6, 96.2, 96.7, 97.3, 97.7, 98.2, 98.7, 99.1, 99.5, 99.9, 100.3, 100.6,
       101.0, 101.4, 101.7, 102.0, 102.4, 102.7, 103.0, 103.3, 103.6, 103.9,
     ],
-    male: [
+    Male: [
       2.5, 2.6, 2.7, 2.7, 2.8, 2.8, 2.8, 2.9, 2.9, 3.0, 3.0, 3.0, 3.1, 3.1, 3.1,
       3.2, 3.2, 3.2, 3.3, 3.3, 3.3, 3.4, 3.4, 3.4, 3.5, 3.5, 3.5, 3.6, 3.6, 3.6,
       3.7, 3.7, 3.7, 3.8, 3.8, 3.8, 3.9, 3.9, 3.9, 4.0, 4.0, 4.0, 4.1, 4.1, 4.1,
@@ -331,14 +350,14 @@ export class NutritionalStatusCalcComponent {
 
   // Weight for Age thresholds
   private weightForAgeMedian: any = {
-    female: [
+    Female: [
       3.2, 4.2, 5.1, 5.8, 6.4, 6.9, 7.3, 7.6, 8.0, 8.3, 8.6, 8.9, 9.2, 9.4, 9.7,
       9.9, 10.1, 10.4, 10.6, 10.8, 11.1, 11.3, 11.5, 11.7, 11.9, 12.2, 12.4,
       12.6, 12.8, 13.0, 13.2, 13.4, 13.6, 13.8, 14.0, 14.2, 14.4, 14.6, 14.8,
       15.0, 15.2, 15.4, 15.6, 15.8, 16.0, 16.2, 16.4, 16.6, 16.8, 17.0, 17.2,
       17.4, 17.6, 17.8, 18.0, 18.2, 18.4, 18.6, 18.8, 19.0, 19.2,
     ],
-    male: [
+    Male: [
       3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9, 8.3, 8.6, 8.9, 9.2, 9.5, 9.7, 10.0,
       10.3, 10.5, 10.8, 11.0, 11.3, 11.5, 11.8, 12.0, 12.3, 12.5, 12.8, 13.0,
       13.2, 13.5, 13.7, 13.9, 14.2, 14.4, 14.6, 14.8, 15.1, 15.3, 15.5, 15.7,
@@ -347,13 +366,13 @@ export class NutritionalStatusCalcComponent {
     ],
   };
   private weightForAgeSD: any = {
-    female: [
+    Female: [
       0.5, 0.6, 0.6, 0.7, 0.7, 0.8, 0.8, 0.8, 0.9, 0.9, 0.9, 1.0, 1.0, 1.0, 1.0,
       1.1, 1.1, 1.1, 1.1, 1.1, 1.2, 1.2, 1.2, 1.2, 1.2, 1.3, 1.3, 1.3, 1.3, 1.3,
       1.4, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.6, 1.6, 1.6,
       1.6, 1.6, 1.6, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.8,
     ],
-    male: [
+    Male: [
       0.6, 0.7, 0.8, 0.9, 1.0, 1.0, 1.1, 1.1, 1.2, 1.2, 1.3, 1.3, 1.3, 1.4, 1.4,
       1.5, 1.5, 1.5, 1.6, 1.6, 1.6, 1.7, 1.7, 1.7, 1.8, 1.8, 1.8, 1.9, 1.9, 1.9,
       1.9, 2.0, 2.0, 2.0, 2.0, 2.1, 2.1, 2.1, 2.1, 2.2, 2.2, 2.2, 2.2, 2.2, 2.3,
@@ -394,7 +413,7 @@ export class NutritionalStatusCalcComponent {
       '+2SD': this.getInterpolatedThreshold(thresholds[group]['+2SD'], length),
       '+3SD': this.getInterpolatedThreshold(thresholds[group]['+3SD'], length),
     };
-
+    console.log('Threshold values for length:', thresholdValues);
     if (weight < thresholdValues['-3SD']) {
       return 'Severely Wasted';
     } else if (
@@ -461,6 +480,10 @@ export class NutritionalStatusCalcComponent {
 
   calculateNutritionalStatus(): void {
     // Call each of the logic methods and assign the results to different variables
+    if (!this.ageInMonths || !this.weight || !this.height || !this.gender) {
+      console.error('All fields are required for calculation');
+      return;
+    }
     const weightForLengthStatus = this.getWeightForLengthStatus(
       this.gender,
       this.ageInMonths,
@@ -489,6 +512,11 @@ export class NutritionalStatusCalcComponent {
     ) {
       overallStatus = 'Malnourished';
     }
+
+    console.log('ageInMonths:', this.ageInMonths);
+    console.log('weight:', this.weight);
+    console.log('height:', this.height);
+    console.log('gender:', this.gender);
 
     // Store the results in a way that you can display in the HTML
     this.classification = `${overallStatus},${weightForAgeStatus}, ${lengthForAgeStatus}, ${weightForLengthStatus}`;

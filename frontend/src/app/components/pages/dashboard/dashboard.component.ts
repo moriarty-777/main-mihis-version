@@ -39,7 +39,7 @@ export class DashboardComponent {
   private userService = inject(UserService);
   private router = inject(Router);
   user!: User;
-  showDashboardBody: boolean = true;
+  showDashboardBody: boolean = false;
 
   constructor() {}
 
