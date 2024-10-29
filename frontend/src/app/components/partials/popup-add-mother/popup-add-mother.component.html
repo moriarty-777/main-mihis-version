@@ -40,8 +40,8 @@
       <div class="vvld-form-group">
         <label for="gender">Gender</label>
         <select formControlName="gender" id="gender" class="form-ctrl">
-          <option value="" disabled selected>Select Gender</option>
-          <option value="Male">Male</option>
+          <option value="" disabled>Select Gender</option>
+          <!-- <option value="Male">Male</option> -->
           <option value="Female">Female</option>
         </select>
         <div *ngIf="gender?.touched && gender?.invalid" class="form-error">
@@ -147,5 +147,6 @@
 
       <button type="submit" class="global-btn">Add Mother</button>
     </form>
+    <!-- <pre>{{ addMotherForm.value | json }}</pre> -->
   </div>
 </div>

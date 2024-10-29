@@ -189,13 +189,8 @@
         <option value="Female">Female</option>
       </select>
     </div>
-    <button
-      type="submit"
-      class="global-btn"
-      [disabled]="!ageInMonths || !weight || !height || !gender"
-    >
-      Calculate
-    </button>
+    <button type="submit" class="global-btn">Calculate</button>
+    <!-- <pre>{{ addMotherForm.value | json }}</pre> -->
   </form>
 
   <div class="table-group">

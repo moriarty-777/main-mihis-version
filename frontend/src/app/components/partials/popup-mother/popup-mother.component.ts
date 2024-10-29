@@ -35,6 +35,7 @@ export class PopupMotherComponent {
       if (this.data && this.data.motherId) {
         this.motherService.getMotherById(this.data.motherId).subscribe(
           (mother: Mother) => {
+            console.log('Mother data fetched:', mother);
             this.updatesForm.patchValue({
               firstName: mother.firstName || '',
               lastName: mother.lastName || '',

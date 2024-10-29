@@ -230,7 +230,7 @@ export class ChildrenProfileComponent {
   //   }
   // }
 
-  // // Method to open the edit dialog
+  // Method to open the edit dialog
   // openEditDialog(weighingStat: any): void {
   //   const dialogRef = this.dialogRef.open(PopupWeighingComponent, {
   //     data: { weighingStat },
@@ -241,7 +241,7 @@ export class ChildrenProfileComponent {
   //   });
   // }
 
-  //   getNutritionalStatus(child: Child): string {
+  // getNutritionalStatus(child: Child): string {
   //   // If no weighing history exists, return 'N/A' or some default status
   //   if (!child.weighingHistory || child.weighingHistory.length === 0) {
   //     return 'N/A';
@@ -256,17 +256,11 @@ export class ChildrenProfileComponent {
   //     } = weighingStat;
 
   //     // If any status is not 'Normal' or 'Tall', return 'Malnourished'
-  //     if (
-  //       weightForAgeStatus !== 'Normal' &&
-  //       weightForAgeStatus !== 'Tall'
-  //     ) {
+  //     if (weightForAgeStatus !== 'Normal' && weightForAgeStatus !== 'Tall') {
   //       return 'Malnourished';
   //     }
 
-  //     if (
-  //       heightForAgeStatus !== 'Normal' &&
-  //       heightForAgeStatus !== 'Tall'
-  //     ) {
+  //     if (heightForAgeStatus !== 'Normal' && heightForAgeStatus !== 'Tall') {
   //       return 'Malnourished';
   //     }
 

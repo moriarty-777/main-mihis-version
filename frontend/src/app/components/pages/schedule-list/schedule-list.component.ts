@@ -201,6 +201,7 @@ export class ScheduleListComponent {
   openNutritionalStatusDialog(schedule: any): void {
     const dialogRef = this.dialog.open(PopupNutriCalcComponent, {
       data: {
+        childId: schedule.number,
         ageInMonths: schedule.ageInMonths,
         // weight: schedule.weight,
         // height: schedule.height,

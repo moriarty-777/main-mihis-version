@@ -7,9 +7,12 @@ import { map, tap } from 'rxjs/operators';
 import {
   CHILD_ADD_URL,
   CHILD_ALL_SCHEDULES_URL,
+  CHILD_ANTHROPOMETRIC_URL,
+  CHILD_NUTRITIONAL_STATUS_URL,
   CHILD_URL,
   CHILD_VACCINATION_URL,
   CHILD_VAX_SUMMARY_URL,
+  CHILD_WEIGHING_HISTORY_URL,
   CHILDREN_ANTHRO_PRINT,
   CHILDREN_PROFILE_URL,
 } from '../shared/constants/urls';
@@ -311,6 +314,265 @@ export class ChildService {
           },
           error: (error) => {
             this.toastrService.error('Failed to add vaccination');
+          },
+        })
+      );
+  }
+
+  // Nutri Calc
+
+  // TODO:
+  // Get weighing history for a child
+  // getWeighingHistory(childId: string): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+  //   return this.http.get<any>(CHILD_WEIGHING_HISTORY_URL(childId), { headers });
+  // }
+
+  // // Add a new weighing entry for a child
+  // addWeighingEntry(childId: string, weighingData: any): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+  //   return this.http
+  //     .post<any>(CHILD_WEIGHING_HISTORY_URL(childId), weighingData, { headers })
+  //     .pipe(
+  //       tap({
+  //         next: () =>
+  //           this.toastrService.success('Weighing entry added successfully!'),
+  //         error: () => this.toastrService.error('Failed to add weighing entry'),
+  //       })
+  //     );
+  // }
+
+  // // Get nutritional status for a child
+  // getNutritionalStatus(childId: string): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+  //   return this.http.get<any>(CHILD_NUTRITIONAL_STATUS_URL(childId), {
+  //     headers,
+  //   });
+  // }
+
+  // // Update nutritional status for a child
+  // updateNutritionalStatus(
+  //   childId: string,
+  //   nutritionalData: any
+  // ): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+  //   return this.http
+  //     .patch<any>(CHILD_NUTRITIONAL_STATUS_URL(childId), nutritionalData, {
+  //       headers,
+  //     })
+  //     .pipe(
+  //       tap({
+  //         next: () =>
+  //           this.toastrService.success(
+  //             'Nutritional status updated successfully!'
+  //           ),
+  //         error: () =>
+  //           this.toastrService.error('Failed to update nutritional status'),
+  //       })
+  //     );
+  // }
+
+  // Get anthropometric data for a child
+  // getAnthropometricData(childId: string): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+  //   return this.http.get<any>(CHILD_ANTHROPOMETRIC_URL(childId), { headers });
+  // }
+
+  // Update anthropometric data for a child
+  // updateAnthropometricData(
+  //   childId: string,
+  //   anthropometricData: any
+  // ): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+  //   return this.http
+  //     .patch<any>(CHILD_ANTHROPOMETRIC_URL(childId), anthropometricData, {
+  //       headers,
+  //     })
+  //     .pipe(
+  //       tap({
+  //         next: () =>
+  //           this.toastrService.success(
+  //             'Anthropometric data updated successfully!'
+  //           ),
+  //         error: () =>
+  //           this.toastrService.error('Failed to update anthropometric data'),
+  //       })
+  //     );
+  // }
+
+  // 3 Things weighing
+  // addWeighingHistory(childId: string, weighingData: any): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+
+  //   return this.http
+  //     .post(
+  //       `${CHILD_WEIGHING_HISTORY_URL}/${childId}/weighing-history`,
+  //       weighingData,
+  //       { headers }
+  //     )
+  //     .pipe(
+  //       tap({
+  //         next: (response) => {
+  //           this.toastrService.success(
+  //             'Weighing history added successfully!',
+  //             '',
+  //             {
+  //               timeOut: 2000,
+  //               closeButton: true,
+  //               progressBar: true,
+  //               positionClass: 'toast-bottom-right',
+  //             }
+  //           );
+  //         },
+  //         error: (error) => {
+  //           this.toastrService.error('Failed to add weighing history');
+  //         },
+  //       })
+  //     );
+  // }
+  // addNutritionalStatus(childId: string, nutritionalData: any): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.getToken()}`,
+  //   });
+
+  //   return this.http
+  //     .post(
+  //       `${CHILD_NUTRITIONAL_STATUS_URL}/${childId}/nutritional-status`,
+  //       nutritionalData,
+  //       { headers }
+  //     )
+  //     .pipe(
+  //       tap({
+  //         next: (response) => {
+  //           this.toastrService.success(
+  //             'Nutritional status added successfully!',
+  //             '',
+  //             {
+  //               timeOut: 2000,
+  //               closeButton: true,
+  //               progressBar: true,
+  //               positionClass: 'toast-bottom-right',
+  //             }
+  //           );
+  //         },
+  //         error: (error) => {
+  //           this.toastrService.error('Failed to add nutritional status');
+  //         },
+  //       })
+  //     );
+  // }
+
+  addAnthropometricAssessment(
+    childId: string,
+    anthropometricData: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    return this.http
+      .post(
+        `${CHILD_ANTHROPOMETRIC_URL}${childId}/anthropometric`,
+        anthropometricData,
+        { headers }
+      )
+      .pipe(
+        tap({
+          next: (response) => {
+            this.toastrService.success(
+              'Anthropometric assessment added successfully!',
+              '',
+              {
+                timeOut: 2000,
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-bottom-right',
+              }
+            );
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to add anthropometric assessment');
+          },
+        })
+      );
+  }
+
+  addWeighingHistory(childId: string, weighingData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    return this.http
+      .post(
+        `${CHILD_WEIGHING_HISTORY_URL}${childId}/weighing-history`,
+        weighingData,
+        { headers }
+      )
+      .pipe(
+        tap({
+          next: (response) => {
+            this.toastrService.success(
+              'Weighing history added successfully!',
+              '',
+              {
+                timeOut: 2000,
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-bottom-right',
+              }
+            );
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to add weighing history');
+          },
+        })
+      );
+  }
+
+  addNutritionalStatus(
+    childId: string,
+    nutritionalStatusData: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    return this.http
+      .post(
+        `${CHILD_NUTRITIONAL_STATUS_URL}${childId}/nutritional-status`,
+        nutritionalStatusData,
+        { headers }
+      )
+      .pipe(
+        tap({
+          next: (response) => {
+            this.toastrService.success(
+              'Nutritional status added successfully!',
+              '',
+              {
+                timeOut: 2000,
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-bottom-right',
+              }
+            );
+          },
+          error: (error) => {
+            this.toastrService.error('Failed to add nutritional status');
           },
         })
       );

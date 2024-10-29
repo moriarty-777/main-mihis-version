@@ -178,11 +178,13 @@ router.get(
 //   })
 // );
 
+// ADDing mother
 router.post(
   "/add",
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
+    console.log("Received Data:", req.body); // Log incoming data
     const {
       firstName,
       lastName,
@@ -210,7 +212,7 @@ router.post(
     });
 
     const savedMother = await newMother.save();
-
+    console.log("Saved Mother:", savedMother); // Check all fields
     if (!savedMother) {
       res.status(500).send({ message: "Error adding mother" });
     } else {
@@ -259,17 +261,14 @@ router.get(
     //   "children",
     //   "firstName lastName photoPath nutritionalStatus isFullyVaccinated dateOfBirth vaccinations"
     // );
-    const specificMother = await MotherModel.findById(req.params.id)
-      .populate({
-        path: "children",
-        populate: {
-          path: "nutritionalStatus", // Populate the nutritional status of each child
-          select: "status", // Select only the 'status' field or other relevant fields
-        },
-      })
-      .select(
-        "firstName lastName photoPath isFullyVaccinated dateOfBirth vaccinations"
-      );
+    const specificMother = await MotherModel.findById(req.params.id).populate({
+      path: "children",
+      populate: {
+        path: "nutritionalStatus", // Populate the nutritional status of each child
+        select: "status", // Select only the 'status' field or other relevant fields
+      },
+    });
+
     if (!specificMother) {
       res.status(404).send({ message: "Mother not found" });
       return; // Add a return here to prevent further code execution
@@ -302,6 +301,7 @@ router.delete(
   })
 );
 
+// updating mother
 router.patch(
   "/:id",
   authMiddleware,

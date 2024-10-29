@@ -1,17 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
+  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { ChildService } from '../../../services/child.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'nutritional-status-calc',
   standalone: true,
-  imports: [MatIconModule, CommonModule, FormsModule],
+  imports: [MatIconModule, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './nutritional-status-calc.component.html',
   styleUrl: './nutritional-status-calc.component.css',
 })
@@ -22,11 +25,16 @@ export class NutritionalStatusCalcComponent {
   // gender: 'male' | 'female' | '' = '';
   // classification: string = '';
   // TODO:
+  private childrenService = inject(ChildService);
+  private dialog = inject(MatDialog);
+
   @Input() ageInMonths: number = 0;
+  @Input() childId: any;
   @Input() weight: number = 0;
   @Input() height: number = 0;
   @Input() gender: 'Male' | 'Female' | '' = '';
   classification: string = '';
+  nutStatus: string = '';
 
   ngOnInit() {
     console.log('Initial Values:', {
@@ -512,13 +520,76 @@ export class NutritionalStatusCalcComponent {
     ) {
       overallStatus = 'Malnourished';
     }
-
-    console.log('ageInMonths:', this.ageInMonths);
-    console.log('weight:', this.weight);
-    console.log('height:', this.height);
-    console.log('gender:', this.gender);
-
     // Store the results in a way that you can display in the HTML
     this.classification = `${overallStatus},${weightForAgeStatus}, ${lengthForAgeStatus}, ${weightForLengthStatus}`;
+    this.nutStatus = overallStatus;
+
+    // Prepare anthropometric data to pass to the service
+    const anthropometricData = {
+      ageInMonths: this.ageInMonths,
+      weight: this.weight,
+      height: this.height,
+      gender: this.gender,
+      overallStatus,
+      weightForLengthStatus,
+      lengthForAgeStatus,
+      weightForAgeStatus,
+    };
+
+    const weighingData = {
+      date: new Date(), // or whichever date you want
+      weight: this.weight,
+      height: this.height,
+      childId: this.childId,
+      weightForLengthStatus,
+      lengthForAgeStatus,
+      weightForAgeStatus,
+    };
+
+    const nutritionalStatusData = {
+      childId: this.childId,
+      status: this.nutStatus, // or other relevant fields
+      date: new Date(),
+    };
+
+    console.log('Weighing Data:', weighingData);
+    console.log('Nutritional Status Data:', nutritionalStatusData);
+
+    // Call the service method to save data
+    this.childrenService
+      .addAnthropometricAssessment(this.childId, anthropometricData)
+      .subscribe({
+        next: (response) => {
+          console.log(
+            'Anthropometric assessment added successfully:',
+            response
+          );
+        },
+        error: (error) => {
+          console.error('Error adding anthropometric assessment:', error);
+        },
+      });
+
+    this.childrenService
+      .addWeighingHistory(this.childId, weighingData)
+      .subscribe({
+        next: (response) => {
+          console.log('Weighing history added successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error adding weighing history:', error);
+        },
+      });
+
+    this.childrenService
+      .addNutritionalStatus(this.childId, nutritionalStatusData)
+      .subscribe({
+        next: (response) => {
+          console.log('Nutritional status added successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error adding nutritional status:', error);
+        },
+      });
   }
 }

@@ -12,6 +12,7 @@ import { NutritionalStatusCalcComponent } from '../../pages/nutritional-status-c
       [weight]="data.weight"
       [height]="data.height"
       [gender]="data.gender"
+      [childId]="data.childId"
     ></nutritional-status-calc>
   `,
   // templateUrl: './popup-nutri-calc.component.html',
@@ -26,6 +27,7 @@ export class PopupNutriCalcComponent {
       weight: number;
       height: number;
       gender: 'Male' | 'Female';
+      childId: any;
     }
   ) {}
 }

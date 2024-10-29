@@ -37,7 +37,7 @@ import { filter } from 'rxjs';
 })
 export class DashboardComponent {
   private userService = inject(UserService);
-  private router = inject(Router);
+  public routers = inject(Router);
   user!: User;
   showDashboardBody: boolean = false;
 
@@ -50,11 +50,11 @@ export class DashboardComponent {
     this.loadChildren();
 
     // Listen for navigation events and update showDashboardBody based on exact URL match
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.showDashboardBody = this.router.url === '/dashboard';
-      });
+    // this.router.events
+    //   .pipe(filter((event) => event instanceof NavigationEnd))
+    //   .subscribe(() => {
+    //     this.showDashboardBody = this.router.url === '/dashboard';
+    //   });
   }
 
   private childService = inject(ChildService);

@@ -30,7 +30,7 @@ export class PopupAddMotherComponent {
     this.addMotherForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
+      gender: ['Female', [Validators.required]],
       phone: ['', [Validators.required, UsernameValidators.isValidPhone]], // Phone validator
       email: ['', [UsernameValidators.isValidEmail]], // Email validator
       barangay: ['Bangad', [Validators.required]],
@@ -76,6 +76,7 @@ export class PopupAddMotherComponent {
   }
 
   addMother() {
+    console.log('Form Data:', this.addMotherForm.value);
     if (this.addMotherForm.invalid) {
       this.addMotherForm.markAllAsTouched(); // Mark all controls as touched
       return; // Exit if the form is invalid
@@ -85,7 +86,7 @@ export class PopupAddMotherComponent {
       const newMother = this.addMotherForm.value;
       this.motherService.addMother(newMother).subscribe(
         (response: any) => {
-          this.toastrService.success('Mother added successfully!');
+          // this.toastrService.success('Mother added successfully!');
           this.dialogRef.close(response);
           setTimeout(() => {
             window.location.reload();

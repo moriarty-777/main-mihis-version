@@ -1047,7 +1047,7 @@ router.get(
       if (!children.length) {
         res.status(404).send({ message: "No schedules found." });
       }
-      console.log("Children with schedules:", children); // Add this to check
+      // console.log("Children with schedules:", children); // Add this to check
       res.send({ children });
     } catch (error) {
       res.status(500).send({ message: "Error fetching schedules", error });
@@ -1688,6 +1688,124 @@ router.post(
     });
 
     res.status(201).send({ vaccination });
+  })
+);
+
+// Add Anthropometric
+// Add Anthropometric Data
+router.post(
+  "/child/:id/anthropometric",
+  authMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const childId = req.params.id;
+
+    // Map incoming fields to match the schema requirements
+    const weightForAge = req.body.weightForAgeStatus;
+    const heightForAge = req.body.lengthForAgeStatus;
+    const weightForHeight = req.body.weightForLengthStatus;
+    const dateOfWeighing = req.body.dateOfWeighing; // or use req.body.dateOfWeighing if provided from frontend
+
+    try {
+      // Create a new anthropometric data record with mapped fields
+      const anthropometric = await AnthropometricModel.create({
+        childId,
+        weightForAge,
+        heightForAge,
+        weightForHeight,
+        dateOfWeighing,
+      });
+
+      // Link the anthropometric data to the child record
+      await ChildModel.findByIdAndUpdate(childId, {
+        $set: { anthropometricStatus: anthropometric._id },
+      });
+
+      res.status(201).send({ anthropometric });
+    } catch (error: any) {
+      console.error("Error creating anthropometric data:", error);
+      res.status(500).send({
+        message:
+          "Failed to add anthropometric assessment. Please check the input data.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// Add Weighing History
+router.post(
+  "/child/:id/weighing-history",
+  authMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const childId = req.params.id;
+
+    const weightForAge = req.body.weightForAgeStatus;
+    const heightForAge = req.body.lengthForAgeStatus;
+    const weightForLengthHeight = req.body.weightForLengthStatus;
+    // const dateOfWeighing = req.body.dateOfWeighing;
+    const weight = req.body.weight;
+    const height = req.body.height;
+    const date = req.body.date;
+
+    try {
+      // Create a new weighing history record
+      const weighingHistory = await WeighingHistoryModel.create({
+        child: childId,
+        date,
+        weight,
+        height,
+        weightForAge,
+        heightForAge,
+        weightForLengthHeight,
+      });
+
+      // Link the weighing history to the child
+      await ChildModel.findByIdAndUpdate(childId, {
+        $push: { weighingHistory: weighingHistory._id },
+      });
+
+      res.status(201).send({ weighingHistory });
+    } catch (error: any) {
+      console.error("Error creating weighing history:", error);
+      res.status(500).send({
+        message: "Failed to add weighing history. Please check the input data.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// Add Nutritional Status
+router.post(
+  "/child/:id/nutritional-status",
+  authMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const childId = req.params.id;
+
+    const { status, dateOfStatus } = req.body;
+
+    try {
+      // Create a new nutritional status record
+      const nutritionalStatus = await NutritionalStatusModel.create({
+        childId,
+        status,
+        dateOfStatus,
+      });
+
+      // Link the nutritional status to the child
+      await ChildModel.findByIdAndUpdate(childId, {
+        $set: { nutritionalStatus: nutritionalStatus._id },
+      });
+
+      res.status(201).send({ nutritionalStatus });
+    } catch (error: any) {
+      console.error("Error creating nutritional status:", error);
+      res.status(500).send({
+        message:
+          "Failed to add nutritional status. Please check the input data.",
+        error: error.message,
+      });
+    }
   })
 );
 

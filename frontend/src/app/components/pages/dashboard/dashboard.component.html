@@ -90,7 +90,7 @@
       </div>
       <div class="panel-body">
         <div
-          *ngIf="showDashboardBody; else showRouterOutlet"
+          *ngIf="routers.url === '/dashboard'; else showRouterOutlet"
           class="dashboard-body"
         >
           <div class="dashboard-container">
