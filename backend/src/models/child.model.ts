@@ -164,8 +164,6 @@ const ChildSchema: any = new Schema(
     motherId: { type: Schema.Types.ObjectId, ref: MotherModel, required: true }, // Reference to the mother
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    // height: { type: Number, required: true },
-    // weight: { type: Number, required: true },
     weightAtBirth: { type: Number, required: false }, // Weight at birth
     heightAtBirth: { type: Number, required: false }, // Height at birth
     dateOfBirth: { type: Date, required: true },

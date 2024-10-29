@@ -14,16 +14,16 @@ export class HomeComponent {
   private smsService = inject(SmsService);
 
   // Method to send SMS
-  sendSms(): void {
-    this.smsService
-      .sendSMS('+639683799097', 'Welcome to MIHIS New User!')
-      .subscribe({
-        next: (response) => {
-          console.log('SMS sent successfully', response);
-        },
-        error: (err) => {
-          console.error('Error sending SMS', err);
-        },
-      });
-  }
+  // sendSms(): void {
+  //   this.smsService
+  //     .sendSMS('+639683799097', 'Welcome to MIHIS New User!')
+  //     .subscribe({
+  //       next: (response) => {
+  //         console.log('SMS sent successfully', response);
+  //       },
+  //       error: (err) => {
+  //         console.error('Error sending SMS', err);
+  //       },
+  //     });
+  // }
 }

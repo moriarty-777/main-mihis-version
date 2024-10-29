@@ -128,3 +128,34 @@ a:hover {
   color: white;
   border-color: red;
 }
+.d-tag-container {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.d-tag {
+  font-family: var(--font-title);
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  margin: 60px 0 0 0;
+  position: relative;
+}
+.d-tag::before,
+.d-tag::after {
+  position: absolute;
+  content: "";
+  width: 150px;
+  height: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.d-tag::before {
+  left: -161px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+.d-tag::after {
+  right: -161px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}

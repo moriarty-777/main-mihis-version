@@ -19,7 +19,6 @@ export class CalendarComponent {
   public calendarOptions!: CalendarOptions;
 
   constructor(private childService: ChildService) {
-    console.log('Calendar component initialized');
     this.loadAllSchedules(); // Moved this inside consstructor to ensure schedules are fetched early.
     this.initializeCalendarOptions(); // Initialize calendar after API is done.
   }
