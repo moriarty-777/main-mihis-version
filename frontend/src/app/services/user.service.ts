@@ -86,11 +86,15 @@ export class UserService {
           this.userSubject.next(user);
           this.toastrService.success(
             `Welcome to MIHIS ${user.firstName + ' ' + user.lastName}!`,
-            'Login Successful'
+            'Login Successful',
+            { closeButton: true, timeOut: 2000 } // Enables the close button
           );
         },
         error: (HttpErrorResponse) => {
-          this.toastrService.error(HttpErrorResponse.error, 'Login Failed');
+          this.toastrService.error(HttpErrorResponse.error, 'Login Failed', {
+            closeButton: true,
+            timeOut: 2000,
+          });
         },
       })
     );
@@ -107,17 +111,28 @@ export class UserService {
             // Display a message that the user needs to wait for admin approval
             this.toastrService.info(
               'You are a new user. Please wait for an admin to assign a role.',
-              'Role Pending'
+              'Role Pending',
+              {
+                closeButton: true,
+                timeOut: 2000,
+              }
             );
           } else {
             this.toastrService.success(
               `Welcome to MIHIS ${user.firstName}`,
-              'Signup Successful!'
+              'Signup Successful!',
+              {
+                closeButton: true,
+                timeOut: 2000,
+              }
             );
           }
         },
         error: (HttpErrorResponse) => {
-          this.toastrService.error(HttpErrorResponse.error, 'Signup Failed');
+          this.toastrService.error(HttpErrorResponse.error, 'Signup Failed', {
+            closeButton: true,
+            timeOut: 2000,
+          });
         },
       })
     );

@@ -5,6 +5,8 @@
 // }
 
 export interface Vaccination {
+  id: any;
+  _id: any;
   vaccineType: string;
   doseNumber: string;
   placeOfVaccination: string;

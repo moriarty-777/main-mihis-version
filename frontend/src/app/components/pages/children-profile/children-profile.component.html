@@ -242,7 +242,7 @@
         </div>
         <div class="table-group top">
           <button
-            class="vcard-popup global-btn"
+            class="vcard-popup global-btn s"
             (click)="openVaccinationDialog()"
           >
             <mat-icon>add</mat-icon> Add Vaccination
@@ -256,6 +256,7 @@
                 <th>Administered By</th>
                 <th>Recorded by</th>
                 <th>Location</th>
+                <th>Action</th>
               </tr>
             </thead>
 
@@ -282,6 +283,14 @@
                   }}
                 </td>
                 <td>{{ vaccination.placeOfVaccination }}</td>
+                <td>
+                  <button
+                    (click)="openUpdateDialog(vaccination.id)"
+                    class="vcard-popup global-btn"
+                  >
+                    Update
+                  </button>
+                </td>
               </tr>
               }
             </tbody>
@@ -311,6 +320,7 @@
                 <th>Height (cm)</th>
                 <th>Growth Category</th>
                 <th>Notes</th>
+                <th>Action</th>
                 <!-- <th>Action</th> -->
               </tr>
             </thead>
@@ -323,6 +333,14 @@
                 <!-- <td>{{ child.nutritionalStatus?.status || "N/A" }}</td> -->
                 <td>{{ child.nutritionalStatus?.status || "N/A" }}</td>
                 <td>{{ weighingStat?.notes }}</td>
+                <td>
+                  <button
+                    (click)="openNutriCalcDialog()"
+                    class="vcard-popup global-btn"
+                  >
+                    Update
+                  </button>
+                </td>
                 <!-- <td class="action"> -->
                 <!-- Action Buttons -->
                 <!-- <button (click)="openEditDialog(weighingStat)">Edit</button> -->

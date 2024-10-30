@@ -280,7 +280,7 @@ p.wewsa {
   background: #b51233;
 }
 
-.table-group.top .vcard-popup.global-btn {
+.table-group.top .vcard-popup.global-btn.s {
   position: absolute;
   top: -49px;
   right: 0;

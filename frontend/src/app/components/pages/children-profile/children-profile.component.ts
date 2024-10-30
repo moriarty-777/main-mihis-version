@@ -14,6 +14,8 @@ import { Vaccination } from '../../../shared/models/vaccination';
 import { ChangeDetectorRef } from '@angular/core';
 import { ChartsRadarVaccineTypeComponent } from '../../charts/charts-radar-vaccine-type/charts-radar-vaccine-type.component';
 import { PopupAddVaccinationComponent } from '../../partials/popup-add-vaccination/popup-add-vaccination.component';
+import { PopupUpdateVaccinationComponent } from '../../partials/popup-update-vaccination/popup-update-vaccination.component';
+import { PopupUpdateNutriCalcComponent } from '../../partials/popup-update-nutri-calc/popup-update-nutri-calc.component';
 
 @Component({
   selector: 'app-children-profile',
@@ -210,6 +212,40 @@ export class ChildrenProfileComponent {
     this.dialogRef.open(PopupAddVaccinationComponent, {
       data: { childId: this.child.id },
     });
+  }
+
+  // Update Vaccination record
+  openUpdateDialog(vaccinationId: string) {
+    this.dialogRef.open(PopupUpdateVaccinationComponent, {
+      data: {
+        childId: this.child.id,
+        vaccinationId: vaccinationId,
+      },
+    });
+  }
+
+  // Method to open the nutritional calculation dialog
+  openNutriCalcDialog() {
+    this.dialogRef.open(PopupUpdateNutriCalcComponent, {
+      data: {
+        childId: this.child.id,
+        anthropometricId: this.child.anthropometricStatus, // Ensure this is set in the child object
+        weighingId: this.child.weighingHistory[0], // Ensure this is set in the child object
+        nutritionalStatusId: this.child.nutritionalStatus, // Ensure this is set in the child object
+        ageInMonths: this.calculateAgeInMonths(this.child.dateOfBirth),
+        gender: this.child.gender,
+        // Add more properties if required
+      },
+    });
+  }
+
+  calculateAgeInMonths(dateOfBirth: string): number {
+    const dob = new Date(dateOfBirth);
+    const now = new Date();
+    const ageInMonths =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    return ageInMonths;
   }
 
   // weighing history

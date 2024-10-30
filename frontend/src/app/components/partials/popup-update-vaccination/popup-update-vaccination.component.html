@@ -1,0 +1,87 @@
+<div class="vpopup-container s">
+  <div class="vvld-box-inner">
+    <h2>Update Vaccination</h2>
+    <form [formGroup]="updateVaccinationForm" (submit)="updateVaccination()">
+      <div class="vvld-form-group">
+        <label for="vaccineType">Vaccine Type</label>
+        <input
+          formControlName="vaccineType"
+          type="text"
+          placeholder="Vaccine Type"
+          id="vaccineType"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            updateVaccinationForm.controls['vaccineType'].invalid &&
+            updateVaccinationForm.controls['vaccineType'].touched
+          "
+        >
+          &#42; Vaccine Type is required
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="doseNumber">Dose Number</label>
+        <input
+          formControlName="doseNumber"
+          type="text"
+          placeholder="Dose Number"
+          id="doseNumber"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            updateVaccinationForm.controls['doseNumber'].invalid &&
+            updateVaccinationForm.controls['doseNumber'].touched
+          "
+        >
+          &#42; Dose Number is required
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="placeOfVaccination">Place of Vaccination</label>
+        <input
+          formControlName="placeOfVaccination"
+          type="text"
+          placeholder="Place of Vaccination"
+          id="placeOfVaccination"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            updateVaccinationForm.controls['placeOfVaccination'].invalid &&
+            updateVaccinationForm.controls['placeOfVaccination'].touched
+          "
+        >
+          &#42; Place of Vaccination is required
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="dateOfVaccination">Date of Vaccination</label>
+        <input
+          formControlName="dateOfVaccination"
+          type="date"
+          id="dateOfVaccination"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            updateVaccinationForm.controls['dateOfVaccination'].invalid &&
+            updateVaccinationForm.controls['dateOfVaccination'].touched
+          "
+        >
+          &#42; Date of Vaccination is required
+        </div>
+      </div>
+
+      <button type="submit" class="global-btn">Update Vaccination</button>
+    </form>
+  </div>
+</div>

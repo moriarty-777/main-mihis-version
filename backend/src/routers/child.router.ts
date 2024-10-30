@@ -1809,6 +1809,137 @@ router.post(
   })
 );
 
+// Retrieve and update vaccination
+// Fetch single vaccination by ID
+router.get(
+  "/child/:childId/vaccination/:vaccinationId",
+  authMiddleware,
+  async (req, res) => {
+    const { childId, vaccinationId } = req.params;
+    const vaccination = await VaccinationModel.findById(vaccinationId);
+    if (!vaccination) {
+      return res.status(404).json({ message: "Vaccination not found" });
+    }
+    res.json(vaccination);
+  }
+);
+
+// Update vaccination by ID
+router.patch(
+  "/child/:childId/vaccination/:vaccinationId",
+  authMiddleware,
+  loggerMiddleware,
+  async (req, res) => {
+    const { childId, vaccinationId } = req.params;
+    const updatedData = req.body;
+
+    const vaccination = await VaccinationModel.findByIdAndUpdate(
+      vaccinationId,
+      updatedData,
+      { new: true }
+    );
+    if (!vaccination) {
+      return res.status(404).json({ message: "Vaccination not found" });
+    }
+    res.json(vaccination);
+  }
+);
+
+// Update Nutritional Status Weighing History and Anthropometric
+// Update Weighing History
+router.patch(
+  "/child/:childId/weighing-history/:weighingId",
+  authMiddleware, // add your authentication middleware if necessary
+  async (req, res) => {
+    const { childId, weighingId } = req.params;
+    const updatedData = req.body;
+
+    try {
+      const weighingHistory = await WeighingHistoryModel.findByIdAndUpdate(
+        weighingId,
+        updatedData,
+        { new: true }
+      );
+
+      if (!weighingHistory) {
+        return res.status(404).json({ message: "Weighing history not found" });
+      }
+
+      res.status(200).json({ weighingHistory });
+    } catch (error: any) {
+      console.error("Error updating weighing history:", error);
+      res.status(500).json({
+        message: "Failed to update weighing history",
+        error: error.message,
+      });
+    }
+  }
+);
+
+// Update Anthropometric Data
+router.patch(
+  "/child/:childId/anthropometric/:anthropometricId",
+  authMiddleware, // add your authentication middleware if necessary
+  async (req, res) => {
+    const { childId, anthropometricId } = req.params;
+    const updatedData = req.body;
+
+    try {
+      const anthropometric = await AnthropometricModel.findByIdAndUpdate(
+        anthropometricId,
+        updatedData,
+        { new: true }
+      );
+
+      if (!anthropometric) {
+        return res
+          .status(404)
+          .json({ message: "Anthropometric data not found" });
+      }
+
+      res.status(200).json({ anthropometric });
+    } catch (error: any) {
+      console.error("Error updating anthropometric data:", error);
+      res.status(500).json({
+        message: "Failed to update anthropometric data",
+        error: error.message,
+      });
+    }
+  }
+);
+
+// Update Nutritional Status
+router.patch(
+  "/child/:childId/nutritional-status/:nutritionalStatusId",
+  authMiddleware, // add your authentication middleware if necessary
+  async (req, res) => {
+    const { childId, nutritionalStatusId } = req.params;
+    const updatedData = req.body;
+
+    try {
+      const nutritionalStatus = await NutritionalStatusModel.findByIdAndUpdate(
+        nutritionalStatusId,
+        updatedData,
+        { new: true }
+      );
+
+      if (!nutritionalStatus) {
+        return res
+          .status(404)
+          .json({ message: "Nutritional status not found" });
+      }
+
+      res.status(200).json({ nutritionalStatus });
+    } catch (error: any) {
+      console.error("Error updating nutritional status:", error);
+      res.status(500).json({
+        message: "Failed to update nutritional status",
+        error: error.message,
+      });
+    }
+  }
+);
+
 export default router;
 
 // Run Once
