@@ -699,7 +699,7 @@ export class ChildService {
 
     return this.http
       .patch(
-        `${CHILD_NUTRITIONAL_STATUS_URL}/${childId}/nutritional-status/${nutritionalStatusId}`,
+        `${CHILD_NUTRITIONAL_STATUS_URL}${childId}/nutritional-status/${nutritionalStatusId}`,
         nutritionalStatusData,
         { headers }
       )

@@ -95,9 +95,9 @@ export class ChildrenProfileComponent {
       });
 
       // Sort weighingHistory by date
-      this.child.weighingHistory.sort((a: any, b: any) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      });
+      // this.child.weighingHistory.sort((a: any, b: any) => {
+      //   return new Date(b.date).getTime() - new Date(a.date).getTime();
+      // });
 
       this.cdr.detectChanges(); // Detect changes if necessary
     });
@@ -225,12 +225,18 @@ export class ChildrenProfileComponent {
   }
 
   // Method to open the nutritional calculation dialog
-  openNutriCalcDialog() {
+  openNutriCalcDialog(weighingId: any) {
+    console.log('Opening NutriCalc Dialog with weighingId:', weighingId);
+    console.log('Dialog data:', {
+      nutritionalStatusId: this.child.nutritionalStatus?._id,
+      // Add other necessary fields
+    });
     this.dialogRef.open(PopupUpdateNutriCalcComponent, {
       data: {
         childId: this.child.id,
         anthropometricId: this.child.anthropometricStatus, // Ensure this is set in the child object
-        weighingId: this.child.weighingHistory[0], // Ensure this is set in the child object
+        // weighingId: this.child.weighingHistory[0], // Ensure this is set in the child object
+        weighingId: weighingId, // Ensure this is set in the child object
         nutritionalStatusId: this.child.nutritionalStatus, // Ensure this is set in the child object
         ageInMonths: this.calculateAgeInMonths(this.child.dateOfBirth),
         gender: this.child.gender,

@@ -39,9 +39,9 @@ export class PopupUpdateNutriCalcComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       childId: string;
-      anthropometricId: string;
+      anthropometricId: { _id: string };
       weighingId: string;
-      nutritionalStatusId: string;
+      nutritionalStatusId: { _id: string };
       weight: number;
       ageInMonths: number;
       height: number;
@@ -49,17 +49,20 @@ export class PopupUpdateNutriCalcComponent {
     },
     private dialogRef: MatDialogRef<PopupUpdateNutriCalcComponent>
   ) {
+    // Log the received data for debugging
     this.childId = data.childId;
-    this.anthropometricId = data.anthropometricId;
+    this.anthropometricId = data.anthropometricId._id;
     this.weighingId = data.weighingId;
-    this.nutritionalStatusId = data.nutritionalStatusId;
+    this.nutritionalStatusId = data.nutritionalStatusId._id;
     this.weight = data.weight;
     this.height = data.height;
     this.gender = data.gender;
     this.ageInMonths = data.ageInMonths;
+    console.log('Weighing Id constructor:', this.weighingId);
   }
   ngOnInit() {
     console.log('Data received:', this.data); // Log the received data for debugging
+    console.log('Weighing Id:', this.weighingId); // Log the received data for debugging
     this.ageInMonths = this.data.ageInMonths || this.ageInMonths;
     this.weight = this.data.weight || this.weight;
     this.height = this.data.height || this.height;
@@ -74,12 +77,12 @@ export class PopupUpdateNutriCalcComponent {
 
     // Only calculate if the values are set
     if (this.ageInMonths && this.weight && this.height && this.gender) {
-      this.calculateNutritionalStatus();
+      this.updateData();
     }
     // this.checkAndCalculate();
-    if (this.ageInMonths && this.weight && this.height && this.gender) {
-      this.calculateNutritionalStatus(); // Calculate if data is pre-filled
-    }
+    // if (this.ageInMonths && this.weight && this.height && this.gender) {
+    //   this.calculateNutritionalStatus(); // Calculate if data is pre-filled
+    // }
   }
 
   // checkAndCalculate() {
@@ -519,8 +522,38 @@ export class PopupUpdateNutriCalcComponent {
     }
   }
 
-  calculateNutritionalStatus(): void {
+  // calculateNutritionalStatus(): void {
+
+  // this.classification =
+
+  // this.classification = `${this.getOverallStatus(
+  //   weightForLengthStatus,
+  //   lengthForAgeStatus,
+  //   weightForAgeStatus
+  // )},${weightForAgeStatus}, ${lengthForAgeStatus}, ${weightForLengthStatus}`;
+  // this.nutStatus = this.classification.split(',')[0];
+  // }
+
+  // getOverallStatus(
+  //   weightForLengthStatus: string,
+  //   lengthForAgeStatus: string,
+  //   weightForAgeStatus: string
+  // ): string {
+  //   console.log('getOverallStatus parameters:', {
+  //     weightForLengthStatus,
+  //     lengthForAgeStatus,
+  //     weightForAgeStatus,
+  //   });
+  //   return weightForLengthStatus === 'Normal' &&
+  //     lengthForAgeStatus === 'Normal' &&
+  //     weightForAgeStatus === 'Normal'
+  //     ? 'Normal'
+  //     : 'Malnourished';
+  // }
+
+  updateData(): void {
     // Call each of the logic methods and assign the results to different variables
+    console.log('Calculating nutritional status...');
     if (!this.ageInMonths || !this.weight || !this.height || !this.gender) {
       console.error('All fields are required for calculation');
       return;
@@ -541,6 +574,9 @@ export class PopupUpdateNutriCalcComponent {
       this.ageInMonths,
       this.weight
     );
+    console.log(
+      `${this.nutStatus} <= nut status classfication weigh ${weightForLengthStatus} length ${lengthForAgeStatus} wehe ${weightForLengthStatus}`
+    );
 
     // Determine the overall nutritional status based on the individual statuses
     let overallStatus = 'Normal';
@@ -553,38 +589,21 @@ export class PopupUpdateNutriCalcComponent {
     ) {
       overallStatus = 'Malnourished';
     }
-    this.classification = `${this.getOverallStatus(
-      weightForLengthStatus,
-      lengthForAgeStatus,
-      weightForAgeStatus
-    )},${weightForAgeStatus}, ${lengthForAgeStatus}, ${weightForLengthStatus}`;
-    this.nutStatus = this.classification.split(',')[0];
-  }
 
-  getOverallStatus(
-    weightForLengthStatus: string,
-    lengthForAgeStatus: string,
-    weightForAgeStatus: string
-  ): string {
-    return weightForLengthStatus === 'Normal' &&
-      lengthForAgeStatus === 'Normal' &&
-      weightForAgeStatus === 'Normal'
-      ? 'Normal'
-      : 'Malnourished';
-  }
-
-  updateData() {
+    // Store the results in a way that you can display in the HTML
+    this.classification = `${overallStatus},${weightForAgeStatus}, ${lengthForAgeStatus}, ${weightForLengthStatus}`;
+    this.nutStatus = overallStatus;
     const anthropometricData = {
       ageInMonths: this.ageInMonths,
       weight: this.weight,
       height: this.height,
       gender: this.gender,
       overallStatus: this.nutStatus,
+
       weightForLengthStatus: this.classification.split(',')[3].trim(),
       lengthForAgeStatus: this.classification.split(',')[2].trim(),
       weightForAgeStatus: this.classification.split(',')[1].trim(),
     };
-
     const weighingData = {
       date: new Date(),
       weight: this.weight,
@@ -594,13 +613,11 @@ export class PopupUpdateNutriCalcComponent {
       lengthForAgeStatus: this.classification.split(',')[2].trim(),
       weightForAgeStatus: this.classification.split(',')[1].trim(),
     };
-
     const nutritionalStatusData = {
       childId: this.childId,
       status: this.nutStatus,
       date: new Date(),
     };
-
     // Update Anthropometric data
     this.childrenService
       .updateAnthropometric(
@@ -616,7 +633,6 @@ export class PopupUpdateNutriCalcComponent {
           console.error('Error updating anthropometric data:', error);
         },
       });
-
     // Update Weighing History
     this.childrenService
       .updateWeighingHistory(this.childId, this.weighingId, weighingData)
@@ -628,7 +644,6 @@ export class PopupUpdateNutriCalcComponent {
           console.error('Error updating weighing history:', error);
         },
       });
-
     // Update Nutritional Status
     this.childrenService
       .updateNutritionalStatus(
