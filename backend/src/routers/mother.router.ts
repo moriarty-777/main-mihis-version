@@ -6,6 +6,12 @@ import { loggerMiddleware } from "../middlewares/logger.mid";
 import { HTTP_NOT_FOUND } from "../constants/http_status";
 import { authMiddleware } from "../middlewares/auth.mid";
 import { ChildModel } from "../models/child.model";
+import { SchedulingModel } from "../models/scheduling.model";
+import { WeighingHistoryModel } from "../models/weighing-history.model";
+import { VaccinationModel } from "../models/vaccination.model";
+import { MissedVaccineModel } from "../models/missedVaccine.model";
+import { AnthropometricModel } from "../models/anthropometric.model";
+import { NutritionalStatusModel } from "../models/nutritional-status.model";
 
 const router = Router();
 // Retrieve child FIXME: tobe deleted
@@ -285,19 +291,66 @@ router.get(
   })
 );
 
+// router.delete(
+//   "/:id",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     const motherId = req.params.id;
+//     const deletedMother = await MotherModel.findByIdAndDelete(motherId);
+
+//     if (!deletedMother) {
+//       res.status(HTTP_NOT_FOUND).send({ message: "Mother not found" });
+//     } else {
+//       res.send({ message: "Mother deleted successfully" });
+//     }
+//   })
+// );
 router.delete(
   "/:id",
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     const motherId = req.params.id;
+
+    // Find the mother and check if she exists
     const deletedMother = await MotherModel.findByIdAndDelete(motherId);
 
     if (!deletedMother) {
       res.status(HTTP_NOT_FOUND).send({ message: "Mother not found" });
-    } else {
-      res.send({ message: "Mother deleted successfully" });
     }
+
+    // Find all children associated with the mother
+    const children = await ChildModel.find({ motherId: motherId });
+
+    // Loop through each child and delete their data
+    for (const child of children) {
+      const childId = child._id;
+
+      // Delete related schedules
+      await SchedulingModel.deleteMany({ childId: childId });
+
+      // Delete related weighing history
+      await WeighingHistoryModel.deleteMany({ childId: childId });
+
+      // Delete related vaccinations
+      await VaccinationModel.deleteMany({ childId: childId });
+
+      // Delete missed vaccines (if applicable)
+      await MissedVaccineModel.deleteMany({ childId: childId });
+
+      // Delete related anthropometric and nutritional status records
+      await AnthropometricModel.deleteMany({ childId: childId });
+      await NutritionalStatusModel.deleteMany({ childId: childId });
+
+      // Finally, delete the child
+      await ChildModel.findByIdAndDelete(childId);
+    }
+
+    // Respond with success message
+    res.send({
+      message: "Mother and all related children and data deleted successfully",
+    });
   })
 );
 

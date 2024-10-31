@@ -21,6 +21,7 @@ import { SchedulingModel } from "../models/scheduling.model";
 import { VaccinationModel } from "../models/vaccination.model";
 import { UserModel } from "../models/user.model";
 import { MissedVaccineModel } from "../models/missedVaccine.model";
+import { sendYearlyScheduleSMS } from "./sendsms.router";
 
 const router = Router();
 
@@ -1172,6 +1173,11 @@ router.delete(
       res.status(HTTP_NOT_FOUND).send({ message: "Child not found" });
     }
 
+    // Remove the child reference from the mother's children array
+    await MotherModel.findByIdAndUpdate(deletedChild?.motherId, {
+      $pull: { children: childId },
+    });
+
     // Delete related schedules
     await SchedulingModel.deleteMany({ childId: childId });
 
@@ -1474,7 +1480,10 @@ async function populateChildSchedules(child: any) {
       motherPhoneNumber,
       remarks: `Weighing scheduled for month ${month + 1}`,
     });
-
+    console.log(
+      "Schedule Date for each entry:",
+      newWeighingSchedule.scheduleDate
+    );
     scheduleIds.push(newWeighingSchedule._id); // Collect ObjectId of created schedule
   }
 
@@ -1628,12 +1637,10 @@ router.post(
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
-    console.log(req.body); // Check if motherId is present here
     const { motherId, ...childData } = req.body;
 
     // Add the child to the database
     const newChild = await ChildModel.create({ ...childData, motherId });
-
     // Link the child to the mother
     await MotherModel.findByIdAndUpdate(motherId, {
       $push: { children: newChild._id },
@@ -1641,8 +1648,22 @@ router.post(
 
     // Populate schedules for this specific child
     const schedules = await populateChildSchedules(newChild);
+    const newChildWithSchedules = await ChildModel.findById(newChild._id)
+      .populate("schedules") // This populates the schedules field with full schedule documents
+      .exec();
 
-    res.status(201).send({ newChild, schedules });
+    const mother = await MotherModel.findById(motherId); // get mother's details
+
+    console.log("MMOTHER:", mother);
+    if (mother && mother.phone) {
+      await sendYearlyScheduleSMS(
+        mother.phone,
+        newChild,
+        newChildWithSchedules?.schedules || []
+      );
+    }
+
+    res.status(201).send({ newChild: newChildWithSchedules, schedules });
   })
 );
 

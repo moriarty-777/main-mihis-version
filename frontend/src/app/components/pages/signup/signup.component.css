@@ -66,7 +66,9 @@ hr {
 .global-btn:hover {
   background-color: var(--bg-button-hover);
 }
-
+.ng-star-inserted {
+  margin-bottom: 15px;
+}
 .otp-container {
   display: flex;
   justify-content: center;
