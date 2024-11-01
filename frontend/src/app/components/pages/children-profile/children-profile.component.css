@@ -60,17 +60,20 @@
 @media (min-width: 992px) {
   .user-profile-container {
     width: 970px;
+    width: 1080px;
   }
 }
 @media (min-width: 1200px) {
   .user-profile-container {
     width: 1170px;
+    width: 1090px;
   }
 }
 
 @media (max-width: 1599px) {
   .user-profile-container {
     max-width: 1030px;
+    max-width: 1070px;
   }
 }
 

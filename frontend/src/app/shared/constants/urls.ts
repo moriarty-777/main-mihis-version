@@ -9,6 +9,7 @@ export const CHILD_VAX_SUMMARY_URL =
 export const CHILDREN_PROFILE_URL = BASE_URL + '/api/children-page/';
 export const CHILDREN_ANTHRO_PRINT = BASE_URL + '/api/children-aanthro';
 export const CHILD_ALL_SCHEDULES_URL = BASE_URL + '/api/all-schedules';
+export const CHILD_SCHEDULE_URL = BASE_URL + '/api/child/schedules';
 // FIXME:
 // New URLs for Weighing History, Nutritional Status, and Anthropometric Data
 export const CHILD_ANTHROPOMETRIC_URL = `${CHILD_URL}/`;

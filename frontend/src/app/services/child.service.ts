@@ -9,6 +9,7 @@ import {
   CHILD_ALL_SCHEDULES_URL,
   CHILD_ANTHROPOMETRIC_URL,
   CHILD_NUTRITIONAL_STATUS_URL,
+  CHILD_SCHEDULE_URL,
   CHILD_URL,
   CHILD_VACCINATION_URL,
   CHILD_VAX_SUMMARY_URL,
@@ -726,5 +727,19 @@ export class ChildService {
             this.toastrService.error('Failed to update nutritional status'),
         })
       );
+  }
+
+  // Update Scheduling
+  updateScheduleStatus(scheduleId: string, updateData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.patch(
+      `${CHILD_SCHEDULE_URL}/${scheduleId}/status`,
+      updateData,
+      {
+        headers,
+      }
+    );
   }
 }

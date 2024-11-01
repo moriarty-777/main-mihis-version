@@ -62,19 +62,19 @@ export class ScheduleListComponent {
             // const latestWeighing = child.weighingHistory[0]; // Assuming this is the latest entry
             // console.log('Child Data:', child); // Log each child's data for debugging
             return {
+              id: schedule._id,
               number: child._id,
               name: `${child.firstName} ${child.lastName}`,
               scheduleDate: new Date(schedule.scheduleDate),
               scheduleType: schedule.scheduleType,
               vaccineName: schedule.vaccineName,
+              rescheduleDate: schedule.rescheduleDate,
               doseNumber: schedule.doseNumber,
               location: schedule.location,
               smsContent: schedule.notificationContent,
-              notificationStatus: schedule.notificationSent
-                ? 'Sent'
-                : 'Pending',
+              notificationStatus: schedule.notificationSent,
               type: schedule.scheduleType,
-              status: schedule.status ? 'Sent' : 'Pending',
+              status: schedule.status,
               // Include latest weight and height if available
               // weight: latestWeighing ? latestWeighing.weight : null,
               // height: latestWeighing ? latestWeighing.height : null,
@@ -149,15 +149,82 @@ export class ScheduleListComponent {
 
   // TODO: Schedule List end
 
+  // performAction(schedule: any): void {
+  //   if (schedule.scheduleType === 'vaccination') {
+  //     this.openScheduledVaccinationDialog(schedule);
+  //   } else if (schedule.scheduleType === 'weighing') {
+  //     this.openNutritionalStatusDialog(schedule);
+  //   } else {
+  //     console.log('Unknown schedule type:', schedule.scheduleType);
+  //   }
+  // }
   performAction(schedule: any): void {
-    if (schedule.scheduleType === 'vaccination') {
-      this.openScheduledVaccinationDialog(schedule);
-    } else if (schedule.scheduleType === 'weighing') {
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate date-only comparison
+
+    console.log('Today:', today);
+    console.log('Schedule Type:', schedule.scheduleType);
+    console.log('Schedule Status:', schedule.status);
+    if (schedule.scheduleType === 'weighing' && !schedule.status) {
+      // Update the status to true and make button unclickable for weighing
       this.openNutritionalStatusDialog(schedule);
+      this.childService
+        .updateScheduleStatus(schedule.id, { status: true })
+        .subscribe({
+          next: () => {
+            schedule.status = 'Sent';
+          },
+          error: (error: any) => console.error('Error updating status:', error),
+        });
+    } else if (schedule.scheduleType === 'vaccination') {
+      // Check if the schedule is missed
+
+      const scheduleDate = new Date(schedule.scheduleDate);
+      const rescheduleDate = schedule.rescheduleDate
+        ? new Date(schedule.rescheduleDate)
+        : null;
+      console.log('Schedule Date:', scheduleDate);
+      console.log('Reschedule Date:', rescheduleDate);
+      if (
+        !schedule.status &&
+        today > scheduleDate &&
+        (!rescheduleDate || (rescheduleDate && today > rescheduleDate))
+      ) {
+        // Open missed vaccine popup TODO:
+        // this.openMissedVaccinationDialog(schedule);
+        console.log(
+          `Missed Vaccine Here - schedule date: ${scheduleDate}, reschedule date: ${rescheduleDate}`
+        );
+      } else {
+        // Open vaccination dialog
+        console.log(
+          `Scheduled vaccination - date: ${scheduleDate}, reschedule date: ${rescheduleDate}`
+        );
+        this.openScheduledVaccinationDialog(schedule);
+      }
     } else {
       console.log('Unknown schedule type:', schedule.scheduleType);
     }
   }
+
+  // openMissedVaccinationDialog(schedule: any): void {
+  //   const dialogRef = this.dialog.open(PopupMissedVaccinationComponent, {
+  //     data: {
+  //       childId: schedule.number,
+  //       vaccineType: schedule.vaccineName,
+  //       doseNumber: schedule.doseNumber,
+  //       dateOfVaccination: schedule.scheduleDate,
+  //       placeOfVaccination: schedule.location,
+  //     },
+  //   });
+
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       console.log('Missed vaccination acknowledged');
+  //     }
+  //   });
+  // }
 
   openNutritionalStatusDialog(schedule: any): void {
     const dialogRef = this.dialog.open(PopupNutriCalcComponent, {
@@ -182,9 +249,25 @@ export class ScheduleListComponent {
       },
     });
 
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result) {
+    //     console.log('Scheduled vaccination confirmed');
+    //   }
+    // });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Scheduled vaccination confirmed');
+      if (result === true) {
+        // Assuming 'confirm' is returned when the user confirms vaccination
+        // Update the status to true
+        this.childService
+          .updateScheduleStatus(schedule.id, { status: true })
+          .subscribe({
+            next: () => {
+              schedule.status = true; // Update status in the UI
+              console.log('Vaccination confirmed and status updated');
+            },
+            error: (error: any) =>
+              console.error('Error updating vaccination status:', error),
+          });
       }
     });
   }

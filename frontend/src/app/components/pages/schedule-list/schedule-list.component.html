@@ -63,13 +63,50 @@
           <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
           <td>{{ schedule.location }}</td>
           <!-- <td>{{ schedule.smsContent || "N/A" }}</td> -->
-          <td>{{ schedule.notificationStatus }}</td>
+          <td>{{ schedule.notificationStatus || "N/A" }}</td>
           <td>{{ schedule.vaccineName || "N/A" }}</td>
           <td>{{ schedule.scheduleType || "N/A" }}</td>
-          <td>{{ schedule.status }}</td>
-          <td>
+          <td>{{ schedule.status ? "Done" : "N/A" }}</td>
+          <!-- <td>
             <button class="s global-btn" (click)="performAction(schedule)">
               Action
+            </button>
+          </td> -->
+          <!-- <td>
+            <button
+              class="s global-btn"
+              [disabled]="
+                schedule.scheduleType === 'weighing' && schedule.status === true
+              "
+              (click)="performAction(schedule)"
+            >
+
+              {{
+                schedule.scheduleType === "weighing" && schedule.status === true
+                  ? "Completed"
+                  : "Action"
+              }}
+            </button>
+          </td> -->
+          <td>
+            <button
+              class="s global-btn"
+              [disabled]="
+                (schedule.scheduleType === 'weighing' &&
+                  schedule.status === true) ||
+                (schedule.scheduleType === 'vaccination' &&
+                  schedule.status === true)
+              "
+              (click)="performAction(schedule)"
+            >
+              {{
+                (schedule.scheduleType === "weighing" &&
+                  schedule.status === true) ||
+                (schedule.scheduleType === "vaccination" &&
+                  schedule.status === true)
+                  ? "Completed"
+                  : "Action"
+              }}
             </button>
           </td>
         </tr>

@@ -63,3 +63,8 @@ select:hover {
 td a:hover {
   text-decoration: underline;
 }
+.s.global-btn[disabled] {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}

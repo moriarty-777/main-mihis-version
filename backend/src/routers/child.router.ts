@@ -1868,6 +1868,29 @@ router.post(
   })
 );
 
+// Update Scheduling Status
+// Update Schedule Status
+router.patch(
+  "/child/schedules/:id/status",
+  authMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const scheduleId = req.params.id;
+    const { status } = req.body;
+
+    try {
+      const updatedSchedule = await SchedulingModel.findByIdAndUpdate(
+        scheduleId,
+        { status },
+        { new: true }
+      );
+      res.status(200).send(updatedSchedule);
+    } catch (error) {
+      console.error("Error updating schedule status:", error);
+      res.status(500).send({ message: "Failed to update schedule status." });
+    }
+  })
+);
+
 // Retrieve and update vaccination
 // Fetch single vaccination by ID
 router.get(
