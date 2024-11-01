@@ -64,7 +64,7 @@ td a:hover {
   text-decoration: underline;
 }
 .s.global-btn[disabled] {
-  background-color: #ccc;
-  border-color: #ccc;
+  background-color: #5f35a8;
+  border-color: #5f35a8;
   cursor: not-allowed;
 }

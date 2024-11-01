@@ -375,6 +375,38 @@ export class ChildService {
       );
   }
 
+  // Add missed vaccine
+  // In child.service.ts
+  addMissedVaccine(childId: string, missedVaccineData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    return this.http
+      .post(`${CHILD_URL}/${childId}/missed-vaccine`, missedVaccineData, {
+        headers,
+      })
+      .pipe(
+        tap({
+          next: () => {
+            this.toastrService.success(
+              'Missed vaccine recorded successfully!',
+              '',
+              {
+                timeOut: 2000,
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-bottom-right',
+              }
+            );
+          },
+          error: () => {
+            this.toastrService.error('Failed to record missed vaccine');
+          },
+        })
+      );
+  }
+
   // AEFI
   // Add AEFI
   addAEFI(vaccinationId: string, aefiData: any): Observable<any> {

@@ -26,6 +26,43 @@ import { AefiModel } from "../models/aefi.model";
 
 const router = Router();
 
+// Update all child schedules status to true up until a specific date
+// Update all child schedules status and SMS notification status to true up until a specific date
+// router.patch(
+//   "/update-schedules-status",
+//   authMiddleware, // Apply your authentication middleware if necessary
+//   expressAsyncHandler(async (req, res) => {
+//     const startDate = new Date("2010-01-01");
+//     const endDate = new Date("2024-07-31");
+
+//     try {
+//       // Update all schedules for each child in the specified date range
+//       const result = await SchedulingModel.updateMany(
+//         {
+//           scheduleDate: { $gte: startDate, $lte: endDate },
+//         },
+//         {
+//           status: true, // Set schedule status to true
+//           notificationSent: true, // Set SMS notification status to true
+//         }
+//       );
+
+//       res.status(200).send({
+//         message: `Successfully updated ${result.modifiedCount} schedules to status true and SMS notification sent up to July 31, 2024`,
+//         updatedCount: result.modifiedCount,
+//       });
+//     } catch (error) {
+//       console.error("Error updating schedules:", error);
+//       res
+//         .status(500)
+//         .send({
+//           message:
+//             "Failed to update schedules status and SMS notification status.",
+//         });
+//     }
+//   })
+// );
+
 // seed first
 // router.get(
 //   "/child/seed",
@@ -1747,6 +1784,46 @@ router.post(
     });
 
     res.status(201).send({ aefi });
+  })
+);
+
+// In child router backend endpoint (child.router.js or similar file)
+router.post(
+  "/child/:id/missed-vaccine",
+  authMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const childId = req.params.id;
+    const { vaccineName, dateMissed, reason } = req.body;
+
+    try {
+      // Create a new missed vaccine record
+      const missedVaccine = await MissedVaccineModel.create({
+        childId,
+        vaccineName,
+        dateMissed,
+        reason,
+      });
+
+      // Add the missed vaccine to the child document's missedVaccines array
+      await ChildModel.findByIdAndUpdate(childId, {
+        $push: { missedVaccines: missedVaccine._id },
+      });
+
+      // Update the related schedule's status to `true` (handled)
+      const updatedSchedule = await SchedulingModel.findOneAndUpdate(
+        { childId: childId, vaccineName: vaccineName }, // Adjust this criteria as needed
+        { status: true },
+        { new: true }
+      );
+
+      res.status(201).send({ missedVaccine, updatedSchedule });
+    } catch (error: any) {
+      console.error("Error creating missed vaccine:", error);
+      res.status(500).send({
+        message: "Failed to add missed vaccine. Please check the input data.",
+        error: error.message,
+      });
+    }
   })
 );
 

@@ -1,0 +1,94 @@
+<div class="vpopup-container s">
+  <div class="vvld-box-inner">
+    <h2>Add Missed Vaccine</h2>
+    <form [formGroup]="addMissedVaccineForm" (submit)="addMissedVaccine()">
+      <div class="vvld-form-group">
+        <label for="vaccineName">Vaccine Name</label>
+        <input
+          formControlName="vaccineName"
+          type="text"
+          placeholder="Vaccine Name"
+          id="vaccineName"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            addMissedVaccineForm.controls['vaccineName'].invalid &&
+            addMissedVaccineForm.controls['vaccineName'].touched
+          "
+        >
+          &#42; Vaccine Name is required
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="reason">Reason</label>
+        <select
+          formControlName="reason"
+          id="reason"
+          class="form-ctrl"
+          (change)="onReasonChange($event)"
+        >
+          <option value="" disabled selected>Select Reason</option>
+          <option value="Child Was Sick">Child Was Sick</option>
+          <option value="Lack of Awareness">Lack of Awareness</option>
+          <option value="Went Out of Town">Went Out of Town</option>
+          <option value="Parental Refusal">Parental Refusal</option>
+          <option value="Fear of Side Effects">Fear of Side Effects</option>
+          <option value="Other">Other</option>
+        </select>
+        <div
+          class="form-error"
+          *ngIf="
+            addMissedVaccineForm.controls['reason'].invalid &&
+            addMissedVaccineForm.controls['reason'].touched
+          "
+        >
+          &#42; Reason is required
+        </div>
+      </div>
+
+      <!-- Additional input field for "Other" reason -->
+      <div class="vvld-form-group" *ngIf="isOtherSelected">
+        <label for="otherReason">Please Specify</label>
+        <input
+          formControlName="otherReason"
+          type="text"
+          id="otherReason"
+          class="form-ctrl"
+          placeholder="Specify other reason"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            addMissedVaccineForm.controls['otherReason'].invalid &&
+            addMissedVaccineForm.controls['otherReason'].touched
+          "
+        >
+          &#42; Please specify the other reason
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="dateMissed">Date Missed</label>
+        <input
+          formControlName="dateMissed"
+          type="date"
+          id="dateMissed"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            addMissedVaccineForm.controls['dateMissed'].invalid &&
+            addMissedVaccineForm.controls['dateMissed'].touched
+          "
+        >
+          &#42; Date of Missed Vaccine is Required
+        </div>
+      </div>
+      <button type="submit" class="global-btn">Add Missed Vaccine</button>
+    </form>
+  </div>
+</div>

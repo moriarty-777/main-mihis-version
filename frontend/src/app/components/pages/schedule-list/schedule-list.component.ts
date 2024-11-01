@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { PopupNutriCalcComponent } from '../../partials/popup-nutri-calc/popup-nutri-calc.component';
 import { PopupAddAefiComponent } from '../../partials/popup-add-aefi/popup-add-aefi.component';
+import { PopupMissedVaccinationComponent } from '../../partials/popup-missed-vaccination/popup-missed-vaccination.component';
 
 @Component({
   selector: 'app-schedule-list',
@@ -163,9 +164,6 @@ export class ScheduleListComponent {
 
     today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate date-only comparison
 
-    console.log('Today:', today);
-    console.log('Schedule Type:', schedule.scheduleType);
-    console.log('Schedule Status:', schedule.status);
     if (schedule.scheduleType === 'weighing' && !schedule.status) {
       // Update the status to true and make button unclickable for weighing
       this.openNutritionalStatusDialog(schedule);
@@ -184,23 +182,20 @@ export class ScheduleListComponent {
       const rescheduleDate = schedule.rescheduleDate
         ? new Date(schedule.rescheduleDate)
         : null;
-      console.log('Schedule Date:', scheduleDate);
-      console.log('Reschedule Date:', rescheduleDate);
+
       if (
         !schedule.status &&
         today > scheduleDate &&
         (!rescheduleDate || (rescheduleDate && today > rescheduleDate))
       ) {
         // Open missed vaccine popup TODO:
-        // this.openMissedVaccinationDialog(schedule);
-        console.log(
-          `Missed Vaccine Here - schedule date: ${scheduleDate}, reschedule date: ${rescheduleDate}`
-        );
+        this.openMissedVaccinationDialog(schedule);
+        // console.log(
+        //   `Missed Vaccine Here - schedule date: ${scheduleDate}, reschedule date: ${rescheduleDate}`
+        // );
       } else {
         // Open vaccination dialog
-        console.log(
-          `Scheduled vaccination - date: ${scheduleDate}, reschedule date: ${rescheduleDate}`
-        );
+
         this.openScheduledVaccinationDialog(schedule);
       }
     } else {
@@ -208,23 +203,32 @@ export class ScheduleListComponent {
     }
   }
 
-  // openMissedVaccinationDialog(schedule: any): void {
-  //   const dialogRef = this.dialog.open(PopupMissedVaccinationComponent, {
+  // Add AEFI in Vaccination Record
+  // openAEFIDescriptionDialog(vaccinationId: any): void {
+  //   this.dialogRef.open(PopupAddAefiComponent, {
   //     data: {
-  //       childId: schedule.number,
-  //       vaccineType: schedule.vaccineName,
-  //       doseNumber: schedule.doseNumber,
-  //       dateOfVaccination: schedule.scheduleDate,
-  //       placeOfVaccination: schedule.location,
+  //       vaccinationId: vaccinationId,
   //     },
   //   });
-
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       console.log('Missed vaccination acknowledged');
-  //     }
-  //   });
   // }
+  // TODO:
+  openMissedVaccinationDialog(schedule: any): void {
+    const dialogRef = this.dialog.open(PopupMissedVaccinationComponent, {
+      data: {
+        childId: schedule.number,
+        vaccineType: schedule.vaccineName,
+        dateOfVaccination: schedule.rescheduleDate,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Update the schedule status to true
+        schedule.status = true;
+        // schedule.buttonDisabled = true; /// Optional: Use this flag to manage button state
+      }
+    });
+  }
 
   openNutritionalStatusDialog(schedule: any): void {
     const dialogRef = this.dialog.open(PopupNutriCalcComponent, {

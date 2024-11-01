@@ -75,6 +75,9 @@ export class ChildrenProfileComponent {
       this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
       this.motherId = `${data.mother.id}`;
 
+      // Calculate missed vaccines and update the count
+      this.missedVaccineCount = this.calculateMissedVaccines(this.child);
+
       // Assign the schedules if they exist
       if (this.child.schedules) {
         console.log('Schedules found:', this.child.schedules);
@@ -175,30 +178,74 @@ export class ChildrenProfileComponent {
     return (administeredVaccines / totalRequiredVaccines) * 100;
   }
 
+  // calculateMissedVaccines(child: Child): number {
+  //   const expectedVaccines =
+  //     this.childrenService.getExpectedVaccinationSchedule(child);
+  //   const administeredVaccines = child.vaccinations || []; // Handle if vaccinations are empty
+
+  //   // Calculate the current date
+  //   const today = new Date();
+
+  //   // Filter out the expected vaccines that were not administered or were missed
+  //   const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
+  //     // Find if this expected vaccine was administered
+  //     const administered = administeredVaccines.some(
+  //       (administeredVaccine) =>
+  //         administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
+  //         administeredVaccine.doseNumber === expectedVaccine.doseNumber
+  //     );
+
+  //     // If the vaccine was not administered and the scheduled date has passed, count it as missed
+  //     return (
+  //       !administered && new Date(expectedVaccine.dateOfVaccination) < today
+  //     );
+  //   });
+
+  //   // Return the number of missed vaccines
+  //   return missedVaccines.length;
+  // }
+
   calculateMissedVaccines(child: Child): number {
+    // Fetch the expected vaccination schedule
     const expectedVaccines =
       this.childrenService.getExpectedVaccinationSchedule(child);
-    const administeredVaccines = child.vaccinations || []; // Handle if vaccinations are empty
+    const administeredVaccines = child.vaccinations || []; // Ensure vaccinations array is defined
 
-    // Calculate the current date
+    // Get today's date for comparison
     const today = new Date();
 
-    // Filter out the expected vaccines that were not administered or were missed
+    // Filter expected vaccines that have passed their scheduled date and were not administered
     const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
-      // Find if this expected vaccine was administered
-      const administered = administeredVaccines.some(
+      // Check if this expected vaccine was administered
+      const isAdministered = administeredVaccines.some(
         (administeredVaccine) =>
-          administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
+          administeredVaccine.vaccineType === expectedVaccine.vaccineName &&
           administeredVaccine.doseNumber === expectedVaccine.doseNumber
       );
 
-      // If the vaccine was not administered and the scheduled date has passed, count it as missed
-      return (
-        !administered && new Date(expectedVaccine.dateOfVaccination) < today
+      // Log each vaccine status for debugging
+      console.log(
+        `Checking vaccine: ${expectedVaccine.vaccineName}, Dose: ${expectedVaccine.doseNumber}`
       );
+      console.log(`Scheduled Date: ${expectedVaccine.schedule}`);
+      console.log(`Administered: ${isAdministered ? 'Yes' : 'No'}`);
+      console.log(
+        `Missed: ${
+          !isAdministered && new Date(expectedVaccine.schedule) < today
+            ? 'Yes'
+            : 'No'
+        }`
+      );
+
+      // Return true if not administered and the scheduled date has passed
+      return !isAdministered && new Date(expectedVaccine.schedule) < today;
     });
 
-    // Return the number of missed vaccines
+    // Log missed vaccines count
+    console.log(`Missed vaccines count: ${missedVaccines.length}`);
+
+    // Update the missed vaccine count in the component
+    this.missedVaccineCount = missedVaccines.length;
     return missedVaccines.length;
   }
 
