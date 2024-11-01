@@ -22,6 +22,7 @@ import { VaccinationModel } from "../models/vaccination.model";
 import { UserModel } from "../models/user.model";
 import { MissedVaccineModel } from "../models/missedVaccine.model";
 import { sendYearlyScheduleSMS } from "./sendsms.router";
+import { AefiModel } from "../models/aefi.model";
 
 const router = Router();
 
@@ -964,7 +965,8 @@ router.get(
         path: "vaccinations",
         populate: [
           { path: "midwifeId", select: "firstName lastName" }, // Populate midwife details
-          { path: "bhwId", select: "firstName lastName" }, // Populate BHW details
+          { path: "bhwId", select: "firstName lastName" },
+          { path: "aefi" }, // Populate BHW details
         ],
       });
     // .populate("weighingHistory");
@@ -1183,7 +1185,16 @@ router.delete(
 
     // Delete related weighing history
     await WeighingHistoryModel.deleteMany({ childId: childId });
+    // TODO:
+    // Retrieve all vaccinations for the child
+    const childVaccinations = await VaccinationModel.find({ childId });
 
+    // Delete AEFI records for each vaccination associated with the child
+    const vaccinationIds = childVaccinations.map(
+      (vaccination) => vaccination._id
+    );
+    await AefiModel.deleteMany({ vaccineId: { $in: vaccinationIds } });
+    // TODO:
     // Delete related vaccinations
     await VaccinationModel.deleteMany({ childId: childId });
 
@@ -1709,6 +1720,33 @@ router.post(
     });
 
     res.status(201).send({ vaccination });
+  })
+);
+
+// Add AEFI
+// Add AEFI for a Vaccination
+router.post(
+  "/child/:vaccinationId/aefi",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const { vaccinationId } = req.params;
+    const { description, severity, dateOfEvent } = req.body;
+
+    // Create a new AEFI record
+    const aefi = await AefiModel.create({
+      vaccineId: vaccinationId,
+      description,
+      severity,
+      dateOfEvent,
+    });
+
+    // Update the vaccination to link with the created AEFI
+    await VaccinationModel.findByIdAndUpdate(vaccinationId, {
+      aefi: aefi._id,
+    });
+
+    res.status(201).send({ aefi });
   })
 );
 

@@ -40,8 +40,8 @@
           <th>Schedule</th>
           <!-- location -->
           <th>Location</th>
-          <!-- notificationContent -->
-          <th>SMS Content</th>
+          <!-- notificationStatus -->
+          <th>SMS Status</th>
           <!-- notificationSent -->
           <th>Vax Name</th>
           <th>Type</th>
@@ -62,7 +62,8 @@
           </td>
           <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
           <td>{{ schedule.location }}</td>
-          <td>{{ schedule.smsContent || "N/A" }}</td>
+          <!-- <td>{{ schedule.smsContent || "N/A" }}</td> -->
+          <td>{{ schedule.notificationStatus }}</td>
           <td>{{ schedule.vaccineName || "N/A" }}</td>
           <td>{{ schedule.scheduleType || "N/A" }}</td>
           <td>{{ schedule.status }}</td>

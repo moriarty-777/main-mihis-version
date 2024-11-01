@@ -6,6 +6,7 @@ import { PopupScheduledVaccinationComponent } from '../../partials/popup-schedul
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { PopupNutriCalcComponent } from '../../partials/popup-nutri-calc/popup-nutri-calc.component';
+import { PopupAddAefiComponent } from '../../partials/popup-add-aefi/popup-add-aefi.component';
 
 @Component({
   selector: 'app-schedule-list',
@@ -69,8 +70,11 @@ export class ScheduleListComponent {
               doseNumber: schedule.doseNumber,
               location: schedule.location,
               smsContent: schedule.notificationContent,
-              status: schedule.notificationSent ? 'Sent' : 'Pending',
+              notificationStatus: schedule.notificationSent
+                ? 'Sent'
+                : 'Pending',
               type: schedule.scheduleType,
+              status: schedule.status ? 'Sent' : 'Pending',
               // Include latest weight and height if available
               // weight: latestWeighing ? latestWeighing.weight : null,
               // height: latestWeighing ? latestWeighing.height : null,
@@ -103,49 +107,6 @@ export class ScheduleListComponent {
     const day = ('0' + date.getDate()).slice(-2); // Ensure two digits
     return `${year}-${month}-${day}`;
   }
-
-  // filterSchedules(): void {
-  //   const today = new Date();
-  //   today.setHours(0, 0, 0, 0); // Set time to midnight for accurate past comparison
-
-  //   this.filteredSchedules = this.schedules
-  //     .filter((schedule) => {
-  //       const scheduleDate = new Date(schedule.scheduleDate);
-  //       scheduleDate.setHours(0, 0, 0, 0); // Set time to midnight to compare dates only
-
-  //       const differenceInMs = today.getTime() - scheduleDate.getTime(); // Positive if scheduleDate is in the past
-  //       const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
-
-  //       if (differenceInMs < 0) {
-  //         // Exclude future dates
-  //         return false;
-  //       }
-
-  //       switch (this.selectedFilter) {
-  //         case '24h':
-  //           return differenceInDays <= 1;
-  //         case '1w':
-  //           return differenceInDays <= 7;
-  //         case '2w':
-  //           return differenceInDays <= 14;
-  //         case '1m':
-  //           return differenceInDays <= 30;
-  //         case '6m':
-  //           return differenceInDays <= 182;
-  //         case '1y':
-  //           return differenceInDays <= 365;
-  //         default:
-  //           return true;
-  //       }
-  //     })
-  //     .sort(
-  //       (a, b) =>
-  //         new Date(b.scheduleDate).getTime() -
-  //         new Date(a.scheduleDate).getTime()
-  //     ); // Sort in descending order
-
-  //   console.log('Filtered Schedules:', this.filteredSchedules);
-  // }
 
   filterSchedules(): void {
     const today = new Date();

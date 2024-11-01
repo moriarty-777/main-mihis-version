@@ -374,6 +374,19 @@ export class ChildService {
       );
   }
 
+  // AEFI
+  // Add AEFI
+  addAEFI(vaccinationId: string, aefiData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.post(
+      `${CHILD_VACCINATION_URL}${vaccinationId}/aefi`,
+      aefiData,
+      { headers }
+    );
+  }
+
   // Nutri Calc
 
   // TODO:

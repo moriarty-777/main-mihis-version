@@ -290,3 +290,13 @@ p.wewsa {
   border-radius: 3px;
   z-index: 3;
 }
+.bottoms {
+  display: FLEX;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.bottoms .global-btn {
+  padding: 8px 9px;
+}

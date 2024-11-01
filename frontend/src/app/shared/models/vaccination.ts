@@ -15,6 +15,7 @@ export interface Vaccination {
   midwifeId: any; // Union type
   bhwId: any; // Reference to User (BHW)
   aefi?: {
+    dateOfEvent: any;
     occurred: boolean;
     description?: string;
     severity?: string;

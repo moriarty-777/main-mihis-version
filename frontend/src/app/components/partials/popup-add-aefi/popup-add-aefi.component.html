@@ -1,0 +1,143 @@
+<div class="vpopup-container s">
+  <div class="vvld-box-inner">
+    <h2>Add AEFI</h2>
+    <form [formGroup]="addAefiForm" (submit)="addAefi()">
+      <!-- <div class="vvld-form-group">
+        <label for="description">AEFI Description</label>
+        <input
+          formControlName="description"
+          type="text"
+          placeholder="AEFI Description"
+          id="description"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            addAefiForm.controls['description'].invalid &&
+            addAefiForm.controls['description'].touched
+          "
+        >
+          &#42; AEFI Description is required
+        </div>
+      </div> -->
+
+      <div class="vvld-form-group">
+        <label for="severity">Severity</label>
+        <select formControlName="severity" id="severity" class="form-ctrl">
+          <option value="" disabled selected>Select Severity</option>
+          <option value="Mild">Mild</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Severe">Severe</option>
+        </select>
+        <div
+          class="form-error"
+          *ngIf="
+            addAefiForm.controls['severity'].invalid &&
+            addAefiForm.controls['severity'].touched
+          "
+        >
+          &#42; Severity is required
+        </div>
+      </div>
+      <div class="vvld-form-group">
+        <label for="description">AEFI Description</label>
+        <select
+          formControlName="description"
+          id="description"
+          class="form-ctrl"
+        >
+          <option value="" disabled selected>Select AEFI Description</option>
+          <!-- Mild Severity Descriptions -->
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Mild'"
+            value="Pain at injection site"
+          >
+            Pain at injection site
+          </option>
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Mild'"
+            value="Mild fever (below 38°C)"
+          >
+            Mild fever (below 38°C)
+          </option>
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Mild'"
+            value="Tiredness"
+          >
+            Tiredness
+          </option>
+
+          <!-- Moderate Severity Descriptions -->
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Moderate'"
+            value="High fever (38-39°C)"
+          >
+            High fever (38-39°C)
+          </option>
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Moderate'"
+            value="Nausea or vomiting"
+          >
+            Nausea or vomiting
+          </option>
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Moderate'"
+            value="Rash"
+          >
+            Rash
+          </option>
+
+          <!-- Severe Severity Descriptions -->
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Severe'"
+            value="Severe allergic reaction (anaphylaxis)"
+          >
+            Severe allergic reaction (anaphylaxis)
+          </option>
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Severe'"
+            value="Convulsions or seizures"
+          >
+            Convulsions or seizures
+          </option>
+          <option
+            *ngIf="addAefiForm.controls['severity'].value === 'Severe'"
+            value="Difficulty breathing"
+          >
+            Difficulty breathing
+          </option>
+        </select>
+        <div
+          class="form-error"
+          *ngIf="
+            addAefiForm.controls['description'].invalid &&
+            addAefiForm.controls['description'].touched
+          "
+        >
+          &#42; AEFI Description is required
+        </div>
+      </div>
+
+      <div class="vvld-form-group">
+        <label for="dateOfEvent">Date</label>
+        <input
+          formControlName="dateOfEvent"
+          type="date"
+          id="dateOfEvent"
+          class="form-ctrl"
+        />
+        <div
+          class="form-error"
+          *ngIf="
+            addAefiForm.controls['dateOfEvent'].invalid &&
+            addAefiForm.controls['dateOfEvent'].touched
+          "
+        >
+          &#42; Date of AEFI Happens Required
+        </div>
+      </div>
+      <button type="submit" class="global-btn">Add AEFI</button>
+    </form>
+  </div>
+</div>

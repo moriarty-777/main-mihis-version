@@ -16,6 +16,7 @@ export interface Scheduling {
   doseNumber?: number; // Dose number (for vaccines that require multiple doses)
   weighingDescription?: string; // Weighing description for events
   remarks?: string; // Additional notes if needed
+  status?: boolean;
 }
 
 // Scheduling Schema
@@ -38,6 +39,7 @@ const SchedulingSchema: any = new Schema(
     doseNumber: { type: Number, required: false }, // Dose number (for vaccines that require multiple doses)
     weighingDescription: { type: String, required: false }, // Weighing description for events
     remarks: { type: String, default: "" }, // Additional notes if needed
+    status: { type: Boolean, default: false },
   },
   {
     toJSON: {

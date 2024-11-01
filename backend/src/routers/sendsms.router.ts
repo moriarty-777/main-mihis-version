@@ -266,124 +266,41 @@ export async function sendYearlyScheduleSMS(
   // console.log("Filtered Yearly Schedules:", yearlySchedules);
   const message = `This Year Schedule for your child ${child.firstName} ${child.lastName}:\n${scheduleDetails}`;
   // const message = `This Year Schedule for your child Efraim Gondraneos is the`;
-  console.log("Message Content23:\n", message);
+  // console.log("Message Content23:\n", message);
   const messageText = scheduleDetails.trim();
   if (messageText.length === 0) {
-    console.error("SMS text content is empty.");
+    // console.error("SMS text content is empty.");
     return;
   }
   // Log the full message and its character count
-  console.log("Message Content:\n", message);
-  console.log("Character Count:", message.length);
+  // console.log("Message Content:\n", message);
+  // console.log("Character Count:", message.length);
 
   try {
-    const response = await axios.post(
-      MOVIDER_BASE_URL,
-      new URLSearchParams({
-        api_key: MOVIDER_API_KEY,
-        api_secret: MOVIDER_API_SECRET,
-        to: phoneNumber,
-        from: "CTCMIHIS",
-        text: message,
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json",
-        },
-      }
-    );
-    console.log("Yearly schedule SMS sent successfully!", response.data);
+    // const response = await axios.post(
+    //   MOVIDER_BASE_URL,
+    //   new URLSearchParams({
+    //     api_key: MOVIDER_API_KEY,
+    //     api_secret: MOVIDER_API_SECRET,
+    //     to: phoneNumber,
+    //     from: "CTCMIHIS",
+    //     text: message,
+    //   }),
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/x-www-form-urlencoded",
+    //       Accept: "application/json",
+    //     },
+    //   }
+    // );
+    // console.log("Yearly schedule SMS sent successfully!", response.data);
   } catch (error: any) {
-    console.error(
-      "Failed to send yearly schedule SMS:",
-      error.response ? error.response.data : error.message
-    );
+    // console.error(
+    //   "Failed to send yearly schedule SMS:",
+    //   error.response ? error.response.data : error.message
+    // );
   }
 }
-
-// export async function sendYearlyScheduleSMS(
-//   phoneNumber: string,
-//   child: any,
-//   schedules: any[]
-// ) {
-//   const currentYear = new Date().getFullYear();
-
-//   // Filter schedules for the current year
-//   const yearlySchedules = schedules.filter((schedule) => {
-//     const scheduleYear = new Date(schedule.scheduleDate).getFullYear();
-//     return scheduleYear === currentYear;
-//   });
-
-//   // Format the schedule details
-//   const scheduleDetails = yearlySchedules
-//     .map((schedule) => {
-//       const date = schedule.scheduleDate
-//         ? schedule.scheduleDate.toISOString().split("T", 1)[0]
-//         : "N/A";
-//       const type =
-//         schedule.scheduleType === "weighing" ? "Weighing" : "Vaccination";
-//       const vaccineName = schedule.vaccineName || "";
-//       const doseInfo =
-//         schedule.scheduleType === "vaccination" && schedule.doseNumber
-//           ? `dose ${schedule.doseNumber}`
-//           : ""; // Include dose only if type is Vaccination
-//       const description = schedule.weighingDescription || "";
-
-//       return `${date}: ${type} ${vaccineName} ${doseInfo} ${description}`.trim();
-//     })
-//     .join("\n");
-
-//   // Construct the full message
-//   const message = `This Year Schedule for your child ${child.firstName} ${child.lastName}:\n${scheduleDetails}`;
-
-//   // Define chunk size (67 characters for Unicode or 153 for GSM-7)
-//   const maxLength = 67;
-
-//   // Function to chunk message
-//   function chunkMessage(text: string, maxLength: number): string[] {
-//     const chunks = [];
-//     let index = 0;
-//     while (index < text.length) {
-//       chunks.push(text.slice(index, index + maxLength));
-//       index += maxLength;
-//     }
-//     return chunks;
-//   }
-
-//   // Chunk the message
-//   const messageChunks = chunkMessage(message, maxLength);
-
-//   // Send each chunk
-//   try {
-//     for (let i = 0; i < messageChunks.length; i++) {
-//       const chunk = `${messageChunks[i]}`; // Optional: add part indicator
-
-//       // const response = await axios.post(
-//       //   MOVIDER_BASE_URL,
-//       //   new URLSearchParams({
-//       //     api_key: MOVIDER_API_KEY,
-//       //     api_secret: MOVIDER_API_SECRET,
-//       //     from: "CTCMIHIS",
-//       //     to: phoneNumber,
-//       //     text: chunk,
-//       //   }),
-//       //   {
-//       //     headers: {
-//       //       "Content-Type": "application/x-www-form-urlencoded",
-//       //       Accept: "application/json",
-//       //     },
-//       //   }
-//       // );
-//       console.log(`Chunk ${chunk}`);
-//     }
-//   } catch (error: any) {
-//     console.error(
-//       "Failed to send yearly schedule SMS:",
-//       error.response ? error.response.data : error.message
-//     );
-//   }
-// }
 
 // Send notification upon scheduloing
 

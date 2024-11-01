@@ -16,6 +16,7 @@ import { ChartsRadarVaccineTypeComponent } from '../../charts/charts-radar-vacci
 import { PopupAddVaccinationComponent } from '../../partials/popup-add-vaccination/popup-add-vaccination.component';
 import { PopupUpdateVaccinationComponent } from '../../partials/popup-update-vaccination/popup-update-vaccination.component';
 import { PopupUpdateNutriCalcComponent } from '../../partials/popup-update-nutri-calc/popup-update-nutri-calc.component';
+import { PopupAddAefiComponent } from '../../partials/popup-add-aefi/popup-add-aefi.component';
 
 @Component({
   selector: 'app-children-profile',
@@ -202,9 +203,7 @@ export class ChildrenProfileComponent {
   }
 
   countAEFIOccurrences(child: Child): number {
-    return child.vaccinations.filter(
-      (vaccination) => vaccination.aefi && vaccination.aefi.occurred
-    ).length;
+    return child.vaccinations.filter((vaccination) => vaccination.aefi).length;
   }
 
   // Add Child Vaccination
@@ -219,6 +218,14 @@ export class ChildrenProfileComponent {
     this.dialogRef.open(PopupUpdateVaccinationComponent, {
       data: {
         childId: this.child.id,
+        vaccinationId: vaccinationId,
+      },
+    });
+  }
+  // Add AEFI in Vaccination Record
+  openAEFIDescriptionDialog(vaccinationId: any): void {
+    this.dialogRef.open(PopupAddAefiComponent, {
+      data: {
         vaccinationId: vaccinationId,
       },
     });
