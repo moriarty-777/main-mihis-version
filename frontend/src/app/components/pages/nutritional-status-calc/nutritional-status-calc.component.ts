@@ -510,16 +510,27 @@ export class NutritionalStatusCalcComponent {
     );
 
     // Determine the overall nutritional status based on the individual statuses
+    // let overallStatus = 'Normal';
+    // if (lengthForAgeStatus === 'Tall') {
+    //   overallStatus = 'Normal';
+    // } else if (
+    //   weightForLengthStatus !== 'Normal' ||
+    //   lengthForAgeStatus !== 'Normal' ||
+    //   weightForAgeStatus !== 'Normal'
+    // ) {
+    //   overallStatus = 'Malnourished';
+    // }
+    // Determine the overall nutritional status based on individual categories
     let overallStatus = 'Normal';
-    if (lengthForAgeStatus === 'Tall') {
-      overallStatus = 'Normal';
-    } else if (
-      weightForLengthStatus !== 'Normal' ||
-      lengthForAgeStatus !== 'Normal' ||
-      weightForAgeStatus !== 'Normal'
+
+    if (
+      weightForAgeStatus !== 'Normal' || // Must be "Normal"
+      (lengthForAgeStatus !== 'Normal' && lengthForAgeStatus !== 'Tall') || // Can be "Normal" or "Tall"
+      weightForLengthStatus !== 'Normal' // Must be "Normal"
     ) {
       overallStatus = 'Malnourished';
     }
+    console.log('Overall Status:', overallStatus); // Check the final result
     // Store the results in a way that you can display in the HTML
     this.classification = `${overallStatus},${weightForAgeStatus}, ${lengthForAgeStatus}, ${weightForLengthStatus}`;
     this.nutStatus = overallStatus;

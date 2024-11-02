@@ -8,6 +8,7 @@ import {
   CHILD_ADD_URL,
   CHILD_ALL_SCHEDULES_URL,
   CHILD_ANTHROPOMETRIC_URL,
+  CHILD_FILTER_URL,
   CHILD_NUTRITIONAL_STATUS_URL,
   CHILD_SCHEDULE_URL,
   CHILD_URL,
@@ -41,8 +42,30 @@ export class ChildService {
     return this.http.get<Child[]>(CHILD_URL, { headers, params });
   }
 
+  getAllFilter(
+    startDate?: Date,
+    endDate?: Date,
+    filters?: any
+  ): Observable<Child[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+
+    // Initialize query parameters
+    let params = new HttpParams({ fromObject: filters || {} });
+
+    // Add date filters if provided
+    if (startDate) params = params.set('startDate', startDate.toISOString());
+    if (endDate) params = params.set('endDate', endDate.toISOString());
+
+    return this.http.get<Child[]>(CHILD_FILTER_URL, { headers, params });
+  }
+
   getVaccinationSummary(): Observable<any> {
-    return this.http.get(CHILD_VAX_SUMMARY_URL);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<any>(`${CHILD_URL}/vaccination-summary`, { headers });
   }
 
   getAllChildrenBySearchTerm(searchTerm: string): Observable<Child[]> {

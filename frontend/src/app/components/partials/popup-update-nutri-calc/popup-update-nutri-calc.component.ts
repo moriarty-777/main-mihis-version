@@ -580,12 +580,11 @@ export class PopupUpdateNutriCalcComponent {
 
     // Determine the overall nutritional status based on the individual statuses
     let overallStatus = 'Normal';
-    if (lengthForAgeStatus === 'Tall') {
-      overallStatus = 'Normal';
-    } else if (
-      weightForLengthStatus !== 'Normal' ||
-      lengthForAgeStatus !== 'Normal' ||
-      weightForAgeStatus !== 'Normal'
+
+    if (
+      weightForAgeStatus !== 'Normal' || // Must be "Normal"
+      (lengthForAgeStatus !== 'Normal' && lengthForAgeStatus !== 'Tall') || // Can be "Normal" or "Tall"
+      weightForLengthStatus !== 'Normal' // Must be "Normal"
     ) {
       overallStatus = 'Malnourished';
     }

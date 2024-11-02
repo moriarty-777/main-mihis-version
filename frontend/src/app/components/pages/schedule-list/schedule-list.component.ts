@@ -28,40 +28,11 @@ export class ScheduleListComponent {
     this.loadSchedules();
   }
 
-  // loadSchedules(): void {
-  //   this.childService.getAllSchedules().subscribe(
-  //     (response: any) => {
-  //       this.schedules = response.children.flatMap((child: any) =>
-  //         child.schedules.map((schedule: any) => ({
-
-  //           number: child._id,
-  //           name: `${child.firstName} ${child.lastName}`,
-  //           scheduleDate: new Date(schedule.scheduleDate),
-  //           scheduleType: schedule.scheduleType,
-  //           vaccineName: schedule.vaccineName,
-  //           doseNumber: schedule.doseNumber,
-  //           location: schedule.location,
-  //           smsContent: schedule.notificationContent,
-  //           status: schedule.notificationSent ? 'Sent' : 'Pending',
-  //           type: schedule.scheduleType,
-  //         }))
-  //       );
-  //       this.filterSchedules(); // Apply the initial filter
-  //     },
-  //     (error: any) => {
-  //       console.error('Error fetching schedules:', error);
-  //     }
-  //   );
-  // }
-
   loadSchedules(): void {
     this.childService.getAllSchedules().subscribe(
       (response: any) => {
         this.schedules = response.children.flatMap((child: any) =>
           child.schedules.map((schedule: any) => {
-            // Access the latest weighing data, if available
-            // const latestWeighing = child.weighingHistory[0]; // Assuming this is the latest entry
-            // console.log('Child Data:', child); // Log each child's data for debugging
             return {
               id: schedule._id,
               number: child._id,
@@ -220,14 +191,14 @@ export class ScheduleListComponent {
         dateOfVaccination: schedule.rescheduleDate,
       },
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // Update the schedule status to true
-        schedule.status = true;
-        // schedule.buttonDisabled = true; /// Optional: Use this flag to manage button state
-      }
-    });
+    // TODO:
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result) {
+    //     // Update the schedule status to true
+    //     schedule.status = true;
+    //     // schedule.buttonDisabled = true; /// Optional: Use this flag to manage button state
+    //   }
+    // });
   }
 
   openNutritionalStatusDialog(schedule: any): void {

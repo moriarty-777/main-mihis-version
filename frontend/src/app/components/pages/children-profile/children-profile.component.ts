@@ -75,9 +75,6 @@ export class ChildrenProfileComponent {
       this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
       this.motherId = `${data.mother.id}`;
 
-      // Calculate missed vaccines and update the count
-      this.missedVaccineCount = this.calculateMissedVaccines(this.child);
-
       // Assign the schedules if they exist
       if (this.child.schedules) {
         console.log('Schedules found:', this.child.schedules);
@@ -85,23 +82,12 @@ export class ChildrenProfileComponent {
         console.log('No schedules found for this child.');
       }
 
-      // this.vaccinationSchedule =
-      //   this.childrenService.getExpectedVaccinationSchedule(
-      //     data.child.dateOfBirth
-      //   );
-
-      // Sort the vaccinations after loading the child data
       this.child.vaccinations.sort((a, b) => {
         return (
           new Date(b.dateOfVaccination).getTime() -
           new Date(a.dateOfVaccination).getTime()
         );
       });
-
-      // Sort weighingHistory by date
-      // this.child.weighingHistory.sort((a: any, b: any) => {
-      //   return new Date(b.date).getTime() - new Date(a.date).getTime();
-      // });
 
       this.cdr.detectChanges(); // Detect changes if necessary
     });
@@ -178,77 +164,6 @@ export class ChildrenProfileComponent {
     return (administeredVaccines / totalRequiredVaccines) * 100;
   }
 
-  // calculateMissedVaccines(child: Child): number {
-  //   const expectedVaccines =
-  //     this.childrenService.getExpectedVaccinationSchedule(child);
-  //   const administeredVaccines = child.vaccinations || []; // Handle if vaccinations are empty
-
-  //   // Calculate the current date
-  //   const today = new Date();
-
-  //   // Filter out the expected vaccines that were not administered or were missed
-  //   const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
-  //     // Find if this expected vaccine was administered
-  //     const administered = administeredVaccines.some(
-  //       (administeredVaccine) =>
-  //         administeredVaccine.vaccineType === expectedVaccine.vaccineType &&
-  //         administeredVaccine.doseNumber === expectedVaccine.doseNumber
-  //     );
-
-  //     // If the vaccine was not administered and the scheduled date has passed, count it as missed
-  //     return (
-  //       !administered && new Date(expectedVaccine.dateOfVaccination) < today
-  //     );
-  //   });
-
-  //   // Return the number of missed vaccines
-  //   return missedVaccines.length;
-  // }
-
-  calculateMissedVaccines(child: Child): number {
-    // Fetch the expected vaccination schedule
-    const expectedVaccines =
-      this.childrenService.getExpectedVaccinationSchedule(child);
-    const administeredVaccines = child.vaccinations || []; // Ensure vaccinations array is defined
-
-    // Get today's date for comparison
-    const today = new Date();
-
-    // Filter expected vaccines that have passed their scheduled date and were not administered
-    const missedVaccines = expectedVaccines.filter((expectedVaccine) => {
-      // Check if this expected vaccine was administered
-      const isAdministered = administeredVaccines.some(
-        (administeredVaccine) =>
-          administeredVaccine.vaccineType === expectedVaccine.vaccineName &&
-          administeredVaccine.doseNumber === expectedVaccine.doseNumber
-      );
-
-      // Log each vaccine status for debugging
-      console.log(
-        `Checking vaccine: ${expectedVaccine.vaccineName}, Dose: ${expectedVaccine.doseNumber}`
-      );
-      console.log(`Scheduled Date: ${expectedVaccine.schedule}`);
-      console.log(`Administered: ${isAdministered ? 'Yes' : 'No'}`);
-      console.log(
-        `Missed: ${
-          !isAdministered && new Date(expectedVaccine.schedule) < today
-            ? 'Yes'
-            : 'No'
-        }`
-      );
-
-      // Return true if not administered and the scheduled date has passed
-      return !isAdministered && new Date(expectedVaccine.schedule) < today;
-    });
-
-    // Log missed vaccines count
-    console.log(`Missed vaccines count: ${missedVaccines.length}`);
-
-    // Update the missed vaccine count in the component
-    this.missedVaccineCount = missedVaccines.length;
-    return missedVaccines.length;
-  }
-
   countAEFIOccurrences(child: Child): number {
     return child.vaccinations.filter((vaccination) => vaccination.aefi).length;
   }
@@ -307,68 +222,4 @@ export class ChildrenProfileComponent {
       (now.getMonth() - dob.getMonth());
     return ageInMonths;
   }
-
-  // weighing history
-  // Method to delete weighing history
-  // deleteWeighingHistory(weighingHistoryId: string): void {
-  //   const confirmed = confirm('Are you sure you want to delete this record?');
-  //   if (confirmed) {
-  //     this.childrenService.deleteWeighingHistory(weighingHistoryId).subscribe(
-  //       () => {
-  //         this.toastrService.success('Weighing history deleted successfully!');
-  //         this.loadChildProfile(this.child._id); // Reload the child profile to refresh the table
-  //       },
-  //       (error) => {
-  //         this.toastrService.error('Failed to delete weighing history.');
-  //         console.error('Error deleting weighing history:', error);
-  //       }
-  //     );
-  //   }
-  // }
-
-  // Method to open the edit dialog
-  // openEditDialog(weighingStat: any): void {
-  //   const dialogRef = this.dialogRef.open(PopupWeighingComponent, {
-  //     data: { weighingStat },
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(() => {
-  //     this.loadChildProfile(this.child._id); // Reload the child profile after the dialog is closed
-  //   });
-  // }
-
-  // getNutritionalStatus(child: Child): string {
-  //   // If no weighing history exists, return 'N/A' or some default status
-  //   if (!child.weighingHistory || child.weighingHistory.length === 0) {
-  //     return 'N/A';
-  //   }
-
-  //   // Loop through the weighing history
-  //   for (const weighingStat of child.weighingHistory) {
-  //     const {
-  //       weightForAgeStatus,
-  //       heightForAgeStatus,
-  //       weightForLengthHeightStatus,
-  //     } = weighingStat;
-
-  //     // If any status is not 'Normal' or 'Tall', return 'Malnourished'
-  //     if (weightForAgeStatus !== 'Normal' && weightForAgeStatus !== 'Tall') {
-  //       return 'Malnourished';
-  //     }
-
-  //     if (heightForAgeStatus !== 'Normal' && heightForAgeStatus !== 'Tall') {
-  //       return 'Malnourished';
-  //     }
-
-  //     if (
-  //       weightForLengthHeightStatus !== 'Normal' &&
-  //       weightForLengthHeightStatus !== 'Tall'
-  //     ) {
-  //       return 'Malnourished';
-  //     }
-  //   }
-
-  //   // If all statuses in the history are 'Normal' or 'Tall', return 'Normal'
-  //   return 'Normal';
-  // }
 }

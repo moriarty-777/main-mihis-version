@@ -266,39 +266,39 @@ export async function sendYearlyScheduleSMS(
   // console.log("Filtered Yearly Schedules:", yearlySchedules);
   const message = `This Year Schedule for your child ${child.firstName} ${child.lastName}:\n${scheduleDetails}`;
   // const message = `This Year Schedule for your child Efraim Gondraneos is the`;
-  // console.log("Message Content23:\n", message);
+  console.log("Message Content23:\n", message);
   const messageText = scheduleDetails.trim();
   if (messageText.length === 0) {
-    // console.error("SMS text content is empty.");
+    console.error("SMS text content is empty.");
     return;
   }
   // Log the full message and its character count
-  // console.log("Message Content:\n", message);
-  // console.log("Character Count:", message.length);
+  console.log("Message Content:\n", message);
+  console.log("Character Count:", message.length);
 
   try {
-    // const response = await axios.post(
-    //   MOVIDER_BASE_URL,
-    //   new URLSearchParams({
-    //     api_key: MOVIDER_API_KEY,
-    //     api_secret: MOVIDER_API_SECRET,
-    //     to: phoneNumber,
-    //     from: "CTCMIHIS",
-    //     text: message,
-    //   }),
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/x-www-form-urlencoded",
-    //       Accept: "application/json",
-    //     },
-    //   }
-    // );
-    // console.log("Yearly schedule SMS sent successfully!", response.data);
+    const response = await axios.post(
+      MOVIDER_BASE_URL,
+      new URLSearchParams({
+        api_key: MOVIDER_API_KEY,
+        api_secret: MOVIDER_API_SECRET,
+        to: phoneNumber,
+        from: "CTCMIHIS",
+        text: message,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+        },
+      }
+    );
+    console.log("Yearly schedule SMS sent successfully!", response.data);
   } catch (error: any) {
-    // console.error(
-    //   "Failed to send yearly schedule SMS:",
-    //   error.response ? error.response.data : error.message
-    // );
+    console.error(
+      "Failed to send yearly schedule SMS:",
+      error.response ? error.response.data : error.message
+    );
   }
 }
 

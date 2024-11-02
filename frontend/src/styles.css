@@ -510,3 +510,7 @@ canvas {
   margin: 0 15px;
 }
 /* #endregion Charts */
+
+.reports {
+  cursor: pointer;
+}

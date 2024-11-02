@@ -40,49 +40,4 @@ export class ChartsCompleteImmunizationComponent {
       this.chart.update();
     }
   }
-
-  // completeImmunizationChartData: ChartData<'bar'> = {
-  //   labels: ['Immunization Status'],
-  //   datasets: [
-  //     {
-  //       data: [0], // Fully Vaccinated data (this will be updated dynamically)
-  //       backgroundColor: ['#549280'], // Green color
-  //       hoverBackgroundColor: ['#338c72'],
-  //       borderWidth: 0,
-  //       label: 'Fully Vaccinated', // Label for this dataset
-  //     },
-  //     {
-  //       data: [0], // Partially Vaccinated data
-  //       backgroundColor: ['#a3dccb'], // Light green color
-  //       hoverBackgroundColor: ['#8ce8cd'],
-  //       borderWidth: 0,
-  //       label: 'Partially Vaccinated', // Label for this dataset
-  //     },
-  //     {
-  //       data: [0], // Not Vaccinated data
-  //       backgroundColor: ['#f48c42'], // Soft orange color
-  //       hoverBackgroundColor: ['#ff7043'],
-  //       borderWidth: 0,
-  //       label: 'Not Vaccinated', // Label for this dataset
-  //     },
-  //   ],
-  // };
-
-  // ngOnChanges() {
-  //   // Update the datasets with dynamic data
-  //   this.completeImmunizationChartData.datasets[0].data = [
-  //     this.fullyVaccinatedCount,
-  //   ]; // Update Fully Vaccinated
-  //   this.completeImmunizationChartData.datasets[1].data = [
-  //     this.partiallyVaccinatedCount,
-  //   ]; // Update Partially Vaccinated
-  //   this.completeImmunizationChartData.datasets[2].data = [
-  //     this.notVaccinatedCount,
-  //   ]; // Update Not Vaccinated
-
-  //   // Update the chart to reflect the new data
-  //   if (this.chart) {
-  //     this.chart.update();
-  //   }
-  // }
 }

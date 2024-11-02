@@ -121,14 +121,41 @@
                 <div class="dh-item">
                   <h3 class="dh-title">Monitoring</h3>
                 </div>
+
                 <div class="dh-item">
+                  <select id="month" (change)="onMonthChange($event)">
+                    <option value="">Select Month</option>
+                    <option value="0">January</option>
+                    <option value="1">February</option>
+                    <option value="2">March</option>
+                    <option value="3">April</option>
+                    <option value="4">May</option>
+                    <option value="5">June</option>
+                    <option value="6">July</option>
+                    <option value="7">August</option>
+                    <option value="8">September</option>
+                    <option value="9">October</option>
+                    <option value="10">November</option>
+                    <option value="11">December</option>
+                  </select>
+                </div>
+                <div class="dh-item">
+                  <select id="year" (change)="onYearChange($event)">
+                    <option value="">Select Year</option>
+                    <option *ngFor="let year of availableYears" [value]="year">
+                      {{ year }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- <div class="dh-item">
                   <select id="history">
                     <option value="">Last 24 Hours</option>
                     <option value="1">Last Week</option>
                     <option value="2">Last Month</option>
                     <option value="3">Last Year</option>
                   </select>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="dashboard-bottom">
@@ -145,7 +172,11 @@
                     [purokData]="purokData"
                   ></charts-purok>
                 </div>
-                <div class="analytics-item ai-complete-immunization">
+                <div
+                  class="analytics-item ai-complete-immunization reports"
+                  title="Click to View PDF"
+                  (click)="generateVaccinationPdf()"
+                >
                   <charts-complete-immunization
                     [fullyVaccinatedCount]="fullyVaccinatedCount"
                     [partiallyVaccinatedCount]="partiallyVaccinatedCount"
