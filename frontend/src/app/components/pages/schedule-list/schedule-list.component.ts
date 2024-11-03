@@ -82,7 +82,7 @@ export class ScheduleListComponent {
 
   filterSchedules(): void {
     const today = new Date();
-    today.setDate(today.getDate() + 5);
+    // today.setDate(today.getDate() + 5);
     today.setHours(0, 0, 0, 0); // Reset time for accurate comparisons
 
     this.filteredSchedules = this.schedules

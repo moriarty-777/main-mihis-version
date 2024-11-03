@@ -59,3 +59,11 @@
 .analytics-item canvas {
   padding: 20px;
 }
+.descripp {
+  font-size: 16px;
+  padding: 24px;
+  line-height: 1.5;
+}
+.descripp .ss {
+  font-weight: 600;
+}

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData } from 'chart.js';
+import { AnalyticReportsService } from '../../../services/analytic-reports.service';
 
 @Component({
   selector: 'charts-missed-vaccine-reason',
@@ -15,33 +16,6 @@ export class ChartsMissedVaccineReasonComponent {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  // missedVaccineChartData: ChartData<'doughnut'> = {
-  //   labels: [],
-  //   datasets: [
-  //     {
-  //       data: [],
-  //       backgroundColor: [
-  //         '#3CB371', // Child Was Sick (Medium Sea Green)
-  //         '#66CDAA', // Lack of Awareness (Medium Aquamarine)
-  //         '#98FB98', // Transportation Problems (Pale Green)
-  //         '#2E8B57', // Went Out of Town (Sea Green)
-  //         '#8FBC8F', // Parental Refusal (Dark Sea Green)
-  //         '#20B2AA', // Fear of Side Effects (Light Sea Green)
-  //         '#ADFF2F', // Other (Green Yellow)
-  //       ],
-  //       hoverBackgroundColor: [
-  //         '#2E8B57', // Darker shade for Child Was Sick
-  //         '#5DC9A0', // Darker shade for Lack of Awareness
-  //         '#90EE90', // Darker shade for Transportation Problems
-  //         '#276B46', // Darker shade for Went Out of Town
-  //         '#7DA376', // Darker shade for Parental Refusal
-  //         '#1A958A', // Darker shade for Fear of Side Effects
-  //         '#9DE72E', // Darker shade for Other
-  //       ],
-  //       borderWidth: 0, // No border to keep it clean
-  //     },
-  //   ],
-  // };
   missedVaccineChartData: ChartData<'bar'> = {
     labels: [],
     datasets: [
@@ -87,3 +61,24 @@ export class ChartsMissedVaccineReasonComponent {
     }
   }
 }
+
+// TODO:
+//   missedVaccines: any[] = [];
+
+//   constructor(private analyticReportService: AnalyticReportsService) {}
+
+//   ngOnInit() {
+//     this.fetchMissedVaccineReport();
+//   }
+
+//   fetchMissedVaccineReport() {
+//     this.analyticReportService.getMissedVaccineReport().subscribe(
+//       (data: any) => {
+//         this.missedVaccines = data;
+//       },
+//       (error: any) => {
+//         console.error('Failed to load missed vaccine report', error);
+//       }
+//     );
+//   }
+// }

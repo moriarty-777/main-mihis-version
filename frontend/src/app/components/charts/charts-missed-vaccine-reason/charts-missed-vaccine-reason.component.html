@@ -12,3 +12,29 @@
   </div>
   <canvas baseChart [type]="'bar'" [data]="missedVaccineChartData"></canvas>
 </div>
+<!-- <div class="report-container">
+  <h2>Missed Vaccine Report</h2>
+  <div>
+    <div>
+      <div>
+        <div>Child Name</div>
+        <div>Vaccine Name</div>
+        <div>Date Missed</div>
+        <div>Reason</div>
+      </div>
+    </div>
+    <div>
+      <div *ngFor="let child of missedVaccines">
+        <div>{{ child.firstName }} {{ child.lastName }}</div>
+
+        <div *ngFor="let vaccine of child.missedVaccines">
+          {{ vaccine.vaccineName }}
+
+          <div>{{ vaccine.dateMissed | date : "mediumDate" }}</div>
+          <div>{{ vaccine.reason || "N/A" }}</div>
+          <div>{{ child.gender }} {{ child.purok }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

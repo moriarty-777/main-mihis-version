@@ -1,0 +1,10 @@
+.chart-data table {
+  margin: 14px;
+  width: 500px;
+}
+.chart-data tr td {
+  padding: 3px 0;
+}
+tbody {
+  text-align: center;
+}

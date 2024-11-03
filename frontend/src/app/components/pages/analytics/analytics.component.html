@@ -1,16 +1,39 @@
 <div class="analytics-container">
   <!-- <canvas baseChart [type]="'bar'" [data]="data"></canvas> -->
   <div class="analytics-item ai-gender">
-    <charts-gender
+    <!-- Vaccination summary text -->
+    <p class="descripp">
+      This summary provides an overview of the immunization status among
+      children. Out of the total children,
+      <span class="ss">{{ fullyVaccinatedCount }}</span>
+      are <strong class="ss">fully vaccinated</strong>, meeting the required
+      schedule of vaccines, ensuring comprehensive protection against
+      preventable diseases.
+      <span class="ss">{{ partiallyVaccinatedCount }}</span>
+      children are <strong class="ss">partially vaccinated</strong>, indicating
+      they have started but not yet completed the full schedule.
+      <span class="ss">{{ notVaccinatedCount }}</span>
+      children have <strong class="ss">not received any vaccinations</strong>,
+      highlighting a potential risk area that may require targeted outreach and
+      intervention.
+    </p>
+    <!-- <charts-gender
       [maleCount]="maleCount"
       [femaleCount]="femaleCount"
-    ></charts-gender>
+    ></charts-gender> -->
   </div>
   <div class="analytics-item ai-purok">
-    <charts-purok
+    <p class="descripp" *ngIf="mostCommonReason">
+      The most common reason for missed vaccination is
+      <strong class="ss">{{ mostCommonReason }}</strong> with a total count of
+      <span class="ss">{{ mostCommonReasonCount }} cases</span>. This indicates
+      a trend that may need further investigation to ensure better vaccination
+      coverage.
+    </p>
+    <!-- <charts-purok
       [purokLabels]="purokLabels"
       [purokData]="purokData"
-    ></charts-purok>
+    ></charts-purok> -->
   </div>
   <div class="analytics-item ai-complete-immunization">
     <charts-complete-immunization
@@ -24,21 +47,15 @@
       [missedVaccineReasons]="missedVaccineReasons"
     ></charts-missed-vaccine-reason>
   </div>
+  <!-- <div class="analytics-item ai-missed-vaccine-reason">
+    <charts-missed-vaccine-reason></charts-missed-vaccine-reason>
+  </div> -->
 
   <!-- TODO: FIXME: HARD CODED -->
   <div class="analytics-item ai-immunization-coverage">
-    <h2>Complete Infant Immunization Reports</h2>
-    <div class="chart-data">
-      <table>
-        <tr *ngFor="let status of immunizationCoverageData; let i = index">
-          <td>{{ status.label }}:</td>
-          <td>
-            <span>{{ status.value }}</span>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <canvas baseChart [type]="'bar'" [data]="immunizationChartData"></canvas>
+    <charts-immunization-coverage
+      [vaccineDoses]="vaccineDoses"
+    ></charts-immunization-coverage>
   </div>
 
   <div class="analytics-item ai-malnourishment-status">
@@ -56,17 +73,8 @@
     <canvas baseChart [type]="'bar'" [data]="malnourishmentChartData"></canvas>
   </div>
 
-  <!--  -->
+  <!--
   <div class="analytics-item ai-vaccine-coverage">
     <canvas baseChart [data]="vaccineChartData" [type]="'bar'"> </canvas>
-  </div>
-  <!--  -->
-
-  <!-- TODO: FIXME: Hard Data -->
-
-  <!-- <div class="analytics-item ai-coverage-heatmap-purok">
-    <charts-coverage-heatmap-purok
-      [purokCoverageData]="purokCoverageData"
-    ></charts-coverage-heatmap-purok>
   </div> -->
 </div>

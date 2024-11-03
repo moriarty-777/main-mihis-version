@@ -1302,4 +1302,160 @@ router.patch(
   }
 );
 
+// Get the vaccine
+// Get Missed Vaccine Summary
+router.get(
+  "/missed-vaccine-summary",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const missedVaccineSummary = await MissedVaccineModel.aggregate([
+        {
+          $group: {
+            _id: "$vaccineName",
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            vaccineName: "$_id",
+            count: 1,
+          },
+        },
+      ]);
+
+      res.status(200).json(missedVaccineSummary);
+    } catch (error: any) {
+      console.error("Error fetching missed vaccine summary:", error);
+      res.status(500).send({
+        message: "Failed to retrieve missed vaccine summary.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// // New route for missed vaccine reporting
+router.get(
+  "/report/missed-vaccines",
+  expressAsyncHandler(async (req, res) => {
+    try {
+      // Fetch missed vaccines with child details
+      const missedVaccinesReport = await ChildModel.aggregate([
+        {
+          $lookup: {
+            from: "missedvaccines", // Collection name for missed vaccines
+            localField: "_id",
+            foreignField: "childId",
+            as: "missedVaccines",
+          },
+        },
+        {
+          $match: {
+            "missedVaccines.0": { $exists: true }, // Only children with missed vaccines
+          },
+        },
+        {
+          $project: {
+            firstName: 1,
+            lastName: 1,
+            purok: 1,
+            gender: 1,
+            missedVaccines: {
+              vaccineName: 1,
+              dateMissed: 1,
+              reason: 1,
+            },
+          },
+        },
+      ]);
+
+      res.status(200).json(missedVaccinesReport);
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Failed to retrieve missed vaccine report.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+router.get(
+  "/report/vaccine-doses",
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const vaccineCounts = await SchedulingModel.aggregate([
+        {
+          $match: {
+            scheduleType: "vaccination",
+            status: true, // Only administered vaccines
+          },
+        },
+        {
+          $lookup: {
+            from: "children", // The name of the child collection (may need to verify)
+            localField: "childId",
+            foreignField: "_id",
+            as: "childInfo",
+          },
+        },
+        {
+          $unwind: "$childInfo",
+        },
+        {
+          $group: {
+            _id: {
+              vaccineName: "$vaccineName",
+              doseNumber: "$doseNumber",
+              gender: "$childInfo.gender",
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              vaccineName: "$_id.vaccineName",
+              doseNumber: "$_id.doseNumber",
+            },
+            maleCount: {
+              $sum: {
+                $cond: [{ $eq: ["$_id.gender", "Male"] }, "$count", 0],
+              },
+            },
+            femaleCount: {
+              $sum: {
+                $cond: [{ $eq: ["$_id.gender", "Female"] }, "$count", 0],
+              },
+            },
+            totalCount: { $sum: "$count" }, // Total for each dose regardless of gender
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            vaccineName: "$_id.vaccineName",
+            doseNumber: "$_id.doseNumber",
+            maleCount: 1,
+            femaleCount: 1,
+            totalCount: 1,
+          },
+        },
+        {
+          $sort: { vaccineName: 1, doseNumber: 1 },
+        },
+      ]);
+
+      res.status(200).json(vaccineCounts);
+    } catch (error) {
+      res.status(500).json({
+        message: "Failed to retrieve vaccine dose data",
+        error,
+      });
+    }
+  })
+);
+
 export default router;
