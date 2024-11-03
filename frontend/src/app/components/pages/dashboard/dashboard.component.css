@@ -140,25 +140,27 @@ select:hover {
   grid-row: 2/3;
 }
 
+.ai-nutritional-status {
+  /* grid-column: 2/4;
+  grid-row: 2/3; */
+  grid-column: 2/4;
+  grid-row: 1/2;
+}
+
 .ai-complete-immunization {
   grid-column: 2/4;
   grid-row: 1/2;
 }
 
-.ai-missed-vaccine-reason {
+/* .ai-missed-vaccine-reason {
   grid-column: 2/4;
   grid-row: 2/3;
-}
+} */
 
 /* TODO: FIXME: */
 .ai-immunization-coverage {
   grid-column: 1/4;
   grid-row: 3/4;
-}
-
-.ai-malnourishment-status {
-  grid-column: 1/3;
-  grid-row: 4/5;
 }
 
 /* .analytics-container > * {
@@ -181,3 +183,12 @@ select:hover {
 }
 
 /* #endregion analytics end */
+.reports-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reports-header button {
+  max-width: 205px;
+}

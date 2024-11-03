@@ -88,6 +88,7 @@
           </h2>
         </div>
       </div>
+      <!-- TODO: -->
       <div class="panel-body">
         <div
           *ngIf="routers.url === '/dashboard'; else showRouterOutlet"
@@ -158,6 +159,24 @@
                 </div> -->
               </div>
             </div>
+            <!-- FIXME: -->
+            <div class="button-container reports-header">
+              <button
+                (click)="showVaccinationTable()"
+                [class.active]="currentView === 'vaccination'"
+                class="global-btn"
+              >
+                Vaccination Status
+              </button>
+              <button
+                class="global-btn"
+                (click)="showMalnutritionTable()"
+                [class.active]="currentView === 'malnutrition'"
+              >
+                Malnutrition Status
+              </button>
+            </div>
+            <!-- FIXME: -->
             <div class="dashboard-bottom">
               <div class="analytics-container">
                 <div class="analytics-item ai-gender">
@@ -175,13 +194,20 @@
                 <div
                   class="analytics-item ai-complete-immunization reports"
                   title="Click to View PDF"
-                  (click)="generateVaccinationPdf()"
+                  (click)="generatePdf()"
                 >
                   <charts-complete-immunization
+                    *ngIf="currentView === 'vaccination'"
                     [fullyVaccinatedCount]="fullyVaccinatedCount"
                     [partiallyVaccinatedCount]="partiallyVaccinatedCount"
                     [notVaccinatedCount]="notVaccinatedCount"
                   ></charts-complete-immunization>
+
+                  <charts-nutritional-status
+                    *ngIf="currentView === 'malnutrition'"
+                    [nutritionalLabels]="['Normal', 'Malnourished']"
+                    [nutritionalData]="[normalCount, malnourishedCount]"
+                  ></charts-nutritional-status>
                 </div>
               </div>
             </div>
@@ -191,6 +217,7 @@
           <router-outlet></router-outlet>
         </ng-template>
       </div>
+      <!-- TODO: -->
     </div>
   </div>
 </div>

@@ -19,6 +19,7 @@ import { Child } from '../../../shared/models/child';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
 import { PdfGenerationService } from '../../../services/pdf-generation.service';
+import { ChartsNutritionalStatusComponent } from '../../charts/charts-nutritional-status/charts-nutritional-status.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,7 @@ import { PdfGenerationService } from '../../../services/pdf-generation.service';
     ChartsGenderComponent,
     ChartsPurokComponent,
     ChartsCompleteImmunizationComponent,
+    ChartsNutritionalStatusComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -51,6 +53,10 @@ export class DashboardComponent {
   partiallyVaccinatedCount: number = 0;
   notVaccinatedCount: number = 0;
 
+  nutritionalStatus: string | null = null;
+  normalCount: number = 0;
+  malnourishedCount: number = 0;
+
   purokLabels: string[] = []; // Dynamic labels for Purok
   purokData: number[] = []; // Dynamic data for Purok
 
@@ -64,13 +70,23 @@ export class DashboardComponent {
 
   constructor() {}
 
+  currentView: string = 'vaccination';
+
+  // Methods to toggle the view
+  showVaccinationTable() {
+    this.currentView = 'vaccination';
+  }
+
+  showMalnutritionTable() {
+    this.currentView = 'malnutrition';
+  }
+
   ngOnInit() {
     this.initializeAvailableYears();
+
     this.userService.userObservable.subscribe((newUser) => {
       this.user = newUser;
     });
-    // this.loadChildren();
-    // Fetch all children and update dashboard data initially
     this.childService.getAllFilter().subscribe((children: Child[]) => {
       this.updateDashboardData(children);
     });
@@ -102,6 +118,7 @@ export class DashboardComponent {
     this.applyFilters();
   }
 
+  //
   applyFilters() {
     let startDate: Date | undefined = undefined;
     let endDate: Date | undefined = new Date();
@@ -122,11 +139,16 @@ export class DashboardComponent {
           : new Date(this.selectedYear ?? endDate.getFullYear(), 11, 31);
     }
 
+    // Determine filter type based on current view
+    const filterType =
+      this.currentView === 'malnutrition' ? 'malnutrition' : 'vaccination';
+
+    // Fetch filtered children data with the specified filter type
     this.childService
-      .getAllFilter(startDate, endDate)
+      .getAllFilter(startDate, endDate, {}, filterType)
       .subscribe((filteredChildren) => {
         this.updateDashboardData(filteredChildren);
-        this.filteredChildren = filteredChildren; //
+        this.filteredChildren = filteredChildren;
       });
   }
 
@@ -153,9 +175,19 @@ export class DashboardComponent {
       (child) => child.vaccinations.length === 0
     ).length;
 
+    // Update nutritional status counts
+    this.normalCount = filteredChildren.filter(
+      (child) => child.nutritionalStatus?.status === 'Normal'
+    ).length;
+    this.malnourishedCount = filteredChildren.filter(
+      (child) => child.nutritionalStatus?.status === 'Malnourished'
+    ).length;
+
+    console.log('Normal Count:', this.normalCount);
+    console.log('Malnourished Count:', this.malnourishedCount);
+
     // Update Purok data
     const purokCountMap: { [key: string]: number } = {};
-
     filteredChildren.forEach((child) => {
       const purok = `Purok ${child.purok}`;
       if (purokCountMap[purok]) {
@@ -164,79 +196,14 @@ export class DashboardComponent {
         purokCountMap[purok] = 1;
       }
     });
-
     this.purokLabels = Object.keys(purokCountMap).sort((a, b) => {
       const numA = parseInt(a.replace('Purok ', ''));
       const numB = parseInt(b.replace('Purok ', ''));
       return numA - numB;
     });
-
     this.purokData = this.purokLabels.map((label) => purokCountMap[label]);
   }
 
-  // loadChildren() {
-  //   this.childService.getVaccinationSummary().subscribe((data) => {
-  //     this.fullyVaccinatedCount = data.fullyVaccinatedCount;
-  //     this.partiallyVaccinatedCount = data.partiallyVaccinatedCount;
-  //     this.notVaccinatedCount = data.notVaccinatedCount;
-  //   });
-
-  //   this.childService.getAll().subscribe((children: Child[]) => {
-  //     // Gender counts
-  //     this.maleCount = children.filter(
-  //       (child) => child.gender === 'Male'
-  //     ).length;
-  //     this.femaleCount = children.filter(
-  //       (child) => child.gender === 'Female'
-  //     ).length;
-
-  //     // Purok counts
-  //     const purokCountMap: { [key: string]: number } = {};
-
-  //     children.forEach((child) => {
-  //       const purok = `Purok ${child.purok}`; // Ensure "Purok" prefix is added
-  //       if (purokCountMap[purok]) {
-  //         purokCountMap[purok]++;
-  //       } else {
-  //         purokCountMap[purok] = 1;
-  //       }
-  //     });
-  //     // Extract labels and data for the Purok chart
-  //     this.purokLabels = Object.keys(purokCountMap) // Labels: Purok 1, Purok 2, etc.
-  //       .sort((a, b) => {
-  //         // Extract numerical parts and sort numerically
-  //         const numA = parseInt(a.replace('Purok ', ''));
-  //         const numB = parseInt(b.replace('Purok ', ''));
-  //         return numA - numB;
-  //       });
-
-  //     this.purokData = this.purokLabels.map((label) => purokCountMap[label]);
-  //   });
-  // }
-
-  // generateVaccinationPdf() {
-  //   const requiredVaccines = 15;
-  //   const enrichedChildren = this.filteredChildren.map((child) => {
-  //     const vaccineCount = child.vaccinations.length;
-  //     let vaccineStatus = 'Not Vaccinated';
-
-  //     if (vaccineCount >= requiredVaccines) {
-  //       vaccineStatus = 'Fully Vaccinated';
-  //     } else if (vaccineCount > 0) {
-  //       vaccineStatus = 'Partially Vaccinated';
-  //     }
-
-  //     return {
-  //       firstName: child.firstName,
-  //       lastName: child.lastName,
-  //       vaccineStatus,
-  //       purok: child.purok,
-  //       barangay: child.barangay,
-  //     };
-  //   });
-
-  //   this.pdfService.generateChildVaccinationStatusPdf(enrichedChildren);
-  // }
   generateVaccinationPdf() {
     const requiredVaccines = 15;
     const enrichedChildren = this.filteredChildren.map((child) => {
@@ -273,5 +240,39 @@ export class DashboardComponent {
       year,
       month
     );
+  }
+
+  generateNutritionalStatusPdf() {
+    const enrichedChildren = this.filteredChildren.map((child) => ({
+      firstName: child.firstName,
+      lastName: child.lastName,
+      nutritionalStatus: child.nutritionalStatus?.status || 'Unknown', // Fetch nutritional status
+      purok: child.purok,
+      barangay: child.barangay,
+    }));
+
+    // Format the month and year for display
+    const year = this.selectedYear ? this.selectedYear.toString() : '';
+    const month =
+      this.selectedMonth !== null
+        ? new Date(0, this.selectedMonth).toLocaleString('default', {
+            month: 'long',
+          })
+        : '';
+
+    // Call the nutritional status PDF generator
+    this.pdfService.generateChildNutritionalStatusPdf(
+      enrichedChildren,
+      year,
+      month
+    );
+  }
+
+  generatePdf() {
+    if (this.currentView === 'malnutrition') {
+      this.generateNutritionalStatusPdf();
+    } else {
+      this.generateVaccinationPdf();
+    }
   }
 }

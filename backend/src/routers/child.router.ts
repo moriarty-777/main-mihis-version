@@ -150,52 +150,138 @@ router.get(
 );
 
 // Getall child FILTERED
+// router.get(
+//   "/child/filtered",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     const { nutritionalStatus, vaxStatus, startDate, endDate } = req.query;
+
+//     const filter: any = {};
+
+//     // if (gender) filter.gender = gender;
+//     // if (purok) filter.purok = purok;
+
+//     // Add date filtering based on startDate and endDate
+//     if (startDate || endDate) {
+//       filter.dateOfBirth = {};
+//       if (startDate) filter.dateOfBirth.$gte = new Date(startDate as string);
+//       if (endDate) filter.dateOfBirth.$lte = new Date(endDate as string);
+//     }
+
+//     // Fetch all children with applied filters
+//     const children = await ChildModel.find(filter)
+//       .populate("vaccinations")
+//       .populate("anthropometricStatus")
+//       .populate("weighingHistory")
+//       .populate("nutritionalStatus");
+
+//     // Additional in-memory filtering for other attributes (e.g., nutritionalStatus)
+//     let filteredChildren = children;
+
+//     // Filter based on nutritional status
+//     if (nutritionalStatus) {
+//       filteredChildren = children.filter(
+//         (child: any) => child.nutritionalStatus?.status === nutritionalStatus
+//       );
+//     }
+
+//     // Filter based on vaccination status
+//     if (vaxStatus) {
+//       const requiredVaccines = 15; // Number of vaccines needed for 'Fully Vaccinated'
+
+//       filteredChildren = filteredChildren.filter((child) => {
+//         const vaccineCount = child.vaccinations.length;
+//         let vaccineStatus = "Not Vaccinated";
+
+//         if (vaccineCount >= requiredVaccines) {
+//           vaccineStatus = "Fully Vaccinated";
+//         } else if (vaccineCount > 0) {
+//           vaccineStatus = "Partially Vaccinated";
+//         }
+
+//         // Apply the vaxStatus filter
+//         return vaccineStatus === vaxStatus;
+//       });
+//     }
+
+//     res.send(filteredChildren);
+//   })
+// );
+
 router.get(
   "/child/filtered",
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
-    const {
-      gender,
-      purok,
+    const { nutritionalStatus, vaxStatus, startDate, endDate, filterType } =
+      req.query;
+    console.log("Received query params:", {
       nutritionalStatus,
-      heightForAge,
-      weightForAge,
-      weightForLength,
       vaxStatus,
       startDate,
       endDate,
-    } = req.query;
+      filterType,
+    });
 
+    // Malnutrition filter handling
+    if (filterType === "malnutrition") {
+      // Add logging to trace the filter
+      console.log("Applying malnutrition filter");
+      const nutritionalFilter: any = { dateOfStatus: {} };
+      if (startDate)
+        nutritionalFilter.dateOfStatus.$gte = new Date(startDate as string);
+      if (endDate)
+        nutritionalFilter.dateOfStatus.$lte = new Date(endDate as string);
+
+      const children = await ChildModel.find()
+        .populate({
+          path: "nutritionalStatus",
+          match: nutritionalFilter,
+        })
+        .populate("vaccinations")
+        .populate("anthropometricStatus")
+        .populate("weighingHistory");
+
+      let filteredChildren = children.filter(
+        (child: any) => child.nutritionalStatus
+      );
+      if (nutritionalStatus) {
+        filteredChildren = filteredChildren.filter(
+          (child: any) => child.nutritionalStatus?.status === nutritionalStatus
+        );
+      }
+
+      console.log("Filtered Malnutrition Children:", filteredChildren.length);
+      res.send(filteredChildren);
+      return;
+    }
+
+    // Vaccination filter handling
+    console.log("Applying vaccination filter");
     const filter: any = {};
-
-    if (gender) filter.gender = gender;
-    if (purok) filter.purok = purok;
-
-    // Add date filtering based on startDate and endDate
     if (startDate || endDate) {
       filter.dateOfBirth = {};
       if (startDate) filter.dateOfBirth.$gte = new Date(startDate as string);
       if (endDate) filter.dateOfBirth.$lte = new Date(endDate as string);
     }
 
-    // Fetch all children with applied filters
     const children = await ChildModel.find(filter)
       .populate("vaccinations")
       .populate("anthropometricStatus")
       .populate("weighingHistory")
       .populate("nutritionalStatus");
 
-    // Additional in-memory filtering for other attributes (e.g., nutritionalStatus)
     let filteredChildren = children;
+
     if (nutritionalStatus) {
       filteredChildren = children.filter(
         (child: any) => child.nutritionalStatus?.status === nutritionalStatus
       );
     }
-    if (vaxStatus) {
-      const requiredVaccines = 15; // Number of vaccines needed for 'Fully Vaccinated'
 
+    if (vaxStatus) {
+      const requiredVaccines = 15;
       filteredChildren = filteredChildren.filter((child) => {
         const vaccineCount = child.vaccinations.length;
         let vaccineStatus = "Not Vaccinated";
@@ -206,14 +292,194 @@ router.get(
           vaccineStatus = "Partially Vaccinated";
         }
 
-        // Apply the vaxStatus filter
         return vaccineStatus === vaxStatus;
       });
     }
 
+    console.log("Filtered Vaccination Children:", filteredChildren.length);
     res.send(filteredChildren);
   })
 );
+
+// Weighing summary filter
+router.get(
+  "/chold/nutritional-summary",
+  authMiddleware,
+  loggerMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const { year, month, startDate, endDate } = req.query;
+
+    console.log("Received Nutritional Summary Filter Parameters:");
+    console.log("Year:", year);
+    console.log("Month:", month);
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
+
+    const matchConditions: Record<string, any> = {};
+
+    // Apply date range filtering
+    if (startDate || endDate) {
+      matchConditions.dateOfStatus = {};
+      if (startDate && typeof startDate === "string") {
+        matchConditions.dateOfStatus.$gte = new Date(startDate);
+      }
+      if (endDate && typeof endDate === "string") {
+        matchConditions.dateOfStatus.$lte = new Date(endDate);
+      }
+    } else if (year && typeof year === "string") {
+      // If only year is specified, filter by year
+      const yearNumber = parseInt(year, 10);
+      matchConditions.dateOfStatus = {
+        $gte: new Date(`${yearNumber}-01-01`),
+        $lte: new Date(`${yearNumber}-12-31`),
+      };
+
+      if (month && typeof month === "string") {
+        // Add month filter if specified
+        const monthNumber = parseInt(month, 10);
+        if (!isNaN(monthNumber) && monthNumber >= 1 && monthNumber <= 12) {
+          matchConditions.dateOfStatus.$gte = new Date(
+            `${yearNumber}-${monthNumber.toString().padStart(2, "0")}-01`
+          );
+          matchConditions.dateOfStatus.$lte = new Date(
+            new Date(
+              `${yearNumber}-${monthNumber.toString().padStart(2, "0")}-01`
+            ).setMonth(monthNumber)
+          );
+        }
+      }
+    }
+
+    const weighingAggregation = [
+      { $match: matchConditions },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$dateOfStatus" },
+            ...(month !== null && month !== undefined
+              ? { month: { $month: "$dateOfStatus" } }
+              : {}),
+          },
+          normalCount: {
+            $sum: { $cond: [{ $eq: ["$status", "Normal"] }, 1, 0] },
+          },
+          malnourishedCount: {
+            $sum: { $cond: [{ $eq: ["$status", "Malnourished"] }, 1, 0] },
+          },
+        },
+      },
+    ];
+
+    const weighingSummary = await NutritionalStatusModel.aggregate(
+      weighingAggregation
+    );
+    res.send({ weighingSummary });
+  })
+);
+
+// router.get(
+//   "/child/filtered",
+//   authMiddleware,
+//   loggerMiddleware,
+//   expressAsyncHandler(async (req, res) => {
+//     const {
+//       gender,
+//       purok,
+//       nutritionalStatus,
+//       heightForAge,
+//       weightForAge,
+//       weightForLength,
+//       vaxStatus,
+//       startDate,
+//       endDate,
+//       groupBy, // New parameter to group by month or year
+//     } = req.query;
+
+//     const filter: any = {};
+
+//     // Existing filters for gender, purok, etc.
+//     if (gender) filter.gender = gender;
+//     if (purok) filter.purok = purok;
+//     if (heightForAge || weightForAge || weightForLength) {
+//       filter["anthropometric"] = {};
+//       if (heightForAge) filter["anthropometric.heightForAge"] = heightForAge;
+//       if (weightForAge) filter["anthropometric.weightForAge"] = weightForAge;
+//       if (weightForLength)
+//         filter["anthropometric.weightForHeight"] = weightForLength;
+//     }
+
+//     // Date filtering based on startDate and endDate
+//     if (startDate || endDate) {
+//       filter.dateOfBirth = {};
+//       if (startDate) filter.dateOfBirth.$gte = new Date(startDate as string);
+//       if (endDate) filter.dateOfBirth.$lte = new Date(endDate as string);
+//     }
+
+//     // Query children with applied filters
+//     const children = await ChildModel.find(filter)
+//       .populate("vaccinations")
+//       .populate("anthropometricStatus")
+//       .populate("weighingHistory")
+//       .populate("nutritionalStatus");
+
+//     // Filter by nutritional status if provided
+//     let filteredChildren = children;
+//     if (nutritionalStatus) {
+//       filteredChildren = children.filter(
+//         (child: any) => child.nutritionalStatus?.status === nutritionalStatus
+//       );
+//     }
+
+//     // Vaccination status filter
+//     if (vaxStatus) {
+//       const requiredVaccines = 15; // Number of vaccines needed for 'Fully Vaccinated'
+//       filteredChildren = filteredChildren.filter((child) => {
+//         const vaccineCount = child.vaccinations.length;
+//         let vaccineStatus = "Not Vaccinated";
+
+//         if (vaccineCount >= requiredVaccines) {
+//           vaccineStatus = "Fully Vaccinated";
+//         } else if (vaccineCount > 0) {
+//           vaccineStatus = "Partially Vaccinated";
+//         }
+
+//         // Apply the vaxStatus filter
+//         return vaccineStatus === vaxStatus;
+//       });
+//     }
+
+//     const weighingAggregation = [
+//       {
+//         $match: {
+//           childId: { $in: filteredChildren.map((child) => child._id) },
+//         },
+//       },
+//       {
+//         $group: {
+//           _id:
+//             groupBy === "month"
+//               ? {
+//                   month: { $month: "$dateOfStatus" },
+//                   year: { $year: "$dateOfStatus" },
+//                 }
+//               : { year: { $year: "$dateOfStatus" } },
+//           normalCount: {
+//             $sum: { $cond: [{ $eq: ["$status", "Normal"] }, 1, 0] },
+//           },
+//           malnourishedCount: {
+//             $sum: { $cond: [{ $eq: ["$status", "Malnourished"] }, 1, 0] },
+//           },
+//         },
+//       },
+//     ];
+
+//     const weighingSummary = await NutritionalStatusModel.aggregate(
+//       weighingAggregation
+//     );
+
+//     res.send({ children: filteredChildren, weighingSummary });
+//   })
+// );
 
 // FIXME: get childprofile
 router.get(

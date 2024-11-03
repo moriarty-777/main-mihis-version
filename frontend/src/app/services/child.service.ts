@@ -45,18 +45,19 @@ export class ChildService {
   getAllFilter(
     startDate?: Date,
     endDate?: Date,
-    filters?: any
+    filters?: any,
+    filterType: 'vaccination' | 'malnutrition' = 'vaccination'
   ): Observable<Child[]> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.getToken()}`,
     });
 
-    // Initialize query parameters
     let params = new HttpParams({ fromObject: filters || {} });
-
-    // Add date filters if provided
     if (startDate) params = params.set('startDate', startDate.toISOString());
     if (endDate) params = params.set('endDate', endDate.toISOString());
+
+    // Append filter type to differentiate between vaccination and malnutrition requests
+    params = params.set('filterType', filterType);
 
     return this.http.get<Child[]>(CHILD_FILTER_URL, { headers, params });
   }
