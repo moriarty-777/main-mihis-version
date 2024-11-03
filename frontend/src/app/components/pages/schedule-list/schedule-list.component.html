@@ -57,7 +57,7 @@
           <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
           <td>{{ schedule.location }}</td>
           <!-- <td>{{ schedule.smsContent || "N/A" }}</td> -->
-          <td>{{ schedule.notificationStatus || "N/A" }}</td>
+          <td>{{ schedule.notificationStatus ? "Sent" : "N/A" }}</td>
           <td>{{ schedule.vaccineName || "N/A" }}</td>
           <td>{{ schedule.scheduleType || "N/A" }}</td>
           <td>{{ schedule.status ? "Done" : "N/A" }}</td>
