@@ -68,17 +68,34 @@ export class DashboardComponent {
 
   filteredChildren: Child[] = []; // Store f
 
+  // Add a new property to manage default year and month
+  defaultYear: number | null = new Date().getFullYear();
+  defaultMonth: number | null = null;
+
   constructor() {}
+
+  // TODO:
 
   currentView: string = 'vaccination';
 
   // Methods to toggle the view
+  // Methods to toggle the view with filter reset
   showVaccinationTable() {
     this.currentView = 'vaccination';
+    this.resetFilters(); // Reset filters
+    this.applyFilters(); // Reapply filters to load relevant data
   }
 
   showMalnutritionTable() {
     this.currentView = 'malnutrition';
+    this.resetFilters(); // Reset filters
+    this.applyFilters(); // Reapply filters to load relevant data
+  }
+
+  // Function to reset filters
+  resetFilters() {
+    this.selectedYear = this.defaultYear;
+    this.selectedMonth = this.defaultMonth;
   }
 
   ngOnInit() {
