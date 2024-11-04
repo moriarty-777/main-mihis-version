@@ -5,6 +5,7 @@ import { MotherService } from '../../../services/mother.service';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PopupAddChildComponent } from '../../partials/popup-add-child/popup-add-child.component';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-mother-profile',
@@ -18,7 +19,13 @@ export class MotherProfileComponent {
   private activatedRoute = inject(ActivatedRoute);
   private motherService = inject(MotherService);
   private dialogRef = inject(MatDialog);
+  userRole: string = '';
+  private userService = inject(UserService);
+
   constructor() {
+    this.userService.userObservable.subscribe((user) => {
+      this.userRole = user.role;
+    });
     this.activatedRoute.params.subscribe((params) => {
       if (params['id'])
         this.motherService

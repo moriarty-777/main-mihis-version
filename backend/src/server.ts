@@ -76,7 +76,7 @@ app.get("*", (req, res) => {
 // Schedule the cron job to run daily at 9:00 AM Philippine time
 // In server.ts
 cron.schedule(
-  "20 17 * * *", // Adjusted for UTC to run at 9:00 AM Philippine Time
+  "40 9 * * *", // Adjusted for UTC to run at 9:00 AM Philippine Time
   async () => {
     console.log("Running daily SMS reminder job at 9:00 AM Philippine Time...");
     await sendDailyReminders(); // Call the daily reminders function

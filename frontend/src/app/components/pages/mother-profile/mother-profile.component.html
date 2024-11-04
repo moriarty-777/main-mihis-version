@@ -64,7 +64,11 @@
           </div>
         </div>
         <div class="user-statistics">
-          <button class="vcard-popup global-btn" (click)="openDialog()">
+          <button
+            *ngIf="userRole !== 'midwife' && userRole !== 'admin'"
+            class="vcard-popup global-btn"
+            (click)="openDialog()"
+          >
             Add New Child
           </button>
           <!-- <button class="s vcard-popup global-btn" (click)="linkChild()">
