@@ -71,6 +71,68 @@ export class AnalyticsComponent {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
+  // FILETER TODO:
+  // FILETER TODO:
+  // FILETER TODO:
+
+  availableYears: number[] = [];
+  selectedTimeframe: string = '24h';
+  selectedMonth: number | null = null;
+  selectedYear: number | null = null;
+  // Add a new property to manage default year and month
+  defaultYear: number | null = new Date().getFullYear();
+  defaultMonth: number | null = null;
+  // Function to reset filters
+  resetFilters() {
+    this.selectedYear = this.defaultYear;
+    this.selectedMonth = this.defaultMonth;
+  }
+
+  initializeAvailableYears() {
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 2017; year--) {
+      this.availableYears.push(year);
+    }
+  }
+
+  onMonthChange(event: any) {
+    this.selectedMonth = event.target.value
+      ? parseInt(event.target.value)
+      : null;
+    this.applyFilters();
+  }
+
+  onYearChange(event: any) {
+    this.selectedYear = event.target.value
+      ? parseInt(event.target.value)
+      : null;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let startDate: Date | undefined = undefined;
+    let endDate: Date | undefined = new Date();
+
+    if (this.selectedYear || this.selectedMonth !== null) {
+      startDate = new Date(
+        this.selectedYear ?? endDate.getFullYear(),
+        this.selectedMonth ?? 0,
+        1
+      );
+      endDate =
+        this.selectedMonth !== null
+          ? new Date(
+              this.selectedYear ?? endDate.getFullYear(),
+              (this.selectedMonth ?? 0) + 1,
+              0
+            )
+          : new Date(this.selectedYear ?? endDate.getFullYear(), 11, 31);
+    }
+  }
+  // FILETER TODO:
+  // FILETER TODO:
+  // FILETER TODO:
+
   ngOnInit() {
     this.loadChildren(); // Fetch data on initialization
     this.loadVaccinationSummary(); // Fetch immunization data
@@ -78,9 +140,12 @@ export class AnalyticsComponent {
     this.fetchAnthropometricStatusData();
     this.fetchWeightForHeightData();
     this.fetchHeightForAgeData(); // Ensure th
-    // TODO: Hard coded data
-    this.loadMissedVaccineData(); // Fetch missed vaccine data
-    this.loadCoveragePurok();
+    this.loadMissedVaccineData();
+    // FILter
+    this.initializeAvailableYears();
+
+    // this.loadMissedVaccineData(); // Fetch missed vaccine data
+    // this.loadCoveragePurok();
   }
 
   // Weight for height
@@ -283,7 +348,7 @@ export class AnalyticsComponent {
     });
   }
 
-  // Malnourishment Data (Hardcoded)
+  // Malnourishme nt Data (Hardcoded)
   malnourishmentData: { label: string; value: number }[] = [
     { label: 'Normal', value: 70 },
     { label: 'Malnourished', value: 30 },
@@ -309,4 +374,40 @@ export class AnalyticsComponent {
   }
 
   // TODO:
+  // generateMissedVaccinePdf() {
+  //   const year = this.selectedYear ? this.selectedYear.toString() : '';
+  //   const month =
+  //     this.selectedMonth !== null
+  //       ? new Date(0, this.selectedMonth).toLocaleString('default', {
+  //           month: 'long',
+  //         })
+  //       : '';
+
+  //   this.analyticReportsService
+  //     .getMissedVaccineReport() // Pass start and end dates
+  //     .subscribe((data: any[]) => {
+  //       this.pdfService.generateMissedVaccineReportPdf(data, year, month);
+  //     });
+  // }
+
+  generateMissedVaccinePdf() {
+    this.analyticReportsService
+      .getMissedVaccineReport()
+      .subscribe((data: any[]) => {
+        this.pdfService.generateMissedVaccineReportPdf(data);
+      });
+  }
+
+  generateAdministeredVaccinesPdf() {
+    this.pdfService.generateAdministeredVaccinesPdf(this.vaccineDoses);
+  }
+  generateWeightForAgePdf() {
+    this.pdfService.generateWeightForAgePdf(this.weightForAgeData);
+  }
+  generateHeightForAgePdf() {
+    this.pdfService.generateHeightForAgePdf(this.heightForAgeData);
+  }
+  generateWeightForHeightPdf() {
+    this.pdfService.generateWeightForHeightPdf(this.weightForHeightData);
+  }
 }

@@ -1414,6 +1414,7 @@ router.get(
 );
 
 // // New route for missed vaccine reporting
+// TODO: NOW
 router.get(
   "/report/missed-vaccines",
   expressAsyncHandler(async (req, res) => {
@@ -1457,6 +1458,8 @@ router.get(
     }
   })
 );
+
+// Analytics endpoint missed vaccine
 // Vaccine coverage
 router.get(
   "/report/vaccine-doses",
