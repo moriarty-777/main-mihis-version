@@ -72,7 +72,13 @@ export class DashboardComponent {
   defaultYear: number | null = new Date().getFullYear();
   defaultMonth: number | null = null;
 
-  constructor() {}
+  userRole!: string;
+
+  constructor() {
+    this.userService.userObservable.subscribe((user) => {
+      this.userRole = user.role;
+    });
+  }
 
   // TODO:
 

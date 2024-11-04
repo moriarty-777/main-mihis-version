@@ -100,32 +100,43 @@ export const routes: Routes = [
       {
         path: 'audit-trail',
         component: AdminLogsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['admin'] },
       },
       {
         path: 'healthworker-schedule',
         component: ScheduleWorkerComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'midwife'] },
       },
       {
         path: 'analytics',
         component: AnalyticsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'midwife'] },
       },
-      {
-        path: 'nut-calculator',
-        component: NutritionalStatusCalcComponent,
-      },
-      {
-        path: 'reports',
-        component: ReportsComponent,
-      },
+      // {
+      //   path: 'nut-calculator',
+      //   component: NutritionalStatusCalcComponent,
+      // },
+      // {
+      //   path: 'reports',
+      //   component: ReportsComponent,
+      // },
       {
         path: 'calendar',
         component: CalendarComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'midwife', 'bhw'] },
       },
       {
         path: 'schedule-list',
         component: ScheduleListComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'midwife', 'bhw'] },
       },
     ],
     canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin', 'midwife', 'bhw'] },
   },
 ];

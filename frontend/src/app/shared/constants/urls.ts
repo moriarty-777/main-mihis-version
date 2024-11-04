@@ -44,3 +44,9 @@ export const SEND_SMS = BASE_URL + '/api/sms/sendSMS';
 export const REPORT_MISSED_VACCINES_URL =
   BASE_URL + '/api/report/missed-vaccines';
 export const REPORT_VACCINE_DOSES_URL = BASE_URL + '/api/report/vaccine-doses';
+export const REPORT_ANTHROPOMETRIC_URL =
+  BASE_URL + '/api/anthropometric-weight-for-age-by-child';
+export const REPORT_HEIGHT_FOR_AGE_URL =
+  BASE_URL + '/api/anthropometric-height-for-age';
+export const REPORT_WEIGHT_FOR_HEIGHTURL =
+  BASE_URL + '/api/anthropometric-weight-for-height';

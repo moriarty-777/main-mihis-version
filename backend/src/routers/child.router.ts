@@ -148,7 +148,83 @@ router.get(
     res.send(filteredChildren); // Send the filtered results
   })
 );
+// anthropometricRouter.js
+// router.get(
+//   "/report/anthropometric-status",
+//   expressAsyncHandler(async (req, res) => {
+//     try {
+//       const anthropometricCounts = await AnthropometricModel.aggregate([
+//         // Step 1: Match records with a valid weightForAge
+//         {
+//           $match: {
+//             weightForAge: { $exists: true, $ne: null },
+//           },
+//         },
+//         // Step 2: Group by weightForAge and count occurrences
+//         {
+//           $group: {
+//             _id: "$weightForAge",
+//             count: { $sum: 1 },
+//           },
+//         },
+//         // Step 3: Use a $facet to ensure each category is included exactly once
+//         {
+//           $facet: {
+//             results: [
+//               {
+//                 $group: {
+//                   _id: null,
+//                   weightForAge: {
+//                     $push: {
+//                       k: "$_id",
+//                       v: "$count",
+//                     },
+//                   },
+//                 },
+//               },
+//             ],
+//             defaultValues: [
+//               {
+//                 $project: {
+//                   weightForAge: {
+//                     $arrayToObject: [
+//                       [
+//                         { k: "Severely Underweight", v: 0 },
+//                         { k: "Underweight", v: 0 },
+//                         { k: "Normal", v: 0 },
+//                         { k: "Overweight", v: 0 },
+//                       ],
+//                     ],
+//                   },
+//                 },
+//               },
+//             ],
+//           },
+//         },
+//         // Step 4: Merge the actual results with default values to ensure all categories
+//         {
+//           $project: {
+//             weightForAge: {
+//               $mergeObjects: [
+//                 { $arrayElemAt: ["$defaultValues.weightForAge", 0] },
+//                 { $arrayElemAt: ["$results.weightForAge", 0] },
+//               ],
+//             },
+//           },
+//         },
+//       ]);
 
+//       console.log("Weight for Age Data:", anthropometricCounts[0]);
+//       res.status(200).json(anthropometricCounts[0]);
+//     } catch (error) {
+//       console.error("Error retrieving weight for age data:", error);
+//       res.status(500).json({
+//         message: "Failed to retrieve weight for age data",
+//         error,
+//       });
+//     }
+//   })
+// );
 // Getall child FILTERED
 // router.get(
 //   "/child/filtered",
@@ -1381,7 +1457,7 @@ router.get(
     }
   })
 );
-
+// Vaccine coverage
 router.get(
   "/report/vaccine-doses",
   expressAsyncHandler(async (req, res) => {
@@ -1457,5 +1533,117 @@ router.get(
     }
   })
 );
+
+// WEight for age
+router.get(
+  "/anthropometric-weight-for-age-by-child",
+
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const weightForAgeByChild = await AnthropometricModel.aggregate([
+        {
+          $group: {
+            _id: { childId: "$childId", weightForAge: "$weightForAge" },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            childId: "$_id.childId",
+            weightForAge: "$_id.weightForAge",
+            count: 1,
+          },
+        },
+      ]);
+
+      res.status(200).json(weightForAgeByChild);
+    } catch (error: any) {
+      console.error("Error fetching weight for age summary by child:", error);
+      res.status(500).send({
+        message: "Failed to retrieve weight for age summary by child.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// Height for age
+router.get(
+  "/anthropometric-height-for-age",
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const heightForAgeCounts = await AnthropometricModel.aggregate([
+        {
+          $group: {
+            _id: { childId: "$childId", heightForAge: "$heightForAge" },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.heightForAge",
+            totalCount: { $sum: "$count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            heightForAge: "$_id",
+            count: "$totalCount",
+          },
+        },
+      ]);
+
+      res.status(200).json(heightForAgeCounts);
+    } catch (error: any) {
+      console.error("Error fetching height for age summary:", error);
+      res.status(500).send({
+        message: "Failed to retrieve height for age summary.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// weight for height
+router.get(
+  "/anthropometric-weight-for-height",
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const weightForHeightCounts = await AnthropometricModel.aggregate([
+        {
+          $group: {
+            _id: { childId: "$childId", weightForHeight: "$weightForHeight" },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.weightForHeight",
+            totalCount: { $sum: "$count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            weightForHeight: "$_id",
+            count: "$totalCount",
+          },
+        },
+      ]);
+
+      res.status(200).json(weightForHeightCounts);
+    } catch (error: any) {
+      console.error("Error fetching weight-for-height data:", error);
+      res.status(500).send({
+        message: "Failed to retrieve weight-for-height data.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// Filter for analytics TODO: FIXME:
 
 export default router;

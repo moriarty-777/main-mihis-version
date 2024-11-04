@@ -13,8 +13,23 @@
         <a routerLink="/">{{ user.firstName }}</a>
         <div class="menu">
           <a routerLink="/user/{{ user.id }}">Profile</a>
-          <ng-container *ngIf="user.role === 'admin'">
+          <!-- <ng-container *ngIf="user.role === 'admin'">
             <a routerLink="/dashboard">Dashboard</a>
+            <a routerLink="/user">All Users</a>
+          </ng-container> -->
+          <!-- Update this ng-container to check for multiple roles -->
+          <ng-container
+            *ngIf="
+              user.role === 'admin' ||
+              user.role === 'midwife' ||
+              user.role === 'bhw'
+            "
+          >
+            <a routerLink="/dashboard">Dashboard</a>
+          </ng-container>
+
+          <!-- Admin only access for All Users -->
+          <ng-container *ngIf="user.role === 'admin'">
             <a routerLink="/user">All Users</a>
           </ng-container>
           <a routerLink="/mother">All Mother</a>

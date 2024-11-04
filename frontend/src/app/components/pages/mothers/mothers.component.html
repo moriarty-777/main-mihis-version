@@ -51,7 +51,11 @@
           </p>
         </div>
       </div>
-      <button class="vcard-popup global-btn" (click)="openAddDialog()">
+      <button
+        *ngIf="userRole !== 'midwife' && userRole !== 'admin'"
+        class="vcard-popup global-btn"
+        (click)="openAddDialog()"
+      >
         <mat-icon>add</mat-icon> Add Mother
       </button>
     </div>
@@ -64,7 +68,9 @@
               <th>Transient</th>
               <th>Purok</th>
               <th>Children</th>
-              <th>Action</th>
+              <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
+                Action
+              </th>
             </tr>
           </thead>
           @for(mothers of mother; track $index){
@@ -95,7 +101,10 @@
                   </span>
                 </span>
               </td>
-              <td class="action">
+              <td
+                class="action"
+                *ngIf="userRole !== 'midwife' && userRole !== 'admin'"
+              >
                 <button
                   type="button"
                   class="global-btn update"

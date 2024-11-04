@@ -1,11 +1,12 @@
 import { ChartData } from 'chart.js';
 import { Component, Input, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'charts-nutritional-status',
   standalone: true,
-  imports: [BaseChartDirective],
+  imports: [BaseChartDirective, CommonModule],
   templateUrl: './charts-nutritional-status.component.html',
   styleUrl: './charts-nutritional-status.component.css',
 })

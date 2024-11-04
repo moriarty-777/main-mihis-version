@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-child',
@@ -30,6 +31,9 @@ export class ChildComponent {
   purokFilter: string = '';
   nutritionalStatusFilter: string = '';
   vaxStatusFilter: string = '';
+
+  userRole: string = '';
+  private userService = inject(UserService);
   // FIXME:
   // public childObservable: Observable<Child[]>;
   constructor() {
@@ -37,6 +41,9 @@ export class ChildComponent {
     // this.childService.getAll().subscribe((children) => {
     //   this.child = children;
     // });
+    this.userService.userObservable.subscribe((user) => {
+      this.userRole = user.role;
+    });
     // FIXME: New Data
     this.loadChildren();
     // FIXME: New Data

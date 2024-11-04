@@ -6,12 +6,7 @@
           {{ user.firstName + " " + user.lastName }}
         </div>
         <!-- TODO: IF the user has a role of admin Show this -->
-        <a
-          *ngIf="user.role === 'admin'"
-          routerLink="/user"
-          class="usr-hdr-right global-btn"
-          >All Users</a
-        >
+        <a routerLink="/user" class="usr-hdr-right global-btn">All Users</a>
       </div>
       <div class="user-body">
         <div class="user-card-wrap">

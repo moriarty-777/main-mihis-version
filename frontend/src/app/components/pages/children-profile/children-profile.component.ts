@@ -17,6 +17,7 @@ import { PopupAddVaccinationComponent } from '../../partials/popup-add-vaccinati
 import { PopupUpdateVaccinationComponent } from '../../partials/popup-update-vaccination/popup-update-vaccination.component';
 import { PopupUpdateNutriCalcComponent } from '../../partials/popup-update-nutri-calc/popup-update-nutri-calc.component';
 import { PopupAddAefiComponent } from '../../partials/popup-add-aefi/popup-add-aefi.component';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-children-profile',
@@ -48,11 +49,17 @@ export class ChildrenProfileComponent {
   motherId!: any;
   midwives!: { _id: string; firstName: string; lastName: string }[];
 
+  userRole: string = '';
+  private userService = inject(UserService);
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private childrenService: ChildService,
     private cdr: ChangeDetectorRef
   ) {
+    this.userService.userObservable.subscribe((user) => {
+      this.userRole = user.role;
+    });
     this.activatedRoute.params.subscribe((params) => {
       if (params['id']) {
         this.loadChildProfile(params['id']); // Handle everything inside loadChildProfile

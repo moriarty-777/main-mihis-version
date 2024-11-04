@@ -6,7 +6,7 @@
         <h2>User Panel</h2>
       </div>
       <ul class="panel-links">
-        <li>
+        <li *ngIf="userRole === 'admin' || userRole === 'midwife'">
           <a routerLink="/dashboard">
             <span>
               <mat-icon
@@ -17,7 +17,7 @@
             <span class="panel-data">Dashboard</span>
           </a>
         </li>
-        <li>
+        <li *ngIf="userRole === 'admin' || userRole === 'midwife'">
           <a routerLink="analytics">
             <span>
               <mat-icon
@@ -28,7 +28,7 @@
             <span class="panel-data">Analytics</span></a
           >
         </li>
-        <li>
+        <li *ngIf="userRole === 'admin' || userRole === 'midwife'">
           <a routerLink="healthworker-schedule">
             <span>
               <mat-icon
@@ -39,7 +39,7 @@
             <span class="panel-data">Health Worker Schedule</span></a
           >
         </li>
-        <li>
+        <!-- <li>
           <a routerLink="reports">
             <span>
               <mat-icon
@@ -49,8 +49,8 @@
             </span>
             <span class="panel-data">Reports</span></a
           >
-        </li>
-        <li>
+        </li> -->
+        <li *ngIf="userRole === 'admin'">
           <a routerLink="audit-trail">
             <span>
               <mat-icon
@@ -61,7 +61,11 @@
             <span class="panel-data">Audit Trail</span></a
           >
         </li>
-        <li>
+        <li
+          *ngIf="
+            userRole === 'admin' || userRole === 'midwife' || userRole === 'bhw'
+          "
+        >
           <a routerLink="calendar">
             <span>
               <mat-icon fontIcon="event" class="mat-icon-outlined"></mat-icon>
@@ -69,7 +73,11 @@
             <span class="panel-data">Schedule</span></a
           >
         </li>
-        <li>
+        <li
+          *ngIf="
+            userRole === 'admin' || userRole === 'midwife' || userRole === 'bhw'
+          "
+        >
           <a routerLink="schedule-list">
             <span>
               <mat-icon fontIcon="list" class="mat-icon-outlined"></mat-icon>

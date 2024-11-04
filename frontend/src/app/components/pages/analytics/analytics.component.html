@@ -51,14 +51,32 @@
     <charts-missed-vaccine-reason></charts-missed-vaccine-reason>
   </div> -->
 
-  <!-- TODO: FIXME: HARD CODED -->
   <div class="analytics-item ai-immunization-coverage">
     <charts-immunization-coverage
       [vaccineDoses]="vaccineDoses"
     ></charts-immunization-coverage>
   </div>
+  <!-- Existing Components and Structure -->
 
-  <div class="analytics-item ai-malnourishment-status">
+  <!-- Weight for Age Chart -->
+  <div class="analytics-item ai-weight-for-age">
+    <charts-weight-for-age
+      [weightForAgeData]="weightForAgeData"
+    ></charts-weight-for-age>
+  </div>
+  <div class="analytics-item ai-height-for-age">
+    <charts-height-for-age
+      [heightForAgeData]="heightForAgeData"
+    ></charts-height-for-age>
+  </div>
+  <div class="analytics-item ai-weight-for-height">
+    <charts-weight-for-height
+      [weightForHeightData]="weightForHeightData"
+    ></charts-weight-for-height>
+  </div>
+
+  <!-- TODO: FIXME: HARD CODED -->
+  <!-- <div class="analytics-item ai-malnourishment-status">
     <h2>Malnutrition and Normal Status</h2>
     <div class="chart-data">
       <table>
@@ -71,7 +89,7 @@
       </table>
     </div>
     <canvas baseChart [type]="'bar'" [data]="malnourishmentChartData"></canvas>
-  </div>
+  </div> -->
 
   <!--
   <div class="analytics-item ai-vaccine-coverage">

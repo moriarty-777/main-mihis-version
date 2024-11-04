@@ -8,6 +8,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { PopupNutriCalcComponent } from '../../partials/popup-nutri-calc/popup-nutri-calc.component';
 import { PopupAddAefiComponent } from '../../partials/popup-add-aefi/popup-add-aefi.component';
 import { PopupMissedVaccinationComponent } from '../../partials/popup-missed-vaccination/popup-missed-vaccination.component';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-schedule-list',
@@ -21,9 +22,16 @@ export class ScheduleListComponent {
   filteredSchedules: any[] = []; // Filtered schedules for display
   selectedFilter: string = '24h'; // Default filter
 
+  userRole: string = '';
+  private userService = inject(UserService);
+
   private childService = inject(ChildService);
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {
+    this.userService.userObservable.subscribe((user) => {
+      this.userRole = user.role;
+    });
+  }
   ngOnInit(): void {
     this.loadSchedules();
   }

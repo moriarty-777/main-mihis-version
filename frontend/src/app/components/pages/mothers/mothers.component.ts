@@ -12,6 +12,7 @@ import { PopupAddMotherComponent } from '../../partials/popup-add-mother/popup-a
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-mothers',
@@ -30,10 +31,17 @@ export class MothersComponent {
   childrenCountFilter: string = '';
   transientFilter: string = '';
 
+  userRole: string = '';
+  private userService = inject(UserService);
+
   constructor() {
     // this.motherService.getAll().subscribe((mothers) => {
     //   this.mother = mothers;
     // });
+
+    this.userService.userObservable.subscribe((user) => {
+      this.userRole = user.role;
+    });
 
     this.loadMothers();
   }

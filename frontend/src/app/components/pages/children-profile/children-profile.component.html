@@ -243,6 +243,7 @@
         </div>
         <div class="table-group top">
           <button
+            *ngIf="userRole !== 'midwife' && userRole !== 'admin'"
             class="vcard-popup global-btn s"
             (click)="openVaccinationDialog()"
           >
@@ -258,7 +259,9 @@
                 <th>Administered By</th>
                 <th>Recorded by</th>
                 <th>Location</th>
-                <th>Action</th>
+                <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
+                  Action
+                </th>
               </tr>
             </thead>
 
@@ -286,7 +289,10 @@
                   }}
                 </td>
                 <td>{{ vaccination.placeOfVaccination }}</td>
-                <td class="bottoms">
+                <td
+                  class="bottoms"
+                  *ngIf="userRole !== 'midwife' && userRole !== 'admin'"
+                >
                   <button
                     (click)="openUpdateDialog(vaccination.id)"
                     class="vcard-popup global-btn"
@@ -329,7 +335,9 @@
                 <th>Height (cm)</th>
                 <th>Growth Category</th>
                 <th>Notes</th>
-                <th>Action</th>
+                <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
+                  Action
+                </th>
                 <!-- <th>Action</th> -->
               </tr>
             </thead>
@@ -342,7 +350,7 @@
                 <!-- <td>{{ child.nutritionalStatus?.status || "N/A" }}</td> -->
                 <td>{{ child.nutritionalStatus?.status || "N/A" }}</td>
                 <td>{{ weighingStat?.notes }}</td>
-                <td>
+                <td *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
                   <button
                     (click)="openNutriCalcDialog(weighingStat._id)"
                     class="vcard-popup global-btn"

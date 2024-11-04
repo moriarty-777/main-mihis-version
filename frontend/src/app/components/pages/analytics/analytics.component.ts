@@ -11,6 +11,10 @@ import { ChartsCoverageHeatmapPurokComponent } from '../../charts/charts-coverag
 import { CommonModule } from '@angular/common';
 import { AnalyticReportsService } from '../../../services/analytic-reports.service';
 import { ChartsImmunizationCoverageComponent } from '../../charts/charts-immunization-coverage/charts-immunization-coverage.component';
+import { ChartsWeightForAgeComponent } from '../../charts/charts-weight-for-age/charts-weight-for-age.component';
+import { ChartsHeightForAgeComponent } from '../../charts/charts-height-for-age/charts-height-for-age.component';
+import { ChartsWeightForHeightComponent } from '../../charts/charts-weight-for-height/charts-weight-for-height.component';
+import { PdfGenerationService } from '../../../services/pdf-generation.service';
 
 @Component({
   selector: 'app-analytics',
@@ -24,6 +28,9 @@ import { ChartsImmunizationCoverageComponent } from '../../charts/charts-immuniz
     ChartsMissedVaccineReasonComponent,
     ChartsCoverageHeatmapPurokComponent,
     ChartsImmunizationCoverageComponent,
+    ChartsWeightForAgeComponent,
+    ChartsHeightForAgeComponent,
+    ChartsWeightForHeightComponent,
   ],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.css',
@@ -31,6 +38,7 @@ import { ChartsImmunizationCoverageComponent } from '../../charts/charts-immuniz
 export class AnalyticsComponent {
   private childService = inject(ChildService);
   private analyticReportsService = inject(AnalyticReportsService);
+  private pdfService = inject(PdfGenerationService);
   maleCount: number = 0;
   femaleCount: number = 0;
 
@@ -56,22 +64,117 @@ export class AnalyticsComponent {
   mostCommonReason: string = '';
   mostCommonReasonCount: number = 0;
 
+  // Analytics
+  weightForAgeData: { [key: string]: number } = {};
+  heightForAgeData: { [key: string]: number } = {};
+  weightForHeightData: { [key: string]: number } = {};
+
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   ngOnInit() {
     this.loadChildren(); // Fetch data on initialization
     this.loadVaccinationSummary(); // Fetch immunization data
     this.loadVaccineDoseCounts();
+    this.fetchAnthropometricStatusData();
+    this.fetchWeightForHeightData();
+    this.fetchHeightForAgeData(); // Ensure th
     // TODO: Hard coded data
     this.loadMissedVaccineData(); // Fetch missed vaccine data
     this.loadCoveragePurok();
   }
 
+  // Weight for height
+  fetchWeightForHeightData() {
+    this.analyticReportsService.getWeightForHeightCounts().subscribe((data) => {
+      const aggregatedData: { [key: string]: number } = {};
+
+      data.forEach((item: { weightForHeight: string; count: number }) => {
+        if (item.weightForHeight) {
+          aggregatedData[item.weightForHeight] = item.count;
+        } else {
+          console.warn('Missing weightForHeight value in item:', item);
+        }
+      });
+
+      this.weightForHeightData = aggregatedData;
+      console.log('Final Weight for Height Data:', this.weightForHeightData);
+      this.updateChartDataForWeightForHeight();
+    });
+  }
+
+  updateChartDataForWeightForHeight() {
+    if (this.chart) {
+      this.chart.update();
+    }
+  }
+
+  // WEgiht for age
+  fetchAnthropometricStatusData() {
+    this.analyticReportsService
+      .getAnthropometricStatusCounts()
+      .subscribe((data) => {
+        // Transform the data to aggregate `weightForAge` values across all children
+        const aggregatedData: { [key: string]: number } = {};
+
+        data.forEach((item: { weightForAge: string; count: number }) => {
+          if (aggregatedData[item.weightForAge]) {
+            aggregatedData[item.weightForAge] += item.count;
+          } else {
+            aggregatedData[item.weightForAge] = item.count;
+          }
+        });
+
+        // Set the transformed data to the chart input
+        this.weightForAgeData = aggregatedData;
+
+        // Log the transformed data for verification
+        console.log('Aggregated Weight for Age Data:', this.weightForAgeData);
+
+        // Manually trigger chart update in child component
+        this.updateChartDataForChild();
+      });
+  }
+
+  // Manually call chart update in the child component
+  updateChartDataForChild() {
+    if (this.chart) {
+      this.chart.update();
+    }
+  }
+
+  // Weight for age
+
+  // height for age
+  fetchHeightForAgeData() {
+    this.analyticReportsService.getHeightForAgeCounts().subscribe((data) => {
+      const aggregatedData: { [key: string]: number } = {};
+
+      data.forEach((item: { heightForAge: string; count: number }) => {
+        aggregatedData[item.heightForAge] = item.count;
+      });
+
+      this.heightForAgeData = aggregatedData;
+
+      console.log('Aggregated Height for Age Data:', this.heightForAgeData);
+
+      // Trigger chart update if necessary
+      this.updateChartDataForHeightForAge();
+    });
+  }
+
+  // Method to update height for age chart specifically
+  updateChartDataForHeightForAge() {
+    if (this.chart) {
+      this.chart.update();
+    }
+  }
+  // height for age
+
   loadMissedVaccineData() {
     this.analyticReportsService.getMissedVaccineReport().subscribe(
       (data: any[]) => {
         // Log the response data structure to understand the fields
-        console.log('Raw Missed Vaccine Report Data:', data);
+        // console.log('Raw Missed Vaccine Report Data:', data);
 
         // Initialize a map to count occurrences of each reason
         const reasonCounts = new Map<string, number>();
@@ -102,10 +205,10 @@ export class AnalyticsComponent {
         this.mostCommonReason = mostCommon.label;
         this.mostCommonReasonCount = mostCommon.value;
 
-        console.log(
-          'Transformed Missed Vaccine Reasons:',
-          this.missedVaccineReasons
-        );
+        // console.log(
+        //   'Transformed Missed Vaccine Reasons:',
+        //   this.missedVaccineReasons
+        // );
       },
       (error) => {
         console.error('Failed to load missed vaccine report', error);
@@ -125,7 +228,7 @@ export class AnalyticsComponent {
           totalCount: dose.totalCount || 0,
         }));
 
-        console.log('Transformed Vaccine Doses:', this.vaccineDoses);
+        // console.log('Transformed Vaccine Doses:', this.vaccineDoses);
       },
       (error) => {
         console.error('Failed to load vaccine dose counts', error);
@@ -135,10 +238,8 @@ export class AnalyticsComponent {
 
   loadCoveragePurok() {
     // Hardcoded data for now, you can replace this with an API call once the database is set up
-    console.log('Missed Vaccine Data:', this.missedVaccineReasons); // Debugging
+    // console.log('Missed Vaccine Data:', this.missedVaccineReasons); // Debugging
   }
-
-  // FIXME: End hard coded data
 
   loadChildren() {
     this.childService.getAll().subscribe((children: Child[]) => {
@@ -206,85 +307,6 @@ export class AnalyticsComponent {
   getMalnourishmentData() {
     return this.malnourishmentData.map((status) => status.value);
   }
-} //FIXME: END
-// // HHEHEHE
-// vaccineAdministeredData: { label: string; count: number }[] = [
-//   { label: 'BCG', count: 45 },
-//   { label: 'Pentavalent', count: 32 },
-//   { label: 'OPV', count: 50 },
-//   { label: 'IPV', count: 40 },
-//   { label: 'PCV', count: 35 },
-//   { label: 'MMR', count: 38 },
-// ];
 
-// vaccineChartData: ChartData<'bar'> = {
-//   labels: this.vaccineAdministeredData.map((vaccine) => vaccine.label), // Labels: BCG, Pentavalent, etc.
-//   datasets: [
-//     {
-//       data: this.vaccineAdministeredData.map((vaccine) => vaccine.count), // Counts: 45, 32, etc.
-//       backgroundColor: [
-//         '#4CAF50',
-//         '#FFC107',
-//         '#FF5722',
-//         '#03A9F4',
-//         '#9C27B0',
-//         '#FFEB3B',
-//       ], // Different colors for each bar
-//       label: 'Vaccines Administered',
-//     },
-//   ],
-// };
-
-// TODO: EndHardcoded Data
-
-// data: ChartData<'bar'> = {
-//   labels: [
-//     'Jan',
-//     'Feb',
-//     'Mar',
-//     'Apr',
-//     'May',
-//     'Jun',
-//     'Jul',
-//     'Aug',
-//     'Sept',
-//     'Oct',
-//     'Nov',
-//     'Dec',
-//   ],
-//   datasets: [
-//     {
-//       data: this.getSubs(),
-//       backgroundColor: ['#549280'],
-//       label: 'subs',
-//     },
-//     {
-//       data: this.getWatchTime(),
-//       backgroundColor: ['#a3dccb'],
-//       label: 'Watch Time',
-//     },
-//   ],
-// };
-
-// getSubs() {
-//   return [100, 200, 300, 250, 500, 450, 150, 200, 550, 350, 200, 300];
-// }
-// getWatchTime() {
-//   return [100, 150, 120, 250, 230, 450, 150, 210, 220, 140, 200, 100];
-// }
-
-// // Get headers
-// getTotalSubs() {
-//   let sum = 0;
-//   this.getSubs().forEach((v) => (sum += v));
-//   return sum;
-// }
-
-// getTotalWatchTime() {
-//   let sum = 0;
-//   this.getWatchTime().forEach((v) => (sum += v));
-//   return sum;
-// }
-
-// TODO: Hardcoded Data
-// Complete Immunization Coverage Hardcoded Data
+  // TODO:
+}

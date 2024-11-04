@@ -42,7 +42,7 @@
           <!-- Scheduletype -->
           <th>Status</th>
           <!-- scheduleType -->
-          <th>Action</th>
+          <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">Action</th>
         </tr>
       </thead>
 
@@ -62,7 +62,7 @@
           <td>{{ schedule.scheduleType || "N/A" }}</td>
           <td>{{ schedule.status ? "Done" : "N/A" }}</td>
 
-          <td>
+          <td *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
             <button
               class="s global-btn"
               [disabled]="

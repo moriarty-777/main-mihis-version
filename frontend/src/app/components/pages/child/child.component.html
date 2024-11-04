@@ -80,7 +80,9 @@
               <th>Purok</th>
               <th>Nutritional Status</th>
               <th>Vaccine Status</th>
-              <th>Action</th>
+              <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
+                Action
+              </th>
             </tr>
           </thead>
           @for(children of child; track children.id){
@@ -102,7 +104,10 @@
               <td>
                 {{ calculateVaccinationStatus(children) }}
               </td>
-              <td class="action">
+              <td
+                class="action"
+                *ngIf="userRole !== 'midwife' && userRole !== 'admin'"
+              >
                 <button
                   type="button"
                   class="global-btn update"
