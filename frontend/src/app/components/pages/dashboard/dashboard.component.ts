@@ -266,10 +266,39 @@ export class DashboardComponent {
   }
 
   generateNutritionalStatusPdf() {
-    const enrichedChildren = this.filteredChildren.map((child) => ({
+    // const enrichedChildren = this.filteredChildren.map((child) => ({
+    //   firstName: child.firstName,
+    //   lastName: child.lastName,
+    //   nutritionalStatus: child.nutritionalStatus?.status || 'Unknown', // Fetch nutritional status
+    //   purok: child.purok,
+    //   barangay: child.barangay,
+    // }));
+
+    // // Format the month and year for display
+    // const year = this.selectedYear ? this.selectedYear.toString() : '';
+    // const month =
+    //   this.selectedMonth !== null
+    //     ? new Date(0, this.selectedMonth).toLocaleString('default', {
+    //         month: 'long',
+    //       })
+    //     : '';
+
+    // // Call the nutritional status PDF generator
+    // this.pdfService.generateChildNutritionalStatusPdf(
+    //   enrichedChildren,
+    //   year,
+    //   month
+    // );
+
+    // Filter to include only malnourished children
+    const malnourishedChildren = this.filteredChildren.filter(
+      (child) => child.nutritionalStatus?.status === 'Malnourished'
+    );
+
+    const enrichedChildren = malnourishedChildren.map((child) => ({
       firstName: child.firstName,
       lastName: child.lastName,
-      nutritionalStatus: child.nutritionalStatus?.status || 'Unknown', // Fetch nutritional status
+      nutritionalStatus: child.nutritionalStatus?.status || 'Unknown',
       purok: child.purok,
       barangay: child.barangay,
     }));
@@ -283,7 +312,7 @@ export class DashboardComponent {
           })
         : '';
 
-    // Call the nutritional status PDF generator
+    // Call the nutritional status PDF generator with only malnourished children
     this.pdfService.generateChildNutritionalStatusPdf(
       enrichedChildren,
       year,
