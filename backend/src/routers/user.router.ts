@@ -85,17 +85,6 @@ router.get(
   })
 );
 
-// router.get(
-//   "/midwives",
-//   expressAsyncHandler(async (req, res) => {
-//     const midwives = await UserModel.find(
-//       { role: "midwife" },
-//       "firstName lastName _id"
-//     );
-//     res.send(midwives);
-//   })
-// );
-// login
 router.post(
   "/login",
   expressAsyncHandler(async (req, res) => {
@@ -128,8 +117,6 @@ router.post(
   })
 );
 
-// Toggler activate / deactivate
-// Toggle User Activation
 router.patch("/:id/toggle-activation", authMiddleware, async (req, res) => {
   const user = await UserModel.findById(req.params.id);
 
@@ -272,42 +259,5 @@ router.delete(
     }
   })
 );
-
-// Optional
-// router.get(
-//   "/",
-//   expressAsyncHandler(async (req, res) => {
-//     const { role, experience } = req.query;
-
-//     // Start building the filter object
-//     const filter = {};
-
-//     // Apply role filter
-//     if (role) {
-//       filter.role = role;
-//     }
-
-//     // Fetch users from database
-//     let users = await UserModel.find(filter);
-
-//     // Filter users by experience if requested
-//     if (experience) {
-//       users = users.filter(user => {
-//         const totalMonths = calculateTotalMonths(user.dateOfService);
-//         if (experience === 'lessThan1') return totalMonths < 12;
-//         if (experience === 'lessThan5') return totalMonths < 60;
-//         if (experience === 'moreThan10') return totalMonths > 120;
-//         return true;
-//       });
-//     }
-
-//     res.send(users);
-//   })
-// );
-
-// // Helper function to calculate total months of service
-// const calculateTotalMonths = (dateOfService) => {
-//   const serviceDate = new Date(dateOfService);
-//   const today = new Date();
 
 export default router;

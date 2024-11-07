@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { BARANGAY_LOGO, BINANGONAN_LOGO } from './shared-image';
 
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
@@ -13,16 +14,85 @@ export class PdfGenerationService {
   private http = inject(HttpClient);
   private toastrService = inject(ToastrService);
 
+  private readonly bangadLogo = BARANGAY_LOGO;
+  private readonly binangonanLogo = BINANGONAN_LOGO;
+
   async generateChildVaccinationStatusPdf(
     children: any[],
     year: string,
     month: string
   ) {
-    const documentDefinition = {
+    // Filter children by vaccination status
+    const fullyVaccinated = children.filter(
+      (child) => child.vaccineStatus === 'Fully Vaccinated'
+    );
+    const partiallyVaccinated = children.filter(
+      (child) => child.vaccineStatus === 'Partially Vaccinated'
+    );
+    const notVaccinated = children.filter(
+      (child) => child.vaccineStatus === 'Not Vaccinated'
+    );
+
+    const documentDefinition: any = {
       content: [
+        {
+          columns: [
+            {
+              image: this.binangonanLogo, // Left-side logo
+              width: 80,
+              alignment: 'left',
+              margin: [0, 0, 10, 0],
+            },
+            {
+              stack: [
+                { text: 'Republic of the Philippines', style: 'headerText' },
+                { text: 'Province of Rizal', style: 'headerText' },
+                {
+                  text: 'Municipality of Binangonan Rizal',
+                  style: 'headerText',
+                },
+                {
+                  text: 'Barangay Bangad, Binangonan, Rizal',
+                  style: 'headerText',
+                },
+              ],
+              alignment: 'center',
+              margin: [0, 20, 0, 20],
+            },
+            {
+              image: this.bangadLogo, // Right-side logo
+              width: 80,
+              alignment: 'right',
+              margin: [10, 0, 0, 0],
+            },
+          ],
+        },
         { text: 'Child Vaccination Status Report', style: 'header' },
+        {
+          text: 'This document provides an overview of the vaccination status of children within Barangay Bangad, Binangonan, Rizal. It details the number of fully vaccinated, partially vaccinated, and not vaccinated children, along with their respective information and distribution across the puroks.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
+
         { text: `Year: ${year}`, style: 'subheader' },
         { text: `Month: ${month}`, style: 'subheader' },
+
+        // Fully Vaccinated Table with Count
+        {
+          columns: [
+            {
+              text: `Fully Vaccinated`,
+              style: 'tableTitle',
+              alignment: 'left',
+            },
+            {
+              text: `Count: ${fullyVaccinated.length}`,
+              alignment: 'right',
+              style: 'countText',
+            },
+          ],
+          margin: [0, 10, 0, 5],
+        },
         {
           table: {
             headerRows: 1,
@@ -35,7 +105,7 @@ export class PdfGenerationService {
                 { text: 'Purok', style: 'tableHeader' },
                 { text: 'Barangay', style: 'tableHeader' },
               ],
-              ...children.map((child) => [
+              ...fullyVaccinated.map((child) => [
                 child.firstName,
                 child.lastName,
                 child.vaccineStatus,
@@ -44,33 +114,126 @@ export class PdfGenerationService {
               ]),
             ],
           },
+          margin: [0, 0, 0, 20],
+        },
+
+        // Partially Vaccinated Table with Count
+        {
+          columns: [
+            {
+              text: `Partially Vaccinated`,
+              style: 'tableTitle',
+              alignment: 'left',
+            },
+            {
+              text: `Count: ${partiallyVaccinated.length}`,
+              alignment: 'right',
+              style: 'countText',
+            },
+          ],
+          margin: [0, 10, 0, 5],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*', '*'],
+            body: [
+              [
+                { text: 'First Name', style: 'tableHeader' },
+                { text: 'Last Name', style: 'tableHeader' },
+                { text: 'Vaccine Status', style: 'tableHeader' },
+                { text: 'Purok', style: 'tableHeader' },
+                { text: 'Barangay', style: 'tableHeader' },
+              ],
+              ...partiallyVaccinated.map((child) => [
+                child.firstName,
+                child.lastName,
+                child.vaccineStatus,
+                `Purok ${child.purok}`,
+                child.barangay,
+              ]),
+            ],
+          },
+          margin: [0, 0, 0, 20],
+        },
+
+        // Not Vaccinated Table with Count
+        {
+          columns: [
+            { text: `Not Vaccinated`, style: 'tableTitle', alignment: 'left' },
+            {
+              text: `Count: ${notVaccinated.length}`,
+              alignment: 'right',
+              style: 'countText',
+            },
+          ],
+          margin: [0, 10, 0, 5],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*', '*'],
+            body: [
+              [
+                { text: 'First Name', style: 'tableHeader' },
+                { text: 'Last Name', style: 'tableHeader' },
+                { text: 'Vaccine Status', style: 'tableHeader' },
+                { text: 'Purok', style: 'tableHeader' },
+                { text: 'Barangay', style: 'tableHeader' },
+              ],
+              ...notVaccinated.map((child) => [
+                child.firstName,
+                child.lastName,
+                child.vaccineStatus,
+                `Purok ${child.purok}`,
+                child.barangay,
+              ]),
+            ],
+          },
+          margin: [0, 0, 0, 20],
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        subheader: {
-          fontSize: 14,
-          bold: false,
-          margin: [0, 0, 0, 5] as [number, number, number, number],
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        subheader: { fontSize: 14, margin: [0, 0, 0, 5] },
+        tableTitle: { fontSize: 14, bold: true },
+        countText: { fontSize: 12, bold: true },
         tableHeader: { bold: true, fontSize: 13, color: 'black' },
       },
     };
 
     pdfMake.createPdf(documentDefinition).open();
   }
-  // New function for generating nutritional status report
+
+  // Backup
   // async generateChildNutritionalStatusPdf(
   //   children: any[],
   //   year: string,
   //   month: string
   // ) {
+  //   // Calculate the number of malnourished children
+  //   const malnourishedCount = children.filter(
+  //     (child) => child.nutritionalStatus === 'Malnourished'
+  //   ).length;
+
+  //   // Define the note based on the malnourished count
+  //   let note = '';
+  //   if (malnourishedCount > 10) {
+  //     note =
+  //       'Note: Initiate a 10-day feeding program for malnourished children.';
+  //   } else if (malnourishedCount > 0 && malnourishedCount <= 10) {
+  //     note = 'Note: Provide nutritional supplements to malnourished children.';
+  //   }
+
+  //   // Define the document structure
   //   const documentDefinition = {
   //     content: [
+  //       {
+  //         text: note,
+  //         style: 'note',
+  //         absolutePosition: { x: 400, y: 40 }, // Position it at the top right
+  //       },
   //       { text: 'Child Nutritional Status Report', style: 'header' },
   //       { text: `Year: ${year}`, style: 'subheader' },
   //       { text: `Month: ${month}`, style: 'subheader' },
@@ -82,14 +245,14 @@ export class PdfGenerationService {
   //             [
   //               { text: 'First Name', style: 'tableHeader' },
   //               { text: 'Last Name', style: 'tableHeader' },
-  //               { text: 'Nutritional Status', style: 'tableHeader' }, // Updated label
+  //               { text: 'Nutritional Status', style: 'tableHeader' },
   //               { text: 'Purok', style: 'tableHeader' },
   //               { text: 'Barangay', style: 'tableHeader' },
   //             ],
   //             ...children.map((child) => [
   //               child.firstName,
   //               child.lastName,
-  //               child.nutritionalStatus, // Use nutritional status here
+  //               child.nutritionalStatus,
   //               `Purok ${child.purok}`,
   //               child.barangay,
   //             ]),
@@ -109,22 +272,28 @@ export class PdfGenerationService {
   //         margin: [0, 0, 0, 5] as [number, number, number, number],
   //       },
   //       tableHeader: { bold: true, fontSize: 13, color: 'black' },
+  //       note: { fontSize: 12, italics: true }, // Simplified note style
   //     },
   //   };
 
   //   pdfMake.createPdf(documentDefinition).open();
   // }
+
   async generateChildNutritionalStatusPdf(
     children: any[],
     year: string,
     month: string
   ) {
-    // Calculate the number of malnourished children
-    const malnourishedCount = children.filter(
+    // Filter children by nutritional status
+    const malnourishedChildren = children.filter(
       (child) => child.nutritionalStatus === 'Malnourished'
-    ).length;
+    );
+    const normalChildren = children.filter(
+      (child) => child.nutritionalStatus === 'Normal'
+    );
 
-    // Define the note based on the malnourished count
+    // Count of malnourished children for the note
+    const malnourishedCount = malnourishedChildren.length;
     let note = '';
     if (malnourishedCount > 10) {
       note =
@@ -134,16 +303,69 @@ export class PdfGenerationService {
     }
 
     // Define the document structure
-    const documentDefinition = {
+    const documentDefinition: any = {
       content: [
+        {
+          columns: [
+            {
+              image: this.binangonanLogo, // Left-side logo
+              width: 80,
+              alignment: 'left',
+              margin: [0, 0, 10, 0],
+            },
+            {
+              stack: [
+                { text: 'Republic of the Philippines', style: 'headerText' },
+                { text: 'Province of Rizal', style: 'headerText' },
+                {
+                  text: 'Municipality of Binangonan Rizal',
+                  style: 'headerText',
+                },
+                {
+                  text: 'Barangay Bangad, Binangonan, Rizal',
+                  style: 'headerText',
+                },
+              ],
+              alignment: 'center',
+              margin: [0, 20, 0, 20],
+            },
+            {
+              image: this.bangadLogo, // Right-side logo
+              width: 80,
+              alignment: 'right',
+              margin: [10, 0, 0, 0],
+            },
+          ],
+        },
+        { text: 'Child Nutritional Status Report', style: 'header' },
+        {
+          text: 'This document provides an overview of the nutritional status of children within Barangay Bangad, Binangonan, Rizal. It details the number of malnourished and normal children, along with their respective information and distribution across the puroks.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
+        { text: `Year: ${year}`, style: 'subheader' },
+        { text: `Month: ${month}`, style: 'subheader' },
+
+        // Note for malnourished count
         {
           text: note,
           style: 'note',
-          absolutePosition: { x: 400, y: 40 }, // Position it at the top right
+          alignment: 'right',
+          margin: [0, 0, 0, 10],
         },
-        { text: 'Child Nutritional Status Report', style: 'header' },
-        { text: `Year: ${year}`, style: 'subheader' },
-        { text: `Month: ${month}`, style: 'subheader' },
+
+        // Malnourished Table with Count
+        {
+          columns: [
+            { text: 'Malnourished', style: 'tableTitle', alignment: 'left' },
+            {
+              text: `Count: ${malnourishedCount}`,
+              style: 'countText',
+              alignment: 'right',
+            },
+          ],
+          margin: [0, 10, 0, 5],
+        },
         {
           table: {
             headerRows: 1,
@@ -156,7 +378,7 @@ export class PdfGenerationService {
                 { text: 'Purok', style: 'tableHeader' },
                 { text: 'Barangay', style: 'tableHeader' },
               ],
-              ...children.map((child) => [
+              ...malnourishedChildren.map((child) => [
                 child.firstName,
                 child.lastName,
                 child.nutritionalStatus,
@@ -165,24 +387,57 @@ export class PdfGenerationService {
               ]),
             ],
           },
+          margin: [0, 0, 0, 20],
+        },
+
+        // Normal Table with Count
+        {
+          columns: [
+            { text: 'Normal', style: 'tableTitle', alignment: 'left' },
+            {
+              text: `Count: ${normalChildren.length}`,
+              style: 'countText',
+              alignment: 'right',
+            },
+          ],
+          margin: [0, 10, 0, 5],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*', '*'],
+            body: [
+              [
+                { text: 'First Name', style: 'tableHeader' },
+                { text: 'Last Name', style: 'tableHeader' },
+                { text: 'Nutritional Status', style: 'tableHeader' },
+                { text: 'Purok', style: 'tableHeader' },
+                { text: 'Barangay', style: 'tableHeader' },
+              ],
+              ...normalChildren.map((child) => [
+                child.firstName,
+                child.lastName,
+                child.nutritionalStatus,
+                `Purok ${child.purok}`,
+                child.barangay,
+              ]),
+            ],
+          },
+          margin: [0, 0, 0, 20],
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        subheader: {
-          fontSize: 14,
-          bold: false,
-          margin: [0, 0, 0, 5] as [number, number, number, number],
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        subheader: { fontSize: 14, margin: [0, 0, 0, 5] },
+        tableTitle: { fontSize: 14, bold: true },
+        countText: { fontSize: 12, bold: true },
         tableHeader: { bold: true, fontSize: 13, color: 'black' },
-        note: { fontSize: 12, italics: true }, // Simplified note style
+        note: { fontSize: 12, italics: true },
       },
     };
-
+    console.log('Malnourished Children:', malnourishedChildren);
+    console.log('Normal Children:', normalChildren);
     pdfMake.createPdf(documentDefinition).open();
   }
 
@@ -508,6 +763,200 @@ export class PdfGenerationService {
       },
     };
 
+    pdfMake.createPdf(documentDefinition).open();
+  }
+
+  // TODO: Backup
+  // async generateUserReportPdf(users: any[]) {
+  //   // Filter users by role
+  //   const midwives = users.filter(
+  //     (user) => user.role && user.role.toLowerCase() === 'midwife'
+  //   );
+  //   const bhws = users.filter(
+  //     (user) => user.role && user.role.toLowerCase() === 'bhw'
+  //   );
+
+  //   const logoBase64 = BARANGAY_LOGO;
+
+  //   // Define the document content
+  //   const documentDefinition: any = {
+  //     content: [
+  //       {
+  //         image: logoBase64,
+  //         width: 150,
+  //         alignment: 'center',
+  //         margin: [0, 0, 0, 10], // Optional: adds some space after the logo
+  //       },
+  //       { text: 'User Report', style: 'header' },
+  //       { text: 'Midwives', style: 'subheader' },
+  //       {
+  //         table: {
+  //           headerRows: 1,
+  //           widths: ['*', '*', '*', '*'],
+  //           body: [
+  //             [
+  //               { text: 'First Name', style: 'tableHeader' },
+  //               { text: 'Last Name', style: 'tableHeader' },
+  //               { text: 'Gender', style: 'tableHeader' },
+  //               { text: 'Years of Experience', style: 'tableHeader' },
+  //             ],
+  //             ...midwives.map((user: any) => [
+  //               user.firstName,
+  //               user.lastName,
+  //               user.gender,
+  //               user.yearsOfService,
+  //             ]),
+  //           ],
+  //         },
+  //       },
+  //       {
+  //         text: 'Barangay Health Workers (BHW)',
+  //         style: 'subheader',
+  //         margin: [0, 20, 0, 0],
+  //       },
+  //       {
+  //         table: {
+  //           headerRows: 1,
+  //           widths: ['*', '*', '*', '*'],
+  //           body: [
+  //             [
+  //               { text: 'First Name', style: 'tableHeader' },
+  //               { text: 'Last Name', style: 'tableHeader' },
+  //               { text: 'Gender', style: 'tableHeader' },
+  //               { text: 'Years of Experience', style: 'tableHeader' },
+  //             ],
+  //             ...bhws.map((user: any) => [
+  //               user.firstName,
+  //               user.lastName,
+  //               user.gender,
+  //               user.yearsOfService,
+  //             ]),
+  //           ],
+  //         },
+  //       },
+  //     ],
+  //     styles: {
+  //       header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+  //       subheader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] },
+  //       tableHeader: { bold: true, fontSize: 13, color: 'black' },
+  //     },
+  //   };
+
+  //   // Generate and open the PDF
+  //   pdfMake.createPdf(documentDefinition).open();
+  // }
+  async generateUserReportPdf(users: any[]) {
+    // Filter users by role
+    const midwives = users.filter(
+      (user) => user.role && user.role.toLowerCase() === 'midwife'
+    );
+    const bhws = users.filter(
+      (user) => user.role && user.role.toLowerCase() === 'bhw'
+    );
+
+    // Define the document content
+    const documentDefinition: any = {
+      content: [
+        {
+          columns: [
+            {
+              image: this.binangonanLogo, // Now on the left side
+              width: 80,
+              alignment: 'left',
+              margin: [0, 0, 10, 0],
+            },
+            {
+              stack: [
+                { text: 'Republic of the Philippines', style: 'headerText' },
+                { text: 'Province of Rizal', style: 'headerText' },
+                {
+                  text: 'Municipality of Binangonan Rizal',
+                  style: 'headerText',
+                },
+                {
+                  text: 'Barangay Bangad, Binangonan, Rizal',
+                  style: 'headerText',
+                },
+              ],
+              alignment: 'center',
+              margin: [0, 20, 0, 20],
+            },
+            {
+              image: this.bangadLogo, // Now on the right side
+              width: 80,
+              alignment: 'right',
+              margin: [10, 0, 0, 0],
+            },
+          ],
+        },
+        { text: 'User Report', style: 'mainHeader', margin: [0, 10, 0, 10] },
+        {
+          text: 'This document presents a detailed report of the midwives and Barangay Health Workers (BHWs) operating in Barangay Bangad. It includes essential information about each personnel, such as their names, gender, and years of experience in serving the community.',
+          alignment: 'justify', //
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: 'The midwives and BHWs play a crucial role in providing healthcare services, focusing on maternal and child health, immunization programs, nutrition monitoring, and other health-related initiatives within Barangay Bangad, Binangonan, Rizal. This report is part of the ongoing effort to ensure efficient healthcare service delivery, transparency, and resource allocation in the barangay.',
+          alignment: 'justify', //
+          margin: [0, 0, 0, 10],
+        },
+
+        { text: 'Midwives', style: 'subheader' },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*'],
+            body: [
+              [
+                { text: 'First Name', style: 'tableHeader' },
+                { text: 'Last Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
+                { text: 'Years of Experience', style: 'tableHeader' },
+              ],
+              ...midwives.map((user: any) => [
+                user.firstName,
+                user.lastName,
+                user.gender,
+                user.yearsOfService,
+              ]),
+            ],
+          },
+        },
+        {
+          text: 'Barangay Health Workers (BHW)',
+          style: 'subheader',
+          margin: [0, 20, 0, 0],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*'],
+            body: [
+              [
+                { text: 'First Name', style: 'tableHeader' },
+                { text: 'Last Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
+                { text: 'Years of Experience', style: 'tableHeader' },
+              ],
+              ...bhws.map((user: any) => [
+                user.firstName,
+                user.lastName,
+                user.gender,
+                user.yearsOfService,
+              ]),
+            ],
+          },
+        },
+      ],
+      styles: {
+        headerText: { fontSize: 10, bold: true },
+        mainHeader: { fontSize: 18, bold: true, margin: [0, 10, 0, 10] },
+        subheader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] },
+        tableHeader: { bold: true, fontSize: 13, color: 'black' },
+      },
+    };
+
+    // Generate and open the PDF
     pdfMake.createPdf(documentDefinition).open();
   }
 }

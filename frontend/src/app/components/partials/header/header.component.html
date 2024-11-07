@@ -29,7 +29,9 @@
           </ng-container>
 
           <!-- Admin only access for All Users -->
-          <ng-container *ngIf="user.role === 'admin'">
+          <ng-container
+            *ngIf="user.role === 'admin' || user.role === 'midwife'"
+          >
             <a routerLink="/user">All Users</a>
           </ng-container>
           <a routerLink="/mother">All Mother</a>

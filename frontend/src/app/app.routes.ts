@@ -82,7 +82,8 @@ export const routes: Routes = [
     path: 'user/:id',
     component: UserProfileComponent,
     title: 'User Profile',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin', 'midwife'] },
   },
 
   // Routes for Admin
@@ -91,6 +92,7 @@ export const routes: Routes = [
     component: UserComponent,
     title: 'All Users',
     canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin', 'midwife'] },
   },
   {
     path: 'dashboard',

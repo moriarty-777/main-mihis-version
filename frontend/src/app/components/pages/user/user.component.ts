@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { PdfGenerationService } from '../../../services/pdf-generation.service';
 
 @Component({
   selector: 'app-user',
@@ -26,25 +27,16 @@ export class UserComponent {
   private toastrService = inject(ToastrService);
   // private http = inject(HttpClient);
   private userService = inject(UserService);
+  private pdfGenerationService = inject(PdfGenerationService);
   roleFilter: string = '';
   experienceFilter: string = '';
 
   constructor() {
     this.loadUsers();
-    // this.userService.getAll().subscribe((users) => {
-    //   this.user = users
-    //     .filter((user) => user.role && user.role.toLowerCase() !== 'admin')
-    //     .map((user) => ({
-    //       ...user,
-    //       yearsOfService: this.calculateYearsAndMonths(user.dateOfService),
-    //       totalMonthsOfService: this.calculateTotalMonths(user.dateOfService),
-    //     }))
-    //     .sort((a, b) => {
-    //       if (a.role.toLowerCase() === 'midwife') return -1;
-    //       if (b.role.toLowerCase() === 'midwife') return 1;
-    //       return b.totalMonthsOfService - a.totalMonthsOfService;
-    //     });
-    // });
+  }
+
+  generateUserPdf(): void {
+    this.pdfGenerationService.generateUserReportPdf(this.user);
   }
 
   // Load users with filters applied
@@ -174,11 +166,6 @@ export class UserComponent {
       data: { userId }, // Passing user object to the dialog
     });
   }
-  // search(searchTerm: string) {
-  //   this.userService.getAllUserBySearchTerm(searchTerm).subscribe((users) => {
-  //     this.user = users;
-  //   });
-  // }
 
   search(searchTerm: string) {
     this.userService.getAllUserBySearchTerm(searchTerm).subscribe((users) => {
@@ -218,73 +205,6 @@ export class UserComponent {
     XLSX.writeFile(workbook, 'UserData.xlsx');
   }
 
-  // // Toggle activate deactivate
-  // toggleUserActivation(userId: string): void {
-  //   this.userService.toggleUserActivation(userId).subscribe(
-  //     (updatedUser) => {
-  //       const user = this.user.find((u) => u.id === userId);
-  //       if (user) {
-  //         user.isActive = updatedUser.isActive;
-  //       }
-  //       this.toastrService.success(
-  //         `User ${
-  //           updatedUser.isActive ? 'activated' : 'deactivated'
-  //         } successfully!`
-  //       );
-  //     },
-  //     (error) => {
-  //       this.toastrService.error('Error toggling user activation status');
-  //     }
-  //   );
-  // }
-
-  // toggleUserActivation(userId: string): void {
-  //   console.log('Toggling activation for user ID:', userId); // Log the user ID
-
-  //   this.userService.toggleUserActivation(userId).subscribe(
-  //     (updatedUser) => {
-  //       console.log('Updated User Response:', updatedUser); // Log the response from the server
-  //       const user = this.user.find((u) => u.id === userId);
-
-  //       if (user) {
-  //         user.isActive = updatedUser.isActive;
-  //         console.log(
-  //           `User ${userId} is now ${user.isActive ? 'active' : 'inactive'}`
-  //         ); // Log the new status
-  //       }
-
-  //       this.toastrService.success(
-  //         `User ${
-  //           updatedUser.isActive ? 'activated' : 'deactivated'
-  //         } successfully!`
-  //       );
-  //     },
-  //     (error) => {
-  //       console.error('Error toggling user activation status:', error); // Log the error
-  //       this.toastrService.error('Error toggling user activation status');
-  //     }
-  //   );
-  // }
-  // toggleUserActivation(userId: string): void {
-  //   this.userService.toggleUserActivation(userId).subscribe(
-  //     (updatedUser) => {
-  //       console.log('Updated user status:', updatedUser); // Check status
-  //       const user = this.user.find((u) => u.id === userId);
-  //       if (user) {
-  //         user.isActive = updatedUser.isActive;
-  //       }
-  //       this.toastrService.success(
-  //         `User ${
-  //           updatedUser.isActive ? 'activated' : 'deactivated'
-  //         } successfully!`
-  //       );
-  //     },
-  //     (error) => {
-  //       this.toastrService.error('Error toggling user activation status');
-  //     }
-  //   );
-  // }
-  // FIXME:
   toggleUserActivation(userId: string): void {
     this.userService.toggleUserActivation(userId).subscribe(
       (updatedUser) => {
