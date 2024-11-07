@@ -154,75 +154,80 @@ router.get(
   authMiddleware,
   loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
-    const { nutritionalStatus, vaxStatus, startDate, endDate, filterType } =
-      req.query;
+    const {
+      nutritionalStatus,
+      vaxStatus,
+      startDate,
+      endDate,
+      filterType,
+      purok,
+      gender,
+    } = req.query;
+
     console.log("Received query params:", {
       nutritionalStatus,
       vaxStatus,
       startDate,
       endDate,
       filterType,
+      purok,
+      gender,
     });
 
-    // Malnutrition filter handling
+    // Base filter for common fields (purok, gender)
+    const filter: any = {};
+    if (purok && purok !== "null") filter.purok = purok;
+    if (gender && gender !== "null") filter.gender = gender;
+
+    let children;
+
     if (filterType === "malnutrition") {
-      // Add logging to trace the filter
       console.log("Applying malnutrition filter");
+
+      // Add date filter for malnutrition based on `dateOfStatus`
       const nutritionalFilter: any = { dateOfStatus: {} };
       if (startDate)
         nutritionalFilter.dateOfStatus.$gte = new Date(startDate as string);
       if (endDate)
         nutritionalFilter.dateOfStatus.$lte = new Date(endDate as string);
 
-      const children = await ChildModel.find()
+      children = await ChildModel.find(filter)
         .populate({
           path: "nutritionalStatus",
-          match: nutritionalFilter,
+          match: nutritionalFilter, // Apply date filter specifically to nutritional status
         })
-        .populate("vaccinations")
+        .populate("vaccinations") // Populate for other data if needed
         .populate("anthropometricStatus")
         .populate("weighingHistory");
 
-      let filteredChildren = children.filter(
-        (child: any) => child.nutritionalStatus
+      // Further filter children by nutritional status
+      children = children.filter(
+        (child: any) =>
+          child.nutritionalStatus &&
+          (!nutritionalStatus ||
+            child.nutritionalStatus.status === nutritionalStatus)
       );
-      if (nutritionalStatus) {
-        filteredChildren = filteredChildren.filter(
-          (child: any) => child.nutritionalStatus?.status === nutritionalStatus
-        );
+
+      console.log("Filtered Malnutrition Children:", children.length);
+    } else if (filterType === "vaccination") {
+      console.log("Applying vaccination filter");
+
+      // Add date filter for vaccination based on `dateOfBirth`
+      if (startDate || endDate) {
+        filter.dateOfBirth = {};
+        if (startDate) filter.dateOfBirth.$gte = new Date(startDate as string);
+        if (endDate) filter.dateOfBirth.$lte = new Date(endDate as string);
       }
 
-      console.log("Filtered Malnutrition Children:", filteredChildren.length);
-      res.send(filteredChildren);
-      return;
-    }
+      children = await ChildModel.find(filter)
+        .populate("vaccinations")
+        .populate("anthropometricStatus")
+        .populate("weighingHistory")
+        .populate("nutritionalStatus"); // Populate for other data if needed
 
-    // Vaccination filter handling
-    console.log("Applying vaccination filter");
-    const filter: any = {};
-    if (startDate || endDate) {
-      filter.dateOfBirth = {};
-      if (startDate) filter.dateOfBirth.$gte = new Date(startDate as string);
-      if (endDate) filter.dateOfBirth.$lte = new Date(endDate as string);
-    }
-
-    const children = await ChildModel.find(filter)
-      .populate("vaccinations")
-      .populate("anthropometricStatus")
-      .populate("weighingHistory")
-      .populate("nutritionalStatus");
-
-    let filteredChildren = children;
-
-    if (nutritionalStatus) {
-      filteredChildren = children.filter(
-        (child: any) => child.nutritionalStatus?.status === nutritionalStatus
-      );
-    }
-
-    if (vaxStatus) {
+      // Filter children based on vaccination status
       const requiredVaccines = 15;
-      filteredChildren = filteredChildren.filter((child) => {
+      children = children.filter((child) => {
         const vaccineCount = child.vaccinations.length;
         let vaccineStatus = "Not Vaccinated";
 
@@ -232,12 +237,15 @@ router.get(
           vaccineStatus = "Partially Vaccinated";
         }
 
-        return vaccineStatus === vaxStatus;
+        return (
+          (!vaxStatus || vaccineStatus === vaxStatus) &&
+          (!nutritionalStatus ||
+            (child.nutritionalStatus as any).status === nutritionalStatus)
+        );
       });
     }
 
-    console.log("Filtered Vaccination Children:", filteredChildren.length);
-    res.send(filteredChildren);
+    res.send(children);
   })
 );
 

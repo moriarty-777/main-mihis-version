@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
 import { PdfGenerationService } from '../../../services/pdf-generation.service';
 import { ChartsNutritionalStatusComponent } from '../../charts/charts-nutritional-status/charts-nutritional-status.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +35,7 @@ import { ChartsNutritionalStatusComponent } from '../../charts/charts-nutritiona
     ChartsPurokComponent,
     ChartsCompleteImmunizationComponent,
     ChartsNutritionalStatusComponent,
+    FormsModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -66,6 +68,10 @@ export class DashboardComponent {
   selectedMonth: number | null = null;
   selectedYear: number | null = null;
 
+  // New properties for Purok and Gender filters
+  selectedPurok: string | null = null;
+  selectedGender: string | null = null;
+
   filteredChildren: Child[] = []; // Store f
 
   // Add a new property to manage default year and month
@@ -83,6 +89,32 @@ export class DashboardComponent {
   // TODO:
 
   currentView: string = 'vaccination';
+
+  resetAllFilters() {
+    // Reset each filter to default
+    this.selectedPurok = '';
+    this.selectedGender = '';
+    this.selectedMonth = null;
+    this.selectedYear = this.defaultYear;
+
+    // Apply the default filter values
+    this.applyFilters();
+  }
+  // Event handler for Purok change
+  onPurokChange(event: any) {
+    const selectedValue = event.target.value;
+    this.selectedPurok = selectedValue
+      ? selectedValue.replace('Purok ', '')
+      : null; // Removes 'Purok ' prefix
+    this.applyFilters();
+  }
+
+  // Event handler for Gender change
+  onGenderChange(event: any) {
+    console.log('Selected Gender:', this.selectedGender);
+    this.selectedGender = event.target.value || null;
+    this.applyFilters();
+  }
 
   // Methods to toggle the view
   // Methods to toggle the view with filter reset
@@ -105,6 +137,7 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    this.purokLabels = ['Purok 1', 'Purok 2', 'Purok 3', 'Purok 4']; // Full list of Purok labels
     this.initializeAvailableYears();
 
     this.userService.userObservable.subscribe((newUser) => {
@@ -166,10 +199,20 @@ export class DashboardComponent {
     const filterType =
       this.currentView === 'malnutrition' ? 'malnutrition' : 'vaccination';
 
+    // Construct filter object only with valid values
+    const filters: any = {};
+    if (this.selectedPurok && this.selectedPurok !== 'Select Purok') {
+      filters.purok = this.selectedPurok;
+    }
+    if (this.selectedGender) {
+      filters.gender = this.selectedGender;
+    }
+
     // Fetch filtered children data with the specified filter type
     this.childService
-      .getAllFilter(startDate, endDate, {}, filterType)
+      .getAllFilter(startDate, endDate, filters, filterType)
       .subscribe((filteredChildren) => {
+        console.log('Filtered Children from Backend:', filteredChildren); //
         this.updateDashboardData(filteredChildren);
         this.filteredChildren = filteredChildren;
       });
@@ -209,7 +252,7 @@ export class DashboardComponent {
     console.log('Normal Count:', this.normalCount);
     console.log('Malnourished Count:', this.malnourishedCount);
 
-    // Update Purok data
+    // Update purok data for chart display without modifying purokLabels
     const purokCountMap: { [key: string]: number } = {};
     filteredChildren.forEach((child) => {
       const purok = `Purok ${child.purok}`;
@@ -219,12 +262,7 @@ export class DashboardComponent {
         purokCountMap[purok] = 1;
       }
     });
-    this.purokLabels = Object.keys(purokCountMap).sort((a, b) => {
-      const numA = parseInt(a.replace('Purok ', ''));
-      const numB = parseInt(b.replace('Purok ', ''));
-      return numA - numB;
-    });
-    this.purokData = this.purokLabels.map((label) => purokCountMap[label]);
+    this.purokData = this.purokLabels.map((label) => purokCountMap[label] || 0); // Use existing labels and map counts
   }
 
   generateVaccinationPdf() {
@@ -245,6 +283,7 @@ export class DashboardComponent {
         vaccineStatus,
         purok: child.purok,
         barangay: child.barangay,
+        gender: child.gender,
       };
     });
 
@@ -277,6 +316,7 @@ export class DashboardComponent {
       nutritionalStatus: child.nutritionalStatus?.status || 'Unknown',
       purok: child.purok,
       barangay: child.barangay,
+      gender: child.gender,
     }));
 
     // Format the month and year for display

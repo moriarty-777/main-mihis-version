@@ -126,11 +126,31 @@
                   <p class="dh-sub-title">1 Midwife, 14 BHW</p>
                 </div>
               </div>
+
               <div class="d-head-info wesa">
                 <div class="dh-item">
                   <h3 class="dh-title">Monitoring</h3>
                 </div>
-
+                <!-- <div class="dh-item">
+                  <button (click)="resetAllFilters()" class="reset-btn sselect">
+                    Reset Filters
+                  </button>
+                </div> -->
+                <div class="dh-item">
+                  <select id="purok" (change)="onPurokChange($event)">
+                    <option value="">Select Purok</option>
+                    <option *ngFor="let purok of purokLabels" [value]="purok">
+                      {{ purok }}
+                    </option>
+                  </select>
+                </div>
+                <div class="dh-item">
+                  <select id="gender" (change)="onGenderChange($event)">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
                 <div class="dh-item">
                   <select id="month" (change)="onMonthChange($event)">
                     <option value="">Select Month</option>

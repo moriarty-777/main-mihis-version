@@ -22,7 +22,8 @@ export class PdfGenerationService {
     year: string,
     month: string
   ) {
-    // Filter children by vaccination status
+    console.log('Children Data:', children);
+
     const fullyVaccinated = children.filter(
       (child) => child.vaccineStatus === 'Fully Vaccinated'
     );
@@ -69,14 +70,18 @@ export class PdfGenerationService {
         },
         { text: 'Child Vaccination Status Report', style: 'header' },
         {
-          text: 'This document provides an overview of the vaccination status of children within Barangay Bangad, Binangonan, Rizal. It details the number of fully vaccinated, partially vaccinated, and not vaccinated children, along with their respective information and distribution across the puroks.',
-          alignment: 'justify',
-          margin: [0, 10, 0, 20],
+          text: 'This document provides a detailed report of the vaccination status of children in Barangay Bangad. The data includes each child’s name, vaccination status, purok, and gender to aid in monitoring and improving vaccination coverage.',
+          alignment: 'justify', // Justified alignment for readability
+          margin: [0, 10, 0, 10],
         },
-
-        { text: `Year: ${year}`, style: 'subheader' },
-        { text: `Month: ${month}`, style: 'subheader' },
-
+        {
+          text: `Year: ${year}`,
+          style: 'subheader',
+        },
+        {
+          text: `Month: ${month}`,
+          style: 'subheader',
+        },
         // Fully Vaccinated Table with Count
         {
           columns: [
@@ -96,27 +101,24 @@ export class PdfGenerationService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*', '*', '*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
               [
-                { text: 'First Name', style: 'tableHeader' },
-                { text: 'Last Name', style: 'tableHeader' },
-                { text: 'Vaccine Status', style: 'tableHeader' },
+                { text: 'Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
                 { text: 'Purok', style: 'tableHeader' },
-                { text: 'Barangay', style: 'tableHeader' },
+                { text: 'Vaccine Status', style: 'tableHeader' },
               ],
               ...fullyVaccinated.map((child) => [
-                child.firstName,
-                child.lastName,
-                child.vaccineStatus,
+                `${child.firstName} ${child.lastName}`,
+                child.gender || 'N/A', // Display 'N/A' if gender is missing
                 `Purok ${child.purok}`,
-                child.barangay,
+                child.vaccineStatus,
               ]),
             ],
           },
           margin: [0, 0, 0, 20],
         },
-
         // Partially Vaccinated Table with Count
         {
           columns: [
@@ -136,27 +138,24 @@ export class PdfGenerationService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*', '*', '*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
               [
-                { text: 'First Name', style: 'tableHeader' },
-                { text: 'Last Name', style: 'tableHeader' },
-                { text: 'Vaccine Status', style: 'tableHeader' },
+                { text: 'Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
                 { text: 'Purok', style: 'tableHeader' },
-                { text: 'Barangay', style: 'tableHeader' },
+                { text: 'Vaccine Status', style: 'tableHeader' },
               ],
               ...partiallyVaccinated.map((child) => [
-                child.firstName,
-                child.lastName,
-                child.vaccineStatus,
+                `${child.firstName} ${child.lastName}`,
+                child.gender || 'N/A', // Display 'N/A' if gender is missing
                 `Purok ${child.purok}`,
-                child.barangay,
+                child.vaccineStatus,
               ]),
             ],
           },
           margin: [0, 0, 0, 20],
         },
-
         // Not Vaccinated Table with Count
         {
           columns: [
@@ -172,21 +171,19 @@ export class PdfGenerationService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*', '*', '*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
               [
-                { text: 'First Name', style: 'tableHeader' },
-                { text: 'Last Name', style: 'tableHeader' },
-                { text: 'Vaccine Status', style: 'tableHeader' },
+                { text: 'Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
                 { text: 'Purok', style: 'tableHeader' },
-                { text: 'Barangay', style: 'tableHeader' },
+                { text: 'Vaccine Status', style: 'tableHeader' },
               ],
               ...notVaccinated.map((child) => [
-                child.firstName,
-                child.lastName,
-                child.vaccineStatus,
+                `${child.firstName} ${child.lastName}`,
+                child.gender || 'N/A', // Display 'N/A' if gender is missing
                 `Purok ${child.purok}`,
-                child.barangay,
+                child.vaccineStatus,
               ]),
             ],
           },
@@ -205,79 +202,6 @@ export class PdfGenerationService {
 
     pdfMake.createPdf(documentDefinition).open();
   }
-
-  // Backup
-  // async generateChildNutritionalStatusPdf(
-  //   children: any[],
-  //   year: string,
-  //   month: string
-  // ) {
-  //   // Calculate the number of malnourished children
-  //   const malnourishedCount = children.filter(
-  //     (child) => child.nutritionalStatus === 'Malnourished'
-  //   ).length;
-
-  //   // Define the note based on the malnourished count
-  //   let note = '';
-  //   if (malnourishedCount > 10) {
-  //     note =
-  //       'Note: Initiate a 10-day feeding program for malnourished children.';
-  //   } else if (malnourishedCount > 0 && malnourishedCount <= 10) {
-  //     note = 'Note: Provide nutritional supplements to malnourished children.';
-  //   }
-
-  //   // Define the document structure
-  //   const documentDefinition = {
-  //     content: [
-  //       {
-  //         text: note,
-  //         style: 'note',
-  //         absolutePosition: { x: 400, y: 40 }, // Position it at the top right
-  //       },
-  //       { text: 'Child Nutritional Status Report', style: 'header' },
-  //       { text: `Year: ${year}`, style: 'subheader' },
-  //       { text: `Month: ${month}`, style: 'subheader' },
-  //       {
-  //         table: {
-  //           headerRows: 1,
-  //           widths: ['*', '*', '*', '*', '*'],
-  //           body: [
-  //             [
-  //               { text: 'First Name', style: 'tableHeader' },
-  //               { text: 'Last Name', style: 'tableHeader' },
-  //               { text: 'Nutritional Status', style: 'tableHeader' },
-  //               { text: 'Purok', style: 'tableHeader' },
-  //               { text: 'Barangay', style: 'tableHeader' },
-  //             ],
-  //             ...children.map((child) => [
-  //               child.firstName,
-  //               child.lastName,
-  //               child.nutritionalStatus,
-  //               `Purok ${child.purok}`,
-  //               child.barangay,
-  //             ]),
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //     styles: {
-  //       header: {
-  //         fontSize: 18,
-  //         bold: true,
-  //         margin: [0, 0, 0, 10] as [number, number, number, number],
-  //       },
-  //       subheader: {
-  //         fontSize: 14,
-  //         bold: false,
-  //         margin: [0, 0, 0, 5] as [number, number, number, number],
-  //       },
-  //       tableHeader: { bold: true, fontSize: 13, color: 'black' },
-  //       note: { fontSize: 12, italics: true }, // Simplified note style
-  //     },
-  //   };
-
-  //   pdfMake.createPdf(documentDefinition).open();
-  // }
 
   async generateChildNutritionalStatusPdf(
     children: any[],
@@ -369,21 +293,19 @@ export class PdfGenerationService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*', '*', '*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
               [
-                { text: 'First Name', style: 'tableHeader' },
-                { text: 'Last Name', style: 'tableHeader' },
-                { text: 'Nutritional Status', style: 'tableHeader' },
+                { text: 'Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
                 { text: 'Purok', style: 'tableHeader' },
-                { text: 'Barangay', style: 'tableHeader' },
+                { text: 'Nutritional Status', style: 'tableHeader' },
               ],
               ...malnourishedChildren.map((child) => [
-                child.firstName,
-                child.lastName,
-                child.nutritionalStatus,
+                `${child.firstName} ${child.lastName}`,
+                child.gender,
                 `Purok ${child.purok}`,
-                child.barangay,
+                child.nutritionalStatus,
               ]),
             ],
           },
@@ -405,21 +327,19 @@ export class PdfGenerationService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*', '*', '*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
               [
-                { text: 'First Name', style: 'tableHeader' },
-                { text: 'Last Name', style: 'tableHeader' },
-                { text: 'Nutritional Status', style: 'tableHeader' },
+                { text: 'Name', style: 'tableHeader' },
+                { text: 'Gender', style: 'tableHeader' },
                 { text: 'Purok', style: 'tableHeader' },
-                { text: 'Barangay', style: 'tableHeader' },
+                { text: 'Nutritional Status', style: 'tableHeader' },
               ],
               ...normalChildren.map((child) => [
-                child.firstName,
-                child.lastName,
-                child.nutritionalStatus,
+                `${child.firstName} ${child.lastName}`,
+                child.gender,
                 `Purok ${child.purok}`,
-                child.barangay,
+                child.nutritionalStatus,
               ]),
             ],
           },
@@ -436,6 +356,7 @@ export class PdfGenerationService {
         note: { fontSize: 12, italics: true },
       },
     };
+
     console.log('Malnourished Children:', malnourishedChildren);
     console.log('Normal Children:', normalChildren);
     pdfMake.createPdf(documentDefinition).open();
