@@ -733,7 +733,8 @@ router.post(
       await sendYearlyScheduleSMS(
         mother.phone,
         newChild,
-        newChildWithSchedules?.schedules || []
+        newChildWithSchedules?.schedules || [],
+        mother
       );
     }
 

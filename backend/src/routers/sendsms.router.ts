@@ -234,46 +234,67 @@ function getTodayDate(): string {
   const day = ("0" + today.getDate()).slice(-2); // Ensure two digits for day
   return `${year}-${month}-${day}`;
 }
+
 export async function sendYearlyScheduleSMS(
   phoneNumber: string,
   child: any,
-  schedules: any[]
+  schedules: any[],
+  mother: any
 ) {
   const currentYear = new Date().getFullYear();
 
   // Filter schedules for the current year
   const yearlySchedules = schedules.filter((schedule) => {
-    // console.log("Processing Schedule:", schedule); // Log each schedule details
     const scheduleYear = new Date(schedule.scheduleDate).getFullYear();
     return scheduleYear === currentYear;
   });
+
   // Format the schedule details
   const scheduleDetails = yearlySchedules
     .map((schedule) => {
-      const date = schedule.scheduleDate
-        ? schedule.scheduleDate.toISOString().split("T", 1)[0]
+      const scheduleDate = schedule.scheduleDate
+        ? new Date(schedule.scheduleDate)
+        : null;
+
+      // Format date in Filipino with month name, e.g., "Nobyembre 12, 2024"
+      const formattedDate = scheduleDate
+        ? scheduleDate.toLocaleDateString("tl-PH", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
         : "N/A";
-      const type =
-        schedule.scheduleType === "weighing" ? "Weighing" : "Vaccination";
-      const vaccineName = schedule.vaccineName || "";
+
+      const type = schedule.scheduleType === "weighing" ? "Timbang" : "Bakuna";
+      const vaccineName = schedule.vaccineName
+        ? ` - ${schedule.vaccineName}`
+        : "";
       const doseInfo =
         schedule.scheduleType === "vaccination" && schedule.doseNumber
-          ? `dose ${schedule.doseNumber}`
-          : ""; // Include dose only if type is Vaccination
+          ? ` (Dose ${schedule.doseNumber})`
+          : "";
       const description = schedule.weighingDescription || "";
 
-      return `${date}: ${type} ${vaccineName} ${doseInfo} ${description}`.trim();
+      return `${formattedDate} - ${type}${vaccineName}${doseInfo} ${description}`.trim();
     })
     .join("\n");
-  // console.log("Filtered Yearly Schedules:", yearlySchedules);
-  const message = `This Year Schedule for your child ${child.firstName} ${child.lastName}:\n${scheduleDetails}`;
-  // const message = `This Year Schedule for your child Efraim Gondraneos is the`;
-  console.log("Message Content23:\n", message);
+
+  // Create a personalized and friendly message
+  const message = `
+Magandang Araw, Aling ${mother.firstName}! Ang iyong anak na si ${child.firstName} ${child.lastName} ay naka-schedule na sa mga araw na ito:
+
+${scheduleDetails}
+
+Tuloy-tuloy ang pagiging malusog at protektado ni baby ${child.firstName}!
+`;
+
+  // Check if the message content is empty
   const messageText = scheduleDetails.trim();
   if (messageText.length === 0) {
     console.error("SMS text content is empty.");
     return;
   }
+
   // Log the full message and its character count
   console.log("Message Content:\n", message);
   console.log("Character Count:", message.length);
@@ -304,477 +325,11 @@ export async function sendYearlyScheduleSMS(
   }
 }
 
-// TODO:
-// Hard-coded test date (for example, today’s date or a future date for testing)
-// const TEST_SCHEDULE_DATE = "2024-11-03"; // Replace this with a nearby date for testing
-
-// async function sendScheduledSMS(phoneNumber: string, message: string) {
-//   try {
-//     const response = await axios.post(
-//       process.env.MOVIDER_BASE_URL || "https://api.movider.co/v1/sms",
-//       new URLSearchParams({
-//         api_key: process.env.MOVIDER_API_KEY || "",
-//         api_secret: process.env.MOVIDER_API_SECRET || "",
-//         to: phoneNumber,
-//         from: "CTCMIHIS",
-//         text: message,
-//       }),
-//       {
-//         headers: {
-//           "Content-Type": "application/x-www-form-urlencoded",
-//           Accept: "application/json",
-//         },
-//       }
-//     );
-//     console.log("Scheduled SMS sent successfully!", response.data);
-//   } catch (error: any) {
-//     console.error(
-//       "Failed to send scheduled SMS:",
-//       error.response ? error.response.data : error.message
-//     );
-//   }
-// }
-
-// // Main function to send SMS on schedule date match
-// export async function sendSMSBasedOnSchedule(req: Request, res: Response) {
-//   const { phoneNumber, child } = req.body;
-
-//   // Mocked schedule data for testing
-//   const schedules = [
-//     {
-//       scheduleDate: new Date(TEST_SCHEDULE_DATE), // Hard-coded test date
-//       scheduleType: "weighing",
-//       location: "Barangay Health Center",
-//       vaccineName: "",
-//       doseNumber: "",
-//       weighingDescription: "Weighing Schedule",
-//     },
-//   ];
-
-//   const today = new Date().toISOString().split("T", 1)[0]; // Format today's date as YYYY-MM-DD
-
-//   schedules.forEach((schedule) => {
-//     const scheduleDate = schedule.scheduleDate.toISOString().split("T", 1)[0];
-//     if (scheduleDate === today) {
-//       const message = `Reminder: Your child ${child.firstName} ${child.lastName} has a scheduled ${schedule.scheduleType} at ${schedule.location} on ${scheduleDate}.`;
-//       console.log("Sending SMS with message:", message);
-//       sendScheduledSMS(phoneNumber, message);
-//     }
-//   });
-
-//   res.send({ message: "Checked and sent SMS based on schedule if matched." });
-// }
-// TODO:
-
-// FIXME:
-// router.post(
-//   "/testSendSMS",
-//   expressAsyncHandler(async (req: Request, res: Response) => {
-//     // Hardcoded test child data
-//     const testChild = {
-//       firstName: "TestChildFirstName",
-//       lastName: "TestChildLastName",
-//     };
-
-//     // Hardcoded phone number for testing
-//     const testPhoneNumber = "639683799097"; // Replace with a valid number for testing
-
-//     // Call the sendSMSBasedOnSchedule function with hardcoded data
-//     await sendSMSBasedOnSchedule(
-//       {
-//         body: { phoneNumber: testPhoneNumber, child: testChild },
-//       } as Request,
-//       res
-//     );
-//   })
-// );
-
-// FIXME:
-
-// TODO: REAL DATA
-// async function sendScheduledSMS(phoneNumber: string, message: string) {
-//   try {
-//     const response = await axios.post(
-//       process.env.MOVIDER_BASE_URL || "https://api.movider.co/v1/sms",
-//       new URLSearchParams({
-//         api_key: process.env.MOVIDER_API_KEY || "",
-//         api_secret: process.env.MOVIDER_API_SECRET || "",
-//         to: phoneNumber,
-//         from: "CTCMIHIS",
-//         text: message,
-//       }),
-//       {
-//         headers: {
-//           "Content-Type": "application/x-www-form-urlencoded",
-//           Accept: "application/json",
-//         },
-//       }
-//     );
-//     console.log("Scheduled SMS sent successfully!", response.data);
-//   } catch (error: any) {
-//     console.error(
-//       "Failed to send scheduled SMS:",
-//       error.response ? error.response.data : error.message
-//     );
-//   }
-// }
-
-// export async function sendSMSBasedOnRealSchedule(req: Request, res: Response) {
-//   const { phoneNumber, childId } = req.body;
-//   const today = new Date().toISOString().split("T", 1)[0]; // Format today's date as YYYY-MM-DD
-
-//   try {
-//     // Query the database for schedules for this child that match today’s date and have not yet been sent
-//     const schedules = await SchedulingModel.find({
-//       childId,
-//       scheduleDate: {
-//         $gte: new Date(today), // Start of today
-//         $lt: new Date(new Date().setDate(new Date().getDate() + 1)), // Start of tomorrow
-//       },
-//       notificationSent: false, // Only fetch schedules where SMS has not been sent
-//     });
-
-//     // Group schedules by type and construct a single message per type
-//     const vaccinations: string[] = [];
-//     let weighingScheduled = false;
-//     let location = "";
-
-//     for (const schedule of schedules) {
-//       const scheduleDate = schedule.scheduleDate.toISOString().split("T", 1)[0];
-//       location = schedule.location || "designated location"; // Store location for the message
-
-//       if (schedule.scheduleType === "vaccination") {
-//         const vaccineInfo = schedule.vaccineName
-//           ? `${schedule.vaccineName}`
-//           : "vaccine";
-//         const doseInfo = schedule.doseNumber
-//           ? `dose ${schedule.doseNumber}`
-//           : "";
-//         vaccinations.push(`${vaccineInfo} ${doseInfo}`.trim());
-//       } else if (schedule.scheduleType === "weighing") {
-//         weighingScheduled = true;
-//       }
-//     }
-
-//     // Construct the SMS message
-//     let message = `Reminder: Your child has a scheduled `;
-//     if (weighingScheduled) {
-//       message += `weighing at ${location} on ${today}. `;
-//     }
-//     if (vaccinations.length > 0) {
-//       const vaccinesList = vaccinations.join(", ");
-//       message += `vaccination(s) (${vaccinesList}) at ${location} on ${today}.`;
-//     }
-
-//     // Only send SMS if there is a scheduled weighing or vaccinations
-//     if (weighingScheduled || vaccinations.length > 0) {
-//       console.log("Sending SMS with message:", message);
-//       await sendScheduledSMS(phoneNumber, message); // Send SMS
-
-//       // Update the `notificationSent` field for all schedules that were sent
-//       await SchedulingModel.updateMany(
-//         {
-//           childId,
-//           scheduleDate: {
-//             $gte: new Date(today),
-//             $lt: new Date(new Date().setDate(new Date().getDate() + 1)),
-//           },
-//         },
-//         {
-//           $set: {
-//             notificationSent: true,
-//             notificationDate: new Date(),
-//             notificationContent: message,
-//           },
-//         }
-//       );
-//       console.log("Updated schedules to mark SMS as sent.");
-//     }
-
-//     res.send({
-//       message: "Checked and sent SMS based on real schedule if matched.",
-//     });
-//   } catch (error: any) {
-//     console.error("Failed to retrieve or update schedules:", error.message);
-//     res.status(500).send({ message: "Error fetching or updating schedules." });
-//   }
-// }
-
-// router.post(
-//   "/sendRealScheduleSMS",
-//   expressAsyncHandler(async (req: Request, res: Response) => {
-//     await sendSMSBasedOnRealSchedule(req, res);
-//   })
-// );
-
-// FIXME: 2 days before schedule date
-// async function sendScheduledSMS(phoneNumber: string, message: string) {
-//   try {
-//     const response = await axios.post(
-//       process.env.MOVIDER_BASE_URL || "https://api.movider.co/v1/sms",
-//       new URLSearchParams({
-//         api_key: process.env.MOVIDER_API_KEY || "",
-//         api_secret: process.env.MOVIDER_API_SECRET || "",
-//         to: phoneNumber,
-//         from: "CTCMIHIS",
-//         text: message,
-//       }),
-//       {
-//         headers: {
-//           "Content-Type": "application/x-www-form-urlencoded",
-//           Accept: "application/json",
-//         },
-//       }
-//     );
-//     console.log("Scheduled SMS sent successfully!", response.data);
-//   } catch (error: any) {
-//     console.error(
-//       "Failed to send scheduled SMS:",
-//       error.response ? error.response.data : error.message
-//     );
-//   }
-// }
-
-// export async function sendSMSBasedOnRealSchedule(req: Request, res: Response) {
-//   const { phoneNumber, childId } = req.body;
-
-//   // Calculate the reminder date (2 days from today)
-//   const reminderDate = new Date();
-//   reminderDate.setDate(reminderDate.getDate() + 2);
-
-//   // Define the start and end of the reminder date
-//   const reminderDateStart = new Date(reminderDate);
-//   reminderDateStart.setHours(0, 0, 0, 0);
-//   const reminderDateEnd = new Date(reminderDate);
-//   reminderDateEnd.setHours(23, 59, 59, 999);
-
-//   try {
-//     // Query the database for schedules matching the reminder date and not yet sent
-//     const schedules = await SchedulingModel.find({
-//       childId,
-//       scheduleDate: {
-//         $gte: reminderDateStart,
-//         $lt: reminderDateEnd,
-//       },
-//       notificationSent: false, // Only fetch unsent schedules
-//     });
-
-//     // Prepare the SMS message
-//     const vaccinations: string[] = [];
-//     let weighingScheduled = false;
-//     let location = "";
-
-//     for (const schedule of schedules) {
-//       const scheduleDate = schedule.scheduleDate.toISOString().split("T", 1)[0];
-//       location = schedule.location || "designated location";
-
-//       if (schedule.scheduleType === "vaccination") {
-//         const vaccineInfo = schedule.vaccineName
-//           ? `${schedule.vaccineName}`
-//           : "vaccine";
-//         const doseInfo = schedule.doseNumber
-//           ? `dose ${schedule.doseNumber}`
-//           : "";
-//         vaccinations.push(`${vaccineInfo} ${doseInfo}`.trim());
-//       } else if (schedule.scheduleType === "weighing") {
-//         weighingScheduled = true;
-//       }
-//     }
-
-//     // Construct the message based on the schedule type
-//     let message = `Reminder: Your child has a scheduled `;
-//     if (weighingScheduled) {
-//       message += `weighing at ${location} on ${
-//         reminderDate.toISOString().split("T", 1)[0]
-//       }. `;
-//     }
-//     if (vaccinations.length > 0) {
-//       const vaccinesList = vaccinations.join(", ");
-//       message += `vaccination(s) (${vaccinesList}) at ${location} on ${
-//         reminderDate.toISOString().split("T", 1)[0]
-//       }.`;
-//     }
-
-//     // Only send SMS if there's a relevant schedule
-//     if (weighingScheduled || vaccinations.length > 0) {
-//       console.log("Sending SMS with message:", message);
-//       await sendScheduledSMS(phoneNumber, message); // Send the SMS
-
-//       // Update the `notificationSent` field for the sent schedules
-//       await SchedulingModel.updateMany(
-//         {
-//           childId,
-//           scheduleDate: {
-//             $gte: reminderDateStart,
-//             $lt: reminderDateEnd,
-//           },
-//         },
-//         {
-//           $set: {
-//             notificationSent: true,
-//             notificationDate: new Date(),
-//             notificationContent: message,
-//           },
-//         }
-//       );
-//       console.log("Updated schedules to mark SMS as sent.");
-//     }
-
-//     res.send({
-//       message: "Checked and sent SMS based on real schedule if matched.",
-//     });
-//   } catch (error: any) {
-//     console.error("Failed to retrieve or update schedules:", error.message);
-//     res.status(500).send({ message: "Error fetching or updating schedules." });
-//   }
-// }
-
-// router.post(
-//   "/sendRealScheduleSMS",
-//   expressAsyncHandler(async (req: Request, res: Response) => {
-//     await sendSMSBasedOnRealSchedule(req, res);
-//   })
-// );
-
-// FIXME: include child first and last name Current working
-// async function sendScheduledSMS(phoneNumber: string, message: string) {
-//   try {
-//     const response = await axios.post(
-//       process.env.MOVIDER_BASE_URL || "https://api.movider.co/v1/sms",
-//       new URLSearchParams({
-//         api_key: process.env.MOVIDER_API_KEY || "",
-//         api_secret: process.env.MOVIDER_API_SECRET || "",
-//         to: phoneNumber,
-//         from: "CTCMIHIS",
-//         text: message,
-//       }),
-//       {
-//         headers: {
-//           "Content-Type": "application/x-www-form-urlencoded",
-//           Accept: "application/json",
-//         },
-//       }
-//     );
-//     console.log("Scheduled SMS sent successfully!", response.data);
-//   } catch (error: any) {
-//     console.error(
-//       "Failed to send scheduled SMS:",
-//       error.response ? error.response.data : error.message
-//     );
-//   }
-// }
-
-// export async function sendSMSBasedOnRealSchedule(req: Request, res: Response) {
-//   const { phoneNumber, childId } = req.body;
-
-//   // Calculate the reminder date (2 days from today)
-//   const reminderDate = new Date();
-//   reminderDate.setDate(reminderDate.getDate() + 2);
-
-//   // Define the start and end of the reminder date
-//   const reminderDateStart = new Date(reminderDate);
-//   reminderDateStart.setHours(0, 0, 0, 0);
-//   const reminderDateEnd = new Date(reminderDate);
-//   reminderDateEnd.setHours(23, 59, 59, 999);
-
-//   try {
-//     // Retrieve the child's information
-//     const child = await ChildModel.findById(childId);
-//     if (!child) {
-//       return res.status(404).send({ message: "Child not found" });
-//     }
-
-//     const childName = `${child.firstName} ${child.lastName}`;
-
-//     // Query the database for schedules matching the reminder date and not yet sent
-//     const schedules = await SchedulingModel.find({
-//       childId,
-//       scheduleDate: {
-//         $gte: reminderDateStart,
-//         $lt: reminderDateEnd,
-//       },
-//       notificationSent: false, // Only fetch unsent schedules
-//     });
-
-//     // Prepare the SMS message
-//     const vaccinations: string[] = [];
-//     let weighingScheduled = false;
-//     let location = "";
-
-//     for (const schedule of schedules) {
-//       const scheduleDate = schedule.scheduleDate.toISOString().split("T", 1)[0];
-//       location = schedule.location || "designated location";
-
-//       if (schedule.scheduleType === "vaccination") {
-//         const vaccineInfo = schedule.vaccineName
-//           ? `${schedule.vaccineName}`
-//           : "vaccine";
-//         const doseInfo = schedule.doseNumber
-//           ? `dose ${schedule.doseNumber}`
-//           : "";
-//         vaccinations.push(`${vaccineInfo} ${doseInfo}`.trim());
-//       } else if (schedule.scheduleType === "weighing") {
-//         weighingScheduled = true;
-//       }
-//     }
-
-//     // Construct the message based on the schedule type
-//     let message = `Reminder: Your child ${childName} has a scheduled `;
-//     if (weighingScheduled) {
-//       message += `weighing at ${location} on ${
-//         reminderDate.toISOString().split("T", 1)[0]
-//       }. `;
-//     }
-//     if (vaccinations.length > 0) {
-//       const vaccinesList = vaccinations.join(", ");
-//       message += `vaccination(s) (${vaccinesList}) at ${location} on ${
-//         reminderDate.toISOString().split("T", 1)[0]
-//       }.`;
-//     }
-
-//     // Only send SMS if there's a relevant schedule
-//     if (weighingScheduled || vaccinations.length > 0) {
-//       console.log("Sending SMS with message:", message);
-//       await sendScheduledSMS(phoneNumber, message); // Send the SMS
-
-//       // Update the `notificationSent` field for the sent schedules
-//       await SchedulingModel.updateMany(
-//         {
-//           childId,
-//           scheduleDate: {
-//             $gte: reminderDateStart,
-//             $lt: reminderDateEnd,
-//           },
-//         },
-//         {
-//           $set: {
-//             notificationSent: true,
-//             notificationDate: new Date(),
-//             notificationContent: message,
-//           },
-//         }
-//       );
-//       console.log("Updated schedules to mark SMS as sent.");
-//     }
-
-//     res.send({
-//       message: "Checked and sent SMS based on real schedule if matched.",
-//     });
-//   } catch (error: any) {
-//     console.error("Failed to retrieve or update schedules:", error.message);
-//     res.status(500).send({ message: "Error fetching or updating schedules." });
-//   }
-// }
-
-// router.post(
-//   "/sendRealScheduleSMS",
-//   expressAsyncHandler(async (req: Request, res: Response) => {
-//     await sendSMSBasedOnRealSchedule(req, res);
-//   })
-// );
-
 // cron job TODO:
 // Function to send SMS FIXME: Working on schedule date
+function delay(ms: any) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 export async function sendScheduledSMS(phoneNumber: string, message: string) {
   try {
     const response = await axios.post(
@@ -801,75 +356,6 @@ export async function sendScheduledSMS(phoneNumber: string, message: string) {
     );
   }
 }
-
-// // Core function to find schedules and send reminders FIXME: Working on schedule date
-// export async function sendDailyReminders() {
-//   const reminderDate = new Date();
-//   reminderDate.setDate(reminderDate.getDate() + 2); // Set reminder for 2 days ahead
-
-//   const reminderDateStart = new Date(reminderDate);
-//   reminderDateStart.setHours(0, 0, 0, 0); // Start of the reminder day
-//   const reminderDateEnd = new Date(reminderDate);
-//   reminderDateEnd.setHours(23, 59, 59, 999); // End of the reminder day
-
-//   try {
-//     // Find schedules for two days from now that haven't had a notification sent
-//     const schedules = await SchedulingModel.find({
-//       scheduleDate: {
-//         $gte: reminderDateStart,
-//         $lt: reminderDateEnd,
-//       },
-//       notificationSent: false, // Only fetch unsent schedules
-//     });
-
-//     for (const schedule of schedules) {
-//       const phoneNumber = schedule.motherPhoneNumber;
-//       const child = await ChildModel.findById(schedule.childId);
-//       if (!child) continue;
-
-//       const childName = `${child.firstName} ${child.lastName}`;
-//       const location = schedule.location || "designated location";
-//       const scheduleDate = schedule.scheduleDate.toISOString().split("T", 1)[0];
-
-//       // Construct the message
-//       let message = `Reminder: Your child ${childName} has a scheduled `;
-//       if (schedule.scheduleType === "weighing") {
-//         message += `weighing at ${location} on ${scheduleDate}. `;
-//       }
-//       if (schedule.scheduleType === "vaccination") {
-//         const vaccineInfo = schedule.vaccineName
-//           ? `${schedule.vaccineName}`
-//           : "vaccine";
-//         const doseInfo = schedule.doseNumber
-//           ? `dose ${schedule.doseNumber}`
-//           : "";
-//         message += `vaccination (${vaccineInfo} ${doseInfo}) at ${location} on ${scheduleDate}.`;
-//       }
-
-//       console.log("Sending SMS with message:", message);
-
-//       // Send the SMS
-//       await sendScheduledSMS(phoneNumber, message);
-
-//       // Update the schedule to mark SMS as sent
-//       await SchedulingModel.updateOne(
-//         { _id: schedule._id },
-//         {
-//           $set: {
-//             notificationSent: true,
-//             notificationDate: new Date(),
-//             notificationContent: message,
-//           },
-//         }
-//       );
-//       console.log(`Updated schedule ${schedule._id} to mark SMS as sent.`);
-//     }
-
-//     console.log("All scheduled reminders checked and SMS sent if applicable.");
-//   } catch (error: any) {
-//     console.error("Failed to retrieve or update schedules:", error.message);
-//   }
-// }
 
 // sendDailyReminders function in smsRouter.ts or where it's defined
 export async function sendDailyReminders() {
@@ -919,23 +405,33 @@ export async function sendDailyReminders() {
         location,
       } = schedule;
 
-      // Fetch child information (for name, etc.)
-      const child = await ChildModel.findById(childId);
+      // Fetch child information (for name, mother, etc.)
+      const child = await ChildModel.findById(childId).populate("motherId");
       const childName = child
         ? `${child.firstName} ${child.lastName}`
-        : "Your child";
+        : "iyong anak";
+      const motherName =
+        child && child.motherId ? child.motherId.firstName : "Nanay";
 
-      // Format the date for the reminder message
+      // Format the date for the reminder message in Filipino
       const reminderDate = rescheduleDate || scheduleDate;
-      const formattedDate = reminderDate.toISOString().split("T")[0];
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const formattedDate = reminderDate.toLocaleDateString("tl-PH", options);
 
-      // Construct the message based on the schedule type
-      let message = `Reminder: ${childName} has a scheduled ${scheduleType} on ${formattedDate}. Please visit ${location}.`;
+      // Construct the personalized message with "Aling [Mother's First Name]" and "Bakuna"
+      let message = `Magandang Araw, Aling ${motherName}! Ang iyong anak na si ${childName} ay naka-schedule para sa ${
+        scheduleType === "vaccination" ? "Bakuna" : "Timbang"
+      } sa ${formattedDate}. 
+Maaari lamang na bumisita sa ${location} para siguradong malusog at laging handa si baby laban sa sakit!`;
 
       // Include vaccine details if it's a vaccination and they exist
       if (scheduleType === "vaccination") {
         if (vaccineName) {
-          message += ` Vaccine: ${vaccineName}`;
+          message += `\n\nBakuna: ${vaccineName}`;
         }
         if (doseNumber) {
           message += `, Dose: ${doseNumber}`;
@@ -946,14 +442,13 @@ export async function sendDailyReminders() {
 
       // Send the SMS
       await sendScheduledSMS(motherPhoneNumber, message);
+      await delay(1000);
 
       // Mark the reminder as sent
       schedule.notificationSent = true;
       schedule.notificationDate = new Date();
       await schedule.save();
     }
-
-    console.log("Daily SMS reminder job completed.");
   } catch (error) {
     console.error("Error running daily SMS reminder job:", error);
   }
