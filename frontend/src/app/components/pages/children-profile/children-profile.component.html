@@ -39,23 +39,11 @@
                   </tr>
                   <tr>
                     <td>Height</td>
-                    <td>
-                      {{
-                        child.weighingHistory[child.weighingHistory.length - 1]
-                          ?.height
-                      }}
-                      cm
-                    </td>
+                    <td>{{ latestWeighing?.height }} cm</td>
                   </tr>
                   <tr>
                     <td>Weight</td>
-                    <td>
-                      {{
-                        child.weighingHistory[child.weighingHistory.length - 1]
-                          ?.weight
-                      }}
-                      kg
-                    </td>
+                    <td>{{ latestWeighing?.weight }} kg</td>
                   </tr>
                   <!-- <tr>
                     <td>Height</td>
@@ -188,56 +176,7 @@
             Weight Logs
           </h2>
         </div>
-        <!-- <div class="title-wrap">
-          <h3 class="stat-sub-title">Recent Child Vaccinations</h3>
-        </div>
-        <div class="table-group top">
-          <table class="stat-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Vaccine Type</th>
-                <th>Dose Number</th>
-                <th>Administered By</th>
-                <th>Recorded by BHW</th>
-                <th>Location</th>
-              </tr>
-            </thead>
-            @for(vaccination of paginatedChildren; track $index){
 
-            <tbody>
-              <tr>
-                <td>
-                  {{ vaccination.dateOfVaccination | date : "MM/dd/yyyy" }}
-                </td>
-                <td>{{ vaccination.vaccineType }}</td>
-                <td>{{ vaccination.doseNumber }}</td>
-                <td>
-                  {{
-                    vaccination.midwifeId?.firstName +
-                      " " +
-                      vaccination.midwifeId?.lastName
-                  }}
-                </td>
-                <td>
-                  {{
-                    vaccination.bhwId?.firstName +
-                      " " +
-                      vaccination.bhwId?.lastName
-                  }}
-                </td>
-                <td>{{ vaccination.placeOfVaccination }}</td>
-              </tr>
-            </tbody>
-            }
-            <pagination
-              [totalItems]="child.vaccinations.length"
-              [itemsPerPage]="itemsPerPage"
-              [currentPage]="currentPage"
-              (onClick)="changePage($event)"
-            ></pagination>
-          </table>
-        </div> -->
         <div class="title-wrap">
           <h3 class="stat-sub-title">Recent Child Vaccinations</h3>
         </div>
@@ -323,7 +262,7 @@
           </table>
         </div>
 
-        <div class="title-wrap">
+        <!-- <div class="title-wrap">
           <h3 class="stat-sub-title">Child Growth</h3>
         </div>
         <div class="table-group">
@@ -338,7 +277,6 @@
                 <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
                   Action
                 </th>
-                <!-- <th>Action</th> -->
               </tr>
             </thead>
             @for(weighingStat of child.weighingHistory; track $index){
@@ -347,7 +285,6 @@
                 <td>{{ weighingStat?.date | date : "yyyy-MM-dd" }}</td>
                 <td>{{ weighingStat?.weight }}</td>
                 <td>{{ weighingStat?.height }}</td>
-                <!-- <td>{{ child.nutritionalStatus?.status || "N/A" }}</td> -->
                 <td>{{ child.nutritionalStatus?.status || "N/A" }}</td>
                 <td>{{ weighingStat?.notes }}</td>
                 <td *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
@@ -358,30 +295,150 @@
                     Update
                   </button>
                 </td>
-                <!-- <td class="action"> -->
-                <!-- Action Buttons -->
-                <!-- <button (click)="openEditDialog(weighingStat)">Edit</button> -->
-                <!-- <button type="button" class="global-btn update">Edit</button> -->
-                <!-- <button (click)="deleteWeighingHistory(weighingStat._id)">Delete</button> -->
-                <!-- <button type="button" class="global-btn delete">
-                    Delete
-                  </button> -->
-                <!-- </td> -->
+
               </tr>
             </tbody>
             }
           </table>
+        </div> -->
+        <!-- TODO: -->
+        <div class="title-wrap">
+          <h3 class="stat-sub-title">Child Growth</h3>
         </div>
 
+        <div class="table-group">
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Weight (kg)</th>
+                <th>Height (cm)</th>
+                <th>Growth Category</th>
+                <th>Notes</th>
+                <th *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let weighingStat of child.weighingHistory;
+                  let i = index
+                "
+              >
+                <td>{{ weighingStat.date | date : "yyyy-MM-dd" }}</td>
+                <td>{{ weighingStat.weight }}</td>
+                <td>{{ weighingStat.height }}</td>
+                <td>{{ child.nutritionalStatus?.status || "N/A" }}</td>
+                <!-- <td>{{ weighingStat.notes }}</td> -->
+                <td>
+                  <span *ngIf="i === 0">
+                    Latest Weighing Date
+                    <!-- {{ weighingStat.date | date : "yyyy-MM-dd" }} -->
+                  </span>
+                </td>
+                <td *ngIf="userRole !== 'midwife' && userRole !== 'admin'">
+                  <button
+                    (click)="openNutriCalcDialog(weighingStat._id)"
+                    class="vcard-popup global-btn"
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- TODO: -->
         <div class="title-wrap bosst">
           <h3 class="stat-sub-title">Child Schedule</h3>
         </div>
 
-        <button class="global-btn hey" (click)="toggleSchedule()">
-          {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
-        </button>
+        <div class="light-weight-baby">
+          <button class="global-btn hey" (click)="toggleWeighingSchedule()">
+            {{
+              showWeighingSchedule
+                ? "Hide Weighing Schedule"
+                : "Show Weighing Schedule"
+            }}
+          </button>
+          <button class="global-btn hey" (click)="toggleVaccinationSchedule()">
+            {{
+              showVaccinationSchedule
+                ? "Hide Vaccination Schedule"
+                : "Show Vaccination Schedule"
+            }}
+          </button>
+        </div>
 
-        <div class="table-group" *ngIf="showSchedule">
+        <!-- Weighing Schedule Table -->
+        <div class="table-group" *ngIf="showWeighingSchedule">
+          <div class="title-wrap">
+            <h3 class="stat-sub-title">Weighing Schedule</h3>
+          </div>
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Schedule Date</th>
+                <th>Reschedule Date</th>
+                <th>Type (Weighing)</th>
+                <th>Dose Number (if applicable)</th>
+                <th>Schedule Type</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let schedule of weighingSchedules">
+                <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>OPT</td>
+                <td>{{ schedule.doseNumber || "-" }}</td>
+                <td>{{ schedule.scheduleType | titlecase }}</td>
+                <td>{{ schedule.location }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Vaccination Schedule Table -->
+        <div class="table-group" *ngIf="showVaccinationSchedule">
+          <div class="title-wrap">
+            <h3 class="stat-sub-title">Vaccination Schedule</h3>
+          </div>
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Schedule Date</th>
+                <th>Reschedule Date</th>
+                <th>Type (Vaccine)</th>
+                <th>Dose Number (if applicable)</th>
+                <th>Schedule Type</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let schedule of vaccinationSchedules">
+                <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.vaccineName || "N/A" }}</td>
+                <td>{{ schedule.doseNumber || "-" }}</td>
+                <td>{{ schedule.scheduleType | titlecase }}</td>
+                <td>{{ schedule.location }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- <div class="title-wrap bosst">
+          <h3 class="stat-sub-title">Child Schedule</h3>
+        </div> -->
+
+        <!-- <button class="global-btn hey" (click)="toggleSchedule()">
+          {{ showSchedule ? "Hide Child Schedule" : "Show Child Schedule" }}
+        </button> -->
+
+        <!-- <div class="table-group" *ngIf="showSchedule">
           <table class="stat-table">
             <thead>
               <tr>
@@ -398,7 +455,7 @@
                 <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
                 <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
                 <td>
-                  <!-- Display either the vaccine or weighing description -->
+
                   {{
                     schedule.scheduleType === "weighing"
                       ? "OPT"
@@ -411,87 +468,65 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> -->
+        <!-- TODO: -->
+        <!-- <div class="table-group" *ngIf="showSchedule">
+
+
+          <div class="title-wrap">
+            <h3 class="stat-sub-title">Weighing Schedule</h3>
+          </div>
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Schedule Date</th>
+                <th>Reschedule Date</th>
+                <th>Type (Weighing)</th>
+                <th>Dose Number (if applicable)</th>
+                <th>Schedule Type</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let schedule of weighingSchedules">
+                <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>OPT</td>
+                <td>{{ schedule.doseNumber || "-" }}</td>
+                <td>{{ schedule.scheduleType | titlecase }}</td>
+                <td>{{ schedule.location }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="title-wrap">
+            <h3 class="stat-sub-title">Vaccination Schedule</h3>
+          </div>
+          <table class="stat-table">
+            <thead>
+              <tr>
+                <th>Schedule Date</th>
+                <th>Reschedule Date</th>
+                <th>Type (Vaccine)</th>
+                <th>Dose Number (if applicable)</th>
+                <th>Schedule Type</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let schedule of vaccinationSchedules">
+                <td>{{ schedule.scheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.rescheduleDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.vaccineName || "N/A" }}</td>
+                <td>{{ schedule.doseNumber || "-" }}</td>
+                <td>{{ schedule.scheduleType | titlecase }}</td>
+                <td>{{ schedule.location }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+        <!-- TODO: -->
       </div>
     </div>
   </div>
 </div>
-<!--  FIXME: -->
-<!-- <div class="title-wrap">
-  <h3 class="stat-sub-title">Recent Child Vaccinations and AEFI</h3>
-</div> -->
-<!-- <div class="table-group top">
-
-    <mat-icon>add</mat-icon> Add Vaccination
-  </button>
-  <table class="stat-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Vaccine Type</th>
-        <th>Dose Number</th>
-        <th>Administered By</th>
-        <th>Recorded by</th>
-        <th>Location</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody *ngIf="child.vaccinations.length > 0; else noRecords">
-      <tr *ngFor="let vaccination of paginatedChildren">
-        <td>{{ vaccination.dateOfVaccination | date : "yyyy-MM-dd" }}</td>
-        <td>{{ vaccination.vaccineType }}</td>
-        <td>{{ vaccination.doseNumber }}</td>
-        <td>
-          {{ vaccination.midwifeId?.firstName }}
-          {{ vaccination.midwifeId?.lastName }}
-        </td>
-        <td>
-          {{ vaccination.bhwId?.firstName }} {{ vaccination.bhwId?.lastName }}
-        </td>
-        <td>{{ vaccination.placeOfVaccination }}</td>
-        <td class="bottoms">
-          <button
-            (click)="openUpdateDialog(vaccination.id)"
-            class="vcard-popup global-btn"
-          >
-            Update
-          </button>
-          <button
-            (click)="openAEFIDescriptionDialog(vaccination.id)"
-            class="vcard-popup global-btn"
-          >
-            AEFI
-          </button>
-        </td>
-      </tr>
-
-      <div *ngFor="let vaccination of paginatedChildren">
-        <tr *ngIf="vaccination.aefi">
-          <td colspan="7" class="aefi-details">
-            <strong>AEFI:</strong>
-            <div>
-              <span
-                ><strong>Description:</strong>
-                {{ vaccination.aefi.description }}</span
-              >
-              <span
-                ><strong>Severity:</strong>
-                {{ vaccination.aefi.severity }}</span
-              >
-              <span
-                ><strong>Date of Event:</strong>
-                {{ vaccination.aefi.dateOfEvent | date : "yyyy-MM-dd" }}</span
-              >
-            </div>
-          </td>
-        </tr>
-      </div>
-    </tbody>
-  </table>
-
-  <ng-template #noRecords>
-    <p class="wewsa">No records yet.</p>
-  </ng-template>
-</div> -->
-
-<!--  -->

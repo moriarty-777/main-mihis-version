@@ -358,12 +358,107 @@ export async function sendScheduledSMS(phoneNumber: string, message: string) {
 }
 
 // sendDailyReminders function in smsRouter.ts or where it's defined
+// export async function sendDailyReminders() {
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0); // Set to start of the day
+
+//   const reminderDate = new Date(today);
+//   reminderDate.setDate(reminderDate.getDate() + 2); // Set reminder for 2 days ahead
+
+//   const reminderDateStart = new Date(reminderDate);
+//   reminderDateStart.setHours(0, 0, 0, 0);
+//   const reminderDateEnd = new Date(reminderDate);
+//   reminderDateEnd.setHours(23, 59, 59, 999);
+
+//   try {
+//     // Step 1: Reset notificationSent for missed schedules with rescheduleDate
+//     const resetResult = await SchedulingModel.updateMany(
+//       {
+//         scheduleDate: { $lt: today }, // Past schedules
+//         status: false, // Schedule was missed
+//         notificationSent: true, // Previous notification was sent
+//         rescheduleDate: { $exists: true }, // RescheduleDate is set
+//       },
+//       { $set: { notificationSent: false } } // Reset for reschedule reminder
+//     );
+//     console.log("Reset notificationSent for missed schedules:", resetResult);
+
+//     // Step 2: Find and send reminders for 2 days before scheduleDate or rescheduleDate
+//     const schedulesToRemind = await SchedulingModel.find({
+//       $or: [
+//         { scheduleDate: { $gte: reminderDateStart, $lt: reminderDateEnd } },
+//         { rescheduleDate: { $gte: reminderDateStart, $lt: reminderDateEnd } },
+//       ],
+//       notificationSent: false, // Only unsent reminders
+//       status: false, // Event has not been completed
+//     });
+
+//     for (const schedule of schedulesToRemind) {
+//       const {
+//         motherPhoneNumber,
+//         childId,
+//         scheduleDate,
+//         rescheduleDate,
+//         vaccineName,
+//         doseNumber,
+//         scheduleType,
+//         location,
+//       } = schedule;
+
+//       // Fetch child information (for name, mother, etc.)
+//       const child = await ChildModel.findById(childId).populate("motherId");
+//       const childName = child
+//         ? `${child.firstName} ${child.lastName}`
+//         : "iyong anak";
+//       const motherName =
+//         child && child.motherId ? child.motherId.firstName : "Nanay";
+
+//       // Format the date for the reminder message in Filipino
+//       const reminderDate = rescheduleDate || scheduleDate;
+//       const options: Intl.DateTimeFormatOptions = {
+//         year: "numeric",
+//         month: "long",
+//         day: "numeric",
+//       };
+//       const formattedDate = reminderDate.toLocaleDateString("tl-PH", options);
+
+//       // Construct the personalized message with "Aling [Mother's First Name]" and "Bakuna"
+//       let message = `Magandang Araw, Aling ${motherName}! Ang iyong anak na si ${childName} ay naka-schedule para sa ${
+//         scheduleType === "vaccination" ? "Bakuna" : "Timbang"
+//       } sa ${formattedDate}.
+// Maaari lamang na bumisita sa ${location} para siguradong malusog at laging handa si baby laban sa sakit!`;
+
+//       // Include vaccine details if it's a vaccination and they exist
+//       if (scheduleType === "vaccination") {
+//         if (vaccineName) {
+//           message += `\n\nBakuna: ${vaccineName}`;
+//         }
+//         if (doseNumber) {
+//           message += `, Dose: ${doseNumber}`;
+//         }
+//       }
+
+//       console.log("Sending SMS with message:", message);
+
+//       // Send the SMS
+//       await sendScheduledSMS(motherPhoneNumber, message);
+//       await delay(1000);
+
+//       // Mark the reminder as sent
+//       schedule.notificationSent = true;
+//       schedule.notificationDate = new Date();
+//       await schedule.save();
+//     }
+//   } catch (error) {
+//     console.error("Error running daily SMS reminder job:", error);
+//   }
+// }
 export async function sendDailyReminders() {
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Set to start of the day
+  today.setHours(0, 0, 0, 0);
 
   const reminderDate = new Date(today);
-  reminderDate.setDate(reminderDate.getDate() + 2); // Set reminder for 2 days ahead
+  reminderDate.setDate(reminderDate.getDate() + 2); // Reminder for 2 days ahead
 
   const reminderDateStart = new Date(reminderDate);
   reminderDateStart.setHours(0, 0, 0, 0);
@@ -371,26 +466,25 @@ export async function sendDailyReminders() {
   reminderDateEnd.setHours(23, 59, 59, 999);
 
   try {
-    // Step 1: Reset notificationSent for missed schedules with rescheduleDate
-    const resetResult = await SchedulingModel.updateMany(
+    // Step 1: Reset `notificationSent` for missed schedules with rescheduleDate
+    await SchedulingModel.updateMany(
       {
-        scheduleDate: { $lt: today }, // Past schedules
-        status: false, // Schedule was missed
-        notificationSent: true, // Previous notification was sent
-        rescheduleDate: { $exists: true }, // RescheduleDate is set
+        scheduleDate: { $lt: today },
+        status: false, // Missed schedule
+        notificationSent: true,
+        rescheduleDate: { $exists: true },
       },
-      { $set: { notificationSent: false } } // Reset for reschedule reminder
+      { $set: { notificationSent: false } }
     );
-    console.log("Reset notificationSent for missed schedules:", resetResult);
 
-    // Step 2: Find and send reminders for 2 days before scheduleDate or rescheduleDate
+    // Step 2: Find and send reminders for 2 days before `scheduleDate` or `rescheduleDate`
     const schedulesToRemind = await SchedulingModel.find({
       $or: [
         { scheduleDate: { $gte: reminderDateStart, $lt: reminderDateEnd } },
         { rescheduleDate: { $gte: reminderDateStart, $lt: reminderDateEnd } },
       ],
-      notificationSent: false, // Only unsent reminders
-      status: false, // Event has not been completed
+      notificationSent: false,
+      status: false,
     });
 
     for (const schedule of schedulesToRemind) {
@@ -405,46 +499,32 @@ export async function sendDailyReminders() {
         location,
       } = schedule;
 
-      // Fetch child information (for name, mother, etc.)
       const child = await ChildModel.findById(childId).populate("motherId");
       const childName = child
         ? `${child.firstName} ${child.lastName}`
         : "iyong anak";
-      const motherName =
-        child && child.motherId ? child.motherId.firstName : "Nanay";
+      const motherName = child?.motherId?.firstName || "Nanay";
 
-      // Format the date for the reminder message in Filipino
-      const reminderDate = rescheduleDate || scheduleDate;
-      const options: Intl.DateTimeFormatOptions = {
+      const reminderDate = scheduleDate || rescheduleDate;
+      // FIXME: Make the reminder date the schedule date if the date today is not yet in the schedule date and if the scheduledate is past and the status is false make the reminder date the reschedule date
+      const formattedDate = reminderDate.toLocaleDateString("tl-PH", {
         year: "numeric",
         month: "long",
         day: "numeric",
-      };
-      const formattedDate = reminderDate.toLocaleDateString("tl-PH", options);
+      });
 
-      // Construct the personalized message with "Aling [Mother's First Name]" and "Bakuna"
       let message = `Magandang Araw, Aling ${motherName}! Ang iyong anak na si ${childName} ay naka-schedule para sa ${
         scheduleType === "vaccination" ? "Bakuna" : "Timbang"
-      } sa ${formattedDate}. 
-Maaari lamang na bumisita sa ${location} para siguradong malusog at laging handa si baby laban sa sakit!`;
+      } sa ${formattedDate}. Maaari lamang na bumisita sa ${location} para siguradong malusog at laging handa si baby laban sa sakit!`;
 
-      // Include vaccine details if it's a vaccination and they exist
-      if (scheduleType === "vaccination") {
-        if (vaccineName) {
-          message += `\n\nBakuna: ${vaccineName}`;
-        }
-        if (doseNumber) {
-          message += `, Dose: ${doseNumber}`;
-        }
+      if (scheduleType === "vaccination" && vaccineName) {
+        message += `\n\nBakuna: ${vaccineName}, Dose: ${doseNumber || "1"}`;
       }
 
       console.log("Sending SMS with message:", message);
-
-      // Send the SMS
       await sendScheduledSMS(motherPhoneNumber, message);
       await delay(1000);
 
-      // Mark the reminder as sent
       schedule.notificationSent = true;
       schedule.notificationDate = new Date();
       await schedule.save();
@@ -453,6 +533,106 @@ Maaari lamang na bumisita sa ${location} para siguradong malusog at laging handa
     console.error("Error running daily SMS reminder job:", error);
   }
 }
+
+// TODO: Reminder date fixed
+/*
+
+export async function sendDailyReminders() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const reminderDate = new Date(today);
+  reminderDate.setDate(reminderDate.getDate() + 2); // Reminder for 2 days ahead
+
+  const reminderDateStart = new Date(reminderDate);
+  reminderDateStart.setHours(0, 0, 0, 0);
+  const reminderDateEnd = new Date(reminderDate);
+  reminderDateEnd.setHours(23, 59, 59, 999);
+
+  try {
+    // Step 1: Reset `notificationSent` for missed schedules with rescheduleDate
+    await SchedulingModel.updateMany(
+      {
+        scheduleDate: { $lt: today },
+        status: false, // Missed schedule
+        notificationSent: true,
+        rescheduleDate: { $exists: true },
+      },
+      { $set: { notificationSent: false } }
+    );
+
+    // Step 2: Find and send reminders for 2 days before `scheduleDate` or `rescheduleDate`
+    const schedulesToRemind = await SchedulingModel.find({
+      $or: [
+        { scheduleDate: { $gte: reminderDateStart, $lt: reminderDateEnd } },
+        { rescheduleDate: { $gte: reminderDateStart, $lt: reminderDateEnd } },
+      ],
+      notificationSent: false,
+      status: false,
+    });
+
+    for (const schedule of schedulesToRemind) {
+      const {
+        motherPhoneNumber,
+        childId,
+        scheduleDate,
+        rescheduleDate,
+        vaccineName,
+        doseNumber,
+        scheduleType,
+        location,
+      } = schedule;
+
+      const child = await ChildModel.findById(childId).populate("motherId");
+      const childName = child
+        ? `${child.firstName} ${child.lastName}`
+        : "iyong anak";
+      const motherName = child?.motherId?.firstName || "Nanay";
+
+      // Determine which date to use for the reminder
+      let reminderDate;
+      if (scheduleDate && today < new Date(scheduleDate)) {
+        // If scheduleDate is in the future, use it for the reminder
+        reminderDate = scheduleDate;
+      } else if (scheduleDate && today > new Date(scheduleDate) && status === false && rescheduleDate) {
+        // If scheduleDate is missed and there is a rescheduleDate, use rescheduleDate
+        reminderDate = rescheduleDate;
+      }
+
+      // Only proceed if reminderDate is defined
+      if (reminderDate) {
+        const formattedDate = reminderDate.toLocaleDateString("tl-PH", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        let message = `Magandang Araw, Aling ${motherName}! Ang iyong anak na si ${childName} ay naka-schedule para sa ${
+          scheduleType === "vaccination" ? "Bakuna" : "Timbang"
+        } sa ${formattedDate}. Maaari lamang na bumisita sa ${location} para siguradong malusog at laging handa si baby laban sa sakit!`;
+
+        if (scheduleType === "vaccination" && vaccineName) {
+          message += `\n\nBakuna: ${vaccineName}, Dose: ${doseNumber || "1"}`;
+        }
+
+        console.log("Sending SMS with message:", message);
+        await sendScheduledSMS(motherPhoneNumber, message);
+        await delay(1000);
+
+        // Mark the notification as sent
+        schedule.notificationSent = true;
+        schedule.notificationDate = new Date();
+        await schedule.save();
+      } else {
+        console.log("No message sent: conditions not met for sending a reminder.");
+      }
+    }
+  } catch (error) {
+    console.error("Error running daily SMS reminder job:", error);
+  }
+}
+
+*/
 
 // Send notification upon scheduloing
 

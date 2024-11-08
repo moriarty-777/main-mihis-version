@@ -12,10 +12,116 @@ import { Child } from '../../../shared/models/child';
   styleUrl: './charts-radar-vaccine-type.component.css',
 })
 export class ChartsRadarVaccineTypeComponent implements OnChanges {
+  // @Input() child!: Child;
+
+  // // Complete list of all vaccine types that should always appear on the chart
+  // radarChartLabels: string[] = [
+  //   'BCG',
+  //   'Hepatitis B',
+  //   'Pentavalent',
+  //   'OPV',
+  //   'IPV',
+  //   'PCV',
+  //   'MMR',
+  // ];
+
+  // radarChartData: ChartData<'radar'> = {
+  //   labels: this.radarChartLabels,
+  //   datasets: [
+  //     {
+  //       label: 'Vaccine Doses',
+  //       data: [], // This will be filled dynamically
+  //       backgroundColor: 'rgba(92, 194, 184, 0.5)', // Light teal background
+  //       borderColor: 'rgba(92, 194, 184, 1)', // Teal border
+  //       pointBackgroundColor: 'rgba(92, 194, 184, 1)', // Teal points
+  //       // pointRadius: 0, // Removes the dots
+  //       // pointHoverRadius: 0,
+  //     },
+  //   ],
+  // };
+
+  // ngOnChanges() {
+  //   if (this.child && this.child.vaccinations) {
+  //     this.generateChartData();
+  //   }
+  // }
+
+  // generateChartData() {
+  //   // Initialize dose count to 0 for each vaccine type
+  //   const vaccineDoseCount: { [vaccineType: string]: number } = {
+  //     BCG: 0,
+  //     'Hepatitis B Vaccine': 0,
+  //     'Pentavalent Vaccine': 0,
+  //     'Oral Polio Vaccine (OPV)': 0,
+  //     'Inactivated Polio Vaccine (IPV)': 0,
+  //     'Pneumococcal Conjugate Vaccine (PCV)': 0,
+  //     'Measles, Mumps, Rubella Vaccine (MMR)': 0,
+  //   };
+
+  //   // Count the doses for the vaccines the child has received
+  //   this.child.vaccinations.forEach((vaccine) => {
+  //     if (vaccineDoseCount[vaccine.vaccineType] !== undefined) {
+  //       vaccineDoseCount[vaccine.vaccineType]++;
+  //     }
+  //   });
+
+  //   // // Prepare the data for the radar chart (order matters!)
+  //   // const doseData = this.radarChartLabels.map(
+  //   //   (vaccineType) => vaccineDoseCount[vaccineType]
+  //   // );
+  //   // Dynamically calculate doses received per vaccine
+  //   const vaccineData = this.radarChartLabels.map((label) => {
+  //     const dosesReceived = this.child.vaccinations.filter(
+  //       (vac) => vac.vaccineType === label
+  //     ).length;
+  //     return dosesReceived; // Return how many doses of this specific vaccine were received
+  //   });
+
+  //   // Update chart data
+  //   this.radarChartData = {
+  //     labels: this.radarChartLabels,
+  //     datasets: [
+  //       {
+  //         label: 'Vaccine Doses',
+  //         data: vaccineData,
+  //         backgroundColor: 'rgba(92, 194, 184, 0.5)', // Adjust as needed
+  //         borderColor: 'rgba(92, 194, 184, 1)', // Adjust as needed
+  //         pointBackgroundColor: 'rgba(92, 194, 184, 1)', // Adjust as needed
+  //         // pointRadius: 0, // Removes the dots
+  //         // pointHoverRadius: 0,
+  //       },
+  //     ],
+  //   };
+  // }
+
+  // radarChartOptions: ChartOptions<'radar'> = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   devicePixelRatio: 2,
+  //   scales: {
+  //     r: {
+  //       min: 0,
+  //       max: 3,
+  //       ticks: {
+  //         stepSize: 1,
+  //       },
+  //     },
+  //   },
+  //   plugins: {
+  //     legend: {
+  //       display: false, // This will remove the legend
+  //     },
+  //   },
+  // };
+
+  // TODO:
+  // TODO:
+  // TODO:
+  // TODO:
+  // TODO:
   @Input() child!: Child;
 
-  // Complete list of all vaccine types that should always appear on the chart
-  radarChartLabels: string[] = [
+  vaccineLabels = [
     'BCG',
     'Hepatitis B',
     'Pentavalent',
@@ -25,91 +131,66 @@ export class ChartsRadarVaccineTypeComponent implements OnChanges {
     'MMR',
   ];
 
-  radarChartData: ChartData<'radar'> = {
-    labels: this.radarChartLabels,
+  chartData: ChartData<'bar'> = {
+    labels: this.vaccineLabels,
     datasets: [
       {
-        label: 'Vaccine Doses',
-        data: [], // This will be filled dynamically
-        backgroundColor: 'rgba(92, 194, 184, 0.5)', // Light teal background
-        borderColor: 'rgba(92, 194, 184, 1)', // Teal border
-        pointBackgroundColor: 'rgba(92, 194, 184, 1)', // Teal points
-        // pointRadius: 0, // Removes the dots
-        // pointHoverRadius: 0,
+        label: 'Doses Received',
+        data: [],
+        backgroundColor: 'rgba(92, 194, 184, 0.7)', // Completed doses
+      },
+      {
+        label: 'Doses Missing',
+        data: [],
+        backgroundColor: 'rgba(200, 200, 200, 0.5)', // Missing doses
       },
     ],
   };
 
   ngOnChanges() {
     if (this.child && this.child.vaccinations) {
-      this.generateChartData();
+      this.updateChartData();
     }
   }
 
-  generateChartData() {
-    // Initialize dose count to 0 for each vaccine type
-    const vaccineDoseCount: { [vaccineType: string]: number } = {
-      BCG: 0,
-      'Hepatitis B Vaccine': 0,
-      'Pentavalent Vaccine': 0,
-      'Oral Polio Vaccine (OPV)': 0,
-      'Inactivated Polio Vaccine (IPV)': 0,
-      'Pneumococcal Conjugate Vaccine (PCV)': 0,
-      'Measles, Mumps, Rubella Vaccine (MMR)': 0,
+  updateChartData() {
+    const requiredDoses: any = {
+      BCG: 1,
+      'Hepatitis B': 1,
+      Pentavalent: 3,
+      OPV: 3,
+      IPV: 1,
+      PCV: 3,
+      MMR: 2,
     };
+    const dosesReceived = this.vaccineLabels.map(
+      (vaccine) =>
+        this.child.vaccinations.filter((vac) => vac.vaccineType === vaccine)
+          .length
+    );
+    const dosesMissing = this.vaccineLabels.map((vaccine, index) =>
+      Math.max(0, requiredDoses[vaccine] - dosesReceived[index])
+    );
 
-    // Count the doses for the vaccines the child has received
-    this.child.vaccinations.forEach((vaccine) => {
-      if (vaccineDoseCount[vaccine.vaccineType] !== undefined) {
-        vaccineDoseCount[vaccine.vaccineType]++;
-      }
-    });
-
-    // // Prepare the data for the radar chart (order matters!)
-    // const doseData = this.radarChartLabels.map(
-    //   (vaccineType) => vaccineDoseCount[vaccineType]
-    // );
-    // Dynamically calculate doses received per vaccine
-    const vaccineData = this.radarChartLabels.map((label) => {
-      const dosesReceived = this.child.vaccinations.filter(
-        (vac) => vac.vaccineType === label
-      ).length;
-      return dosesReceived; // Return how many doses of this specific vaccine were received
-    });
-
-    // Update chart data
-    this.radarChartData = {
-      labels: this.radarChartLabels,
-      datasets: [
-        {
-          label: 'Vaccine Doses',
-          data: vaccineData,
-          backgroundColor: 'rgba(92, 194, 184, 0.5)', // Adjust as needed
-          borderColor: 'rgba(92, 194, 184, 1)', // Adjust as needed
-          pointBackgroundColor: 'rgba(92, 194, 184, 1)', // Adjust as needed
-          // pointRadius: 0, // Removes the dots
-          // pointHoverRadius: 0,
-        },
-      ],
-    };
+    this.chartData.datasets[0].data = dosesReceived;
+    this.chartData.datasets[1].data = dosesMissing;
   }
 
-  radarChartOptions: ChartOptions<'radar'> = {
+  chartOptions: ChartOptions<'bar'> = {
     responsive: true,
-    maintainAspectRatio: false,
-    devicePixelRatio: 2,
     scales: {
-      r: {
-        min: 0,
-        max: 3,
-        ticks: {
-          stepSize: 1,
-        },
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true,
       },
     },
     plugins: {
       legend: {
-        display: false, // This will remove the legend
+        display: true,
+        position: 'top',
       },
     },
   };

@@ -67,8 +67,12 @@ export class ChildrenProfileComponent {
     });
   }
 
+  latestWeighing: any;
+
   // show schedule of child
   showSchedule = false; // Initially set to false
+  showWeighingSchedule = false;
+  showVaccinationSchedule = false;
 
   // Method to toggle the visibility of the schedule
   toggleSchedule() {
@@ -81,6 +85,22 @@ export class ChildrenProfileComponent {
       this.child = data.child;
       this.motherName = `${data.mother.firstName} ${data.mother.lastName}`;
       this.motherId = `${data.mother.id}`;
+
+      if (this.child.weighingHistory) {
+        this.child.weighingHistory.sort((a: any, b: any) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+      }
+
+      if (this.child?.weighingHistory?.length) {
+        // Sort weighingHistory by date descending to get the latest entry first
+        this.child.weighingHistory.sort((a: any, b: any) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+
+        // Assign the first entry as the latest weighing
+        this.latestWeighing = this.child.weighingHistory[0];
+      }
 
       // Assign the schedules if they exist
       if (this.child.schedules) {
@@ -228,5 +248,25 @@ export class ChildrenProfileComponent {
       (now.getFullYear() - dob.getFullYear()) * 12 +
       (now.getMonth() - dob.getMonth());
     return ageInMonths;
+  }
+
+  get weighingSchedules() {
+    return this.child.schedules.filter(
+      (schedule) => schedule.scheduleType === 'weighing'
+    );
+  }
+
+  get vaccinationSchedules() {
+    return this.child.schedules.filter(
+      (schedule) => schedule.scheduleType === 'vaccination'
+    );
+  }
+
+  toggleWeighingSchedule() {
+    this.showWeighingSchedule = !this.showWeighingSchedule;
+  }
+
+  toggleVaccinationSchedule() {
+    this.showVaccinationSchedule = !this.showVaccinationSchedule;
   }
 }

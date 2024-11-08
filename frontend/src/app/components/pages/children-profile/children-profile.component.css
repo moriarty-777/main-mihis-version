@@ -303,3 +303,14 @@ p.wewsa {
 .bottoms .global-btn {
   padding: 8px 9px;
 }
+
+.light-weight-baby {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.light-weight-baby .global-btn {
+  margin: 0;
+}

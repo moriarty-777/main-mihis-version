@@ -1,9 +1,19 @@
-<div class="chart-wrapper">
+<!-- <div class="chart-wrapper">
   <canvas
     baseChart
     [data]="radarChartData"
     [labels]="radarChartLabels"
     [type]="'radar'"
     [options]="radarChartOptions"
+  ></canvas>
+</div> -->
+
+<div class="chart-wrapper">
+  <canvas
+    baseChart
+    [data]="chartData"
+    [labels]="vaccineLabels"
+    [type]="'bar'"
+    [options]="chartOptions"
   ></canvas>
 </div>
