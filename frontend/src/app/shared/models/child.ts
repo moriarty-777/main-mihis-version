@@ -33,6 +33,7 @@ export interface Child {
   anthropometricStatus: AnthropometricStatus; // Add anthropometricStatus
   nutritionalStatus?: NutritionalStatus;
   vaccinationStatus?: any;
+  missedVaccines?: any;
   mother?: any;
   child?: any;
 }

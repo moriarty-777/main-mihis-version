@@ -109,6 +109,9 @@ export class ChildrenProfileComponent {
         console.log('No schedules found for this child.');
       }
 
+      this.missedVaccineCount = this.child.missedVaccines
+        ? this.child.missedVaccines.length
+        : 0;
       this.child.vaccinations.sort((a, b) => {
         return (
           new Date(b.dateOfVaccination).getTime() -
