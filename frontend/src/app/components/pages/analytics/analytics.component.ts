@@ -410,4 +410,11 @@ export class AnalyticsComponent {
   generateWeightForHeightPdf() {
     this.pdfService.generateWeightForHeightPdf(this.weightForHeightData);
   }
+  generateImmunizationReport() {
+    this.pdfService.generateCompleteImmunizationReportPdf(
+      this.fullyVaccinatedCount,
+      this.partiallyVaccinatedCount,
+      this.notVaccinatedCount
+    );
+  }
 }

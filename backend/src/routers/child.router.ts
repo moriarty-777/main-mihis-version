@@ -1165,6 +1165,8 @@ router.get(
 // TODO: NOW
 router.get(
   "/report/missed-vaccines",
+  authMiddleware,
+  loggerMiddleware,
   expressAsyncHandler(async (req, res) => {
     try {
       // Fetch missed vaccines with child details

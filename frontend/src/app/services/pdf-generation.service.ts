@@ -17,6 +17,36 @@ export class PdfGenerationService {
   private readonly bangadLogo = BARANGAY_LOGO;
   private readonly binangonanLogo = BINANGONAN_LOGO;
 
+  private generateHeader() {
+    return {
+      columns: [
+        {
+          image: this.binangonanLogo, // Left-side logo
+          width: 80,
+          alignment: 'left',
+          margin: [0, 0, 10, 0],
+        },
+        {
+          stack: [
+            { text: 'Republic of the Philippines', style: 'headerText' },
+            { text: 'Province of Rizal', style: 'headerText' },
+            { text: 'Municipality of Binangonan Rizal', style: 'headerText' },
+            { text: 'Barangay Bangad, Binangonan, Rizal', style: 'headerText' },
+            { text: 'Barangay Bangad Health Center', style: 'headerText' },
+          ],
+          alignment: 'center',
+          margin: [0, 20, 0, 20],
+        },
+        {
+          image: this.bangadLogo, // Right-side logo
+          width: 80,
+          alignment: 'right',
+          margin: [10, 0, 0, 0],
+        },
+      ],
+    };
+  }
+
   async generateChildVaccinationStatusPdf(
     children: any[],
     year: string,
@@ -54,6 +84,10 @@ export class PdfGenerationService {
                 },
                 {
                   text: 'Barangay Bangad, Binangonan, Rizal',
+                  style: 'headerText',
+                },
+                {
+                  text: 'Barangay Bangad Health Center',
                   style: 'headerText',
                 },
               ],
@@ -249,6 +283,10 @@ export class PdfGenerationService {
                   text: 'Barangay Bangad, Binangonan, Rizal',
                   style: 'headerText',
                 },
+                {
+                  text: 'Barangay Bangad Health Center',
+                  style: 'headerText',
+                },
               ],
               alignment: 'center',
               margin: [0, 20, 0, 20],
@@ -417,113 +455,71 @@ export class PdfGenerationService {
     pdfMake.createPdf(documentDefinition).open();
   }
 
-  // TODO: NEW
-  // async generateMissedVaccineReportPdf(
-  //   childrenWithMissedVaccines: any[],
-  //   year: string,
-  //   month: string
-  // ) {
-  //   // Define the document structure for the missed vaccine report
-  //   const documentDefinition = {
-  //     content: [
-  //       { text: 'Missed Vaccine Report', style: 'header' },
-  //       { text: `Year: ${year}`, style: 'subheader' },
-  //       { text: `Month: ${month}`, style: 'subheader' },
-  //       {
-  //         table: {
-  //           headerRows: 1,
-  //           widths: ['*', '*', '*', '*', '*', '*'],
-  //           body: [
-  //             [
-  //               { text: 'First Name', style: 'tableHeader' },
-  //               { text: 'Last Name', style: 'tableHeader' },
-  //               { text: 'Vaccine Name', style: 'tableHeader' },
-  //               { text: 'Date Missed', style: 'tableHeader' },
-  //               { text: 'Reason', style: 'tableHeader' },
-  //               { text: 'Purok', style: 'tableHeader' },
-  //             ],
-  //             // Map each child and their missed vaccines to table rows
-  //             ...childrenWithMissedVaccines.flatMap((child) =>
-  //               child.missedVaccines.map((vaccine: any) => [
-  //                 child.firstName,
-  //                 child.lastName,
-  //                 vaccine.vaccineName,
-  //                 new Date(vaccine.dateMissed).toLocaleDateString(), // Format date
-  //                 vaccine.reason || 'N/A',
-  //                 `Purok ${child.purok}`,
-  //               ])
-  //             ),
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //     styles: {
-  //       header: {
-  //         fontSize: 18,
-  //         bold: true,
-  //         margin: [0, 0, 0, 10] as [number, number, number, number],
-  //       },
-  //       subheader: {
-  //         fontSize: 14,
-  //         bold: false,
-  //         margin: [0, 0, 0, 5] as [number, number, number, number],
-  //       },
-  //       tableHeader: { bold: true, fontSize: 13, color: 'black' },
-  //     },
-  //   };
-
-  //   // Generate the PDF and open it
-  //   pdfMake.createPdf(documentDefinition).open();
-  // }
   async generateMissedVaccineReportPdf(childrenWithMissedVaccines: any[]) {
-    const documentDefinition = {
+    // Step 1: Create a map to count occurrences for each reason
+    const reasonCounts = new Map<string, number>();
+
+    // Step 2: Iterate through each child and their missed vaccines
+    childrenWithMissedVaccines.forEach((child) => {
+      child.missedVaccines.forEach((vaccine: any) => {
+        const reason = vaccine.reason || 'N/A';
+        reasonCounts.set(reason, (reasonCounts.get(reason) || 0) + 1);
+      });
+    });
+
+    // Step 3: Convert the map to an array format for the PDF table
+    const reasonTableBody = Array.from(reasonCounts, ([reason, count]) => [
+      reason,
+      count.toString(),
+    ]);
+
+    // Step 4: Define the PDF document structure
+    const documentDefinition: any = {
       content: [
+        this.generateHeader(), // Include the header function if you have one
         { text: 'Missed Vaccine Report', style: 'header' },
+        {
+          text: 'This document provides a detailed report of missed vaccines within Barangay Bangad, including the reason and count for each missed vaccination.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*', '*'], // Only three columns now
+            widths: ['*', '*'],
             body: [
+              // Header row
               [
-                { text: 'Vaccine Name', style: 'tableHeader' },
                 { text: 'Reason', style: 'tableHeader' },
+                { text: 'Count', style: 'tableHeader' },
               ],
-              // Map each missed vaccine to table rows without child names or date
-              ...childrenWithMissedVaccines.flatMap((child) =>
-                child.missedVaccines.map((vaccine: any) => [
-                  vaccine.vaccineName,
-                  vaccine.reason || 'N/A',
-                ])
-              ),
+              ...reasonTableBody, // Insert aggregated reason counts
             ],
           },
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        subheader: {
-          fontSize: 14,
-          margin: [0, 0, 0, 5] as [number, number, number, number],
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
         tableHeader: { bold: true, fontSize: 13, color: 'black' },
       },
     };
 
+    // Step 5: Generate and open the PDF
     pdfMake.createPdf(documentDefinition).open();
   }
 
   // Administered
   async generateAdministeredVaccinesPdf(vaccineData: any[]) {
-    // Check if vaccineData is populated correctly
-    console.log('Vaccine Data for PDF:', vaccineData);
-
-    const documentDefinition = {
+    const documentDefinition: any = {
       content: [
+        this.generateHeader(), // Use the common header here
         { text: 'Administered Vaccines and Doses', style: 'header' },
+        {
+          text: 'This document provides a summary of administered vaccines and doses categorized by vaccine name, dose number, and gender for Barangay Bangad, Binangonan, Rizal.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
         {
           table: {
             headerRows: 1,
@@ -537,31 +533,20 @@ export class PdfGenerationService {
                 { text: 'Total', style: 'tableHeader' },
               ],
               ...vaccineData.map((vaccine) => [
-                vaccine.vaccineName || 'N/A', // Default to "N/A" if undefined
+                vaccine.vaccineName || 'N/A',
                 vaccine.doseNumber || 'N/A',
-                vaccine.maleCount !== undefined ? vaccine.maleCount : 0, // Default to 0 if undefined
-                vaccine.femaleCount !== undefined ? vaccine.femaleCount : 0, // Default to 0 if undefined
-                vaccine.totalCount !== undefined ? vaccine.totalCount : 0, // Default to 0 if undefined
+                vaccine.maleCount !== undefined ? vaccine.maleCount : 0,
+                vaccine.femaleCount !== undefined ? vaccine.femaleCount : 0,
+                vaccine.totalCount !== undefined ? vaccine.totalCount : 0,
               ]),
             ],
           },
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        subheader: {
-          fontSize: 14,
-          margin: [0, 10, 0, 5] as [number, number, number, number],
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 13,
-          color: 'black',
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        tableHeader: { bold: true, fontSize: 13, color: 'black' },
       },
     };
 
@@ -570,9 +555,15 @@ export class PdfGenerationService {
 
   // Weight for age
   async generateWeightForAgePdf(weightForAgeData: { [key: string]: number }) {
-    const documentDefinition = {
+    const documentDefinition: any = {
       content: [
-        { text: 'Weight-for-Age Distribution', style: 'header' },
+        this.generateHeader(), // Use the common header
+        { text: 'Weight-for-Age Distribution Report', style: 'header' },
+        {
+          text: 'This document provides an overview of the weight-for-age distribution among children within Barangay Bangad, Binangonan, Rizal, detailing the count for each category to aid in tracking growth and development.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
         {
           table: {
             headerRows: 1,
@@ -591,26 +582,26 @@ export class PdfGenerationService {
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 13,
-          color: 'black',
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        tableHeader: { bold: true, fontSize: 13, color: 'black' },
       },
     };
 
     pdfMake.createPdf(documentDefinition).open();
   }
+
   // height for age
   async generateHeightForAgePdf(heightForAgeData: { [key: string]: number }) {
-    const documentDefinition = {
+    const documentDefinition: any = {
       content: [
-        { text: 'Height-for-Age Distribution', style: 'header' },
+        this.generateHeader(), // Use the common header
+        { text: 'Height-for-Age Distribution Report', style: 'header' },
+        {
+          text: 'This document provides an overview of the height-for-age distribution among children within Barangay Bangad, Binangonan, Rizal, detailing the count for each category to aid in tracking growth and development.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
         {
           table: {
             headerRows: 1,
@@ -620,7 +611,6 @@ export class PdfGenerationService {
                 { text: 'Category', style: 'tableHeader' },
                 { text: 'Count', style: 'tableHeader' },
               ],
-              // Dynamically map height-for-age data into table rows
               ...Object.entries(heightForAgeData).map(([category, count]) => [
                 category,
                 count,
@@ -630,29 +620,59 @@ export class PdfGenerationService {
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 13,
-          color: 'black',
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        tableHeader: { bold: true, fontSize: 13, color: 'black' },
       },
     };
 
     pdfMake.createPdf(documentDefinition).open();
   }
 
-  // weight for height
   async generateWeightForHeightPdf(weightForHeightData: {
     [key: string]: number;
   }) {
-    const documentDefinition = {
+    const documentDefinition: any = {
       content: [
-        { text: 'Weight-for-Height Status', style: 'header' },
+        {
+          columns: [
+            {
+              image: this.binangonanLogo, // Left-side logo
+              width: 80,
+              alignment: 'left',
+              margin: [0, 0, 10, 0],
+            },
+            {
+              stack: [
+                { text: 'Republic of the Philippines', style: 'headerText' },
+                { text: 'Province of Rizal', style: 'headerText' },
+                {
+                  text: 'Municipality of Binangonan Rizal',
+                  style: 'headerText',
+                },
+                {
+                  text: 'Barangay Bangad, Binangonan, Rizal',
+                  style: 'headerText',
+                },
+                { text: 'Barangay Bangad Health Center', style: 'headerText' },
+              ],
+              alignment: 'center',
+              margin: [0, 20, 0, 20],
+            },
+            {
+              image: this.bangadLogo, // Right-side logo
+              width: 80,
+              alignment: 'right',
+              margin: [10, 0, 0, 0],
+            },
+          ],
+        },
+        { text: 'Weight-for-Height Status Report', style: 'header' },
+        {
+          text: 'This document provides an overview of the weight-for-height status of children within Barangay Bangad, Binangonan, Rizal. It details the distribution of weight categories, aiding in identifying and addressing potential cases of malnutrition.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
         {
           table: {
             headerRows: 1,
@@ -671,97 +691,16 @@ export class PdfGenerationService {
         },
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10] as [number, number, number, number],
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 13,
-          color: 'black',
-        },
+        headerText: { fontSize: 10, bold: true },
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        subheader: { fontSize: 14, margin: [0, 10, 0, 5] },
+        tableHeader: { bold: true, fontSize: 13, color: 'black' },
+        note: { fontSize: 12, italics: true },
       },
     };
 
     pdfMake.createPdf(documentDefinition).open();
   }
-
-  // TODO: Backup
-  // async generateUserReportPdf(users: any[]) {
-  //   // Filter users by role
-  //   const midwives = users.filter(
-  //     (user) => user.role && user.role.toLowerCase() === 'midwife'
-  //   );
-  //   const bhws = users.filter(
-  //     (user) => user.role && user.role.toLowerCase() === 'bhw'
-  //   );
-
-  //   const logoBase64 = BARANGAY_LOGO;
-
-  //   // Define the document content
-  //   const documentDefinition: any = {
-  //     content: [
-  //       {
-  //         image: logoBase64,
-  //         width: 150,
-  //         alignment: 'center',
-  //         margin: [0, 0, 0, 10], // Optional: adds some space after the logo
-  //       },
-  //       { text: 'User Report', style: 'header' },
-  //       { text: 'Midwives', style: 'subheader' },
-  //       {
-  //         table: {
-  //           headerRows: 1,
-  //           widths: ['*', '*', '*', '*'],
-  //           body: [
-  //             [
-  //               { text: 'First Name', style: 'tableHeader' },
-  //               { text: 'Last Name', style: 'tableHeader' },
-  //               { text: 'Gender', style: 'tableHeader' },
-  //               { text: 'Years of Experience', style: 'tableHeader' },
-  //             ],
-  //             ...midwives.map((user: any) => [
-  //               user.firstName,
-  //               user.lastName,
-  //               user.gender,
-  //               user.yearsOfService,
-  //             ]),
-  //           ],
-  //         },
-  //       },
-  //       {
-  //         text: 'Barangay Health Workers (BHW)',
-  //         style: 'subheader',
-  //         margin: [0, 20, 0, 0],
-  //       },
-  //       {
-  //         table: {
-  //           headerRows: 1,
-  //           widths: ['*', '*', '*', '*'],
-  //           body: [
-  //             [
-  //               { text: 'First Name', style: 'tableHeader' },
-  //               { text: 'Last Name', style: 'tableHeader' },
-  //               { text: 'Gender', style: 'tableHeader' },
-  //               { text: 'Years of Experience', style: 'tableHeader' },
-  //             ],
-  //             ...bhws.map((user: any) => [
-  //               user.firstName,
-  //               user.lastName,
-  //               user.gender,
-  //               user.yearsOfService,
-  //             ]),
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //     styles: {
-  //       header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
-  //       subheader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] },
-  //       tableHeader: { bold: true, fontSize: 13, color: 'black' },
-  //     },
-  //   };
 
   //   // Generate and open the PDF
   //   pdfMake.createPdf(documentDefinition).open();
@@ -878,6 +817,44 @@ export class PdfGenerationService {
     };
 
     // Generate and open the PDF
+    pdfMake.createPdf(documentDefinition).open();
+  }
+
+  async generateCompleteImmunizationReportPdf(
+    fullyVaccinatedCount: number,
+    partiallyVaccinatedCount: number,
+    notVaccinatedCount: number
+  ) {
+    const documentDefinition: any = {
+      content: [
+        { text: 'Complete Infant Immunization Report', style: 'header' },
+        {
+          text: 'This document provides an overview of the immunization status among children within Barangay Bangad, including the counts for fully vaccinated, partially vaccinated, and not vaccinated children.',
+          alignment: 'justify',
+          margin: [0, 10, 0, 20],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*'],
+            body: [
+              [
+                { text: 'Immunization Status', style: 'tableHeader' },
+                { text: 'Count', style: 'tableHeader' },
+              ],
+              ['Fully Vaccinated', fullyVaccinatedCount.toString()],
+              ['Partially Vaccinated', partiallyVaccinatedCount.toString()],
+              ['Not Vaccinated', notVaccinatedCount.toString()],
+            ],
+          },
+        },
+      ],
+      styles: {
+        header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+        tableHeader: { bold: true, fontSize: 13, color: 'black' },
+      },
+    };
+
     pdfMake.createPdf(documentDefinition).open();
   }
 }

@@ -75,8 +75,9 @@
         [purokData]="purokData"
             ></charts-purok> -->
         </div>
-        <div class="analytics-item ai-complete-immunization">
+        <div class="analytics-item ai-complete-immunization wesa">
           <charts-complete-immunization
+            (click)="generateImmunizationReport()"
             [fullyVaccinatedCount]="fullyVaccinatedCount"
             [partiallyVaccinatedCount]="partiallyVaccinatedCount"
             [notVaccinatedCount]="notVaccinatedCount"

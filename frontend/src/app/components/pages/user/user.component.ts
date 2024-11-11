@@ -46,8 +46,8 @@ export class UserComponent {
         .filter(
           (user) =>
             user.role &&
-            (user.role.toLowerCase() !== 'admin' ||
-              user.role.toLowerCase() === 'pending')
+            user.role.toLowerCase() !== 'admin' &&
+            user.role.toLowerCase() !== 'midwife' // Exclude midwives
         ) // Hide admins
         .filter((user) => this.applyRoleFilter(user)) // Apply role filter
         .filter((user) => this.applyExperienceFilter(user)) // Apply experience filter
